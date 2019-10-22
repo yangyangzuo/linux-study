@@ -1,0 +1,38 @@
+documents:
+
+
+
+description:
+    用来设置用户的主组/附加组和登录shell
+    主组:通常在新建用户时制定,在etc/pwsswd的第4列GID对应的组
+    附加组:在etc/group中最后一列标识该组的用户列表,用户制定用户的附加权限
+    (设置了用户的附加组后,需要重新登录才生效)
+
+
+help:
+    usermod
+    usermod --h
+    usermod --help
+    man usermod
+    info usermod
+    
+
+example:
+    #修改用户的主组(passwd中的GID)
+    usermod -g 组 用户名
+    
+    #修改用户的附加组
+    usermod -G 组 用户名
+
+    #修改用户登录的shell(不同的shell,显示的内容和文字颜色可能不同)
+    usermod -s /bin/bash
+    
+    #注意默认使用useradd添加的用户是没有权限使用sudo以root身份执行命令的,可以使用如下命令把用户添加到sudo附加组
+    usermod -G sudo 用户名
+
+
+
+
+
+
+

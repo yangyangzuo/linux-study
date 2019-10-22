@@ -1,0 +1,22 @@
+documents:
+    https://www.gnu.org/software/coreutils/manual/html_node/whoami-invocation.html
+
+description:
+    打印当前登录的用户名
+
+
+help:
+    whoami --h
+    whoami --help
+    man whoami 
+
+
+example:
+    ➜  ubuntu-study git:(master) ✗ whoami       
+    zuoyang
+
+
+
+
+
+

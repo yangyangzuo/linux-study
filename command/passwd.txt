@@ -1,0 +1,21 @@
+documents:
+
+
+
+description:
+    修改用户的密码
+    注意这里的passwd指的是/user/bin/passwd,而不是/etc/passwd
+    
+
+help:
+    
+    
+
+example:
+
+
+
+
+
+
+

@@ -1,8 +1,31 @@
-https://www.gnu.org/software/coreutils/manual/html_node/id-invocation.html
+documents:
+    https://www.gnu.org/software/coreutils/manual/html_node/id-invocation.html
 
-id:
+
+description:
     print user indentity
-    打印用户标示信息
+    打印用户标识信息
+
+help:
+    id --h
+    id --help
+    man id
 
 
-    
+example:
+
+    ➜  ubuntu-study git:(master) ✗ id
+    uid=1000(zuoyang) gid=1000(zuoyang) groups=1000(zuoyang),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),118(lpadmin),129(sambashare),131(vboxusers),1001(usbfs)
+
+    ➜  ubuntu-study git:(master) ✗ cat /etc/passwd | zuoyang
+    zuoyang:x:1000:1000:zuoyang,,,:/home/zuoyang:/usr/bin/zsh
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,17 @@
+documents:
+    https://www.gnu.org/software/coreutils/manual/html_node/who-invocation.html
+
+
+description:
+    查看当前所有登录系统的用户列表
+
+help:
+    who --help
+    man who
+    
+
+example:
+    ➜  ubuntu-study git:(master) ✗ who
+        zuoyang  :1           2019-10-22 19:15 (:1)
+
+ 

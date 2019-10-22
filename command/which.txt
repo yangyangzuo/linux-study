@@ -1,0 +1,32 @@
+documents:
+
+
+
+description:
+    查看执行命令所在的位置
+    
+
+help:
+    
+    
+
+example:
+    #/etc/passwd,用户保存用户信息的文件
+    #/usr/bin/passwd,修改用户密码的程序
+    
+    
+    ➜  ~ ls -l /usr/bin/passwd
+    -rwsr-xr-x 1 root root 63736 Mar 23  2019 /usr/bin/passwd
+
+
+    ➜  ~ which passwd
+    /usr/bin/passwd
+
+    ➜  ~ which useradd
+    /usr/sbin/useradd
+
+
+
+
+
+
