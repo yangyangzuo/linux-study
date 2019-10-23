@@ -1,0 +1,27 @@
+documents:
+
+
+
+description:
+    (disk free)查看磁盘信息
+
+help:
+   
+    
+
+example:
+    #人类友好的方式显示磁盘空间(显示MB/GB)
+    df -h
+
+    #
+
+
+    
+
+
+
+
+
+
+
+

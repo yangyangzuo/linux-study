@@ -1,0 +1,37 @@
+documents:
+
+
+
+description:
+    查找文件,通常用来在 特定的目录下搜索符合条件的文件
+
+
+help:
+   
+    
+
+example:
+    
+    #find [路径] -name 文件名
+    #如果省略路径,表示在当前目录下查找
+    #通配符(wildcard)可以在文件名中使用
+
+    #在当前目录及其子目录下查找.py结尾的文件
+    find -name *.py
+
+    #查找desktop及其子目录下含有1的文件
+    find ~ -name *1*
+
+    #当前目录下以.txt结尾的文件
+    find -name *.txt
+
+
+    
+
+
+
+
+
+
+
+

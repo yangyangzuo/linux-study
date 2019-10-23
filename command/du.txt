@@ -1,0 +1,63 @@
+documents:
+
+
+
+description:
+    (disk usage)查看当前目录下的所有文件和所有子目录下文件的大小
+
+help:
+   
+    
+
+example:
+    #人类友好的方式显示磁盘空间(显示MB/GB)
+    du -h
+
+    8.0K	./.git/objects/ac
+    8.0K	./.git/objects/51
+    8.0K	./.git/objects/1b
+    8.0K	./.git/objects/12
+    8.0K	./.git/objects/01
+    8.0K	./.git/objects/33
+    8.0K	./.git/objects/46
+    8.0K	./.git/objects/ce
+    8.0K	./.git/objects/e6
+    8.0K	./.git/objects/3d
+    8.0K	./.git/objects/72
+    8.0K	./.git/objects/0f
+    8.0K	./.git/objects/83
+    8.0K	./.git/objects/ed
+    8.0K	./.git/objects/39
+    4.0K	./.git/objects/pack
+    8.0K	./.git/objects/db
+    4.0K	./.git/objects/info
+    8.0K	./.git/objects/80
+    8.0K	./.git/objects/3f
+    8.0K	./.git/objects/c0
+    312K	./.git/objects
+    4.0K	./.git/branches
+    8.0K	./.git/info
+    460K	./.git
+    8.0K	./directory structure/usr/bin
+    8.0K	./directory structure/usr/sbin
+    20K	./directory structure/usr
+    4.0K	./directory structure/boot
+    32K	./directory structure/etc
+    8.0K	./directory structure/bin
+    8.0K	./directory structure/sbin
+    76K	./directory structure
+    8.0K	./drivers
+    72K	./command
+    624K	.
+    #最后一样624k表示当前目录及其所有子目录下的所有文件的占用的大小,即:当前目录文件夹所有文件占用的空间大小
+
+
+    
+
+
+
+
+
+
+
+

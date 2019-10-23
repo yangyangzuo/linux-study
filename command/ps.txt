@@ -1,0 +1,32 @@
+documents:
+
+
+
+description:
+    (process status)查看进程的详细信息
+
+help:
+   
+    
+
+example:
+    
+    #a显示终端上的所有进程,包括其他用户的进程
+    #u显示进程的详细状态
+    #x显示没有控制终端的进程
+    ps aux
+
+
+
+    
+
+
+    
+
+
+
+
+
+
+
+
