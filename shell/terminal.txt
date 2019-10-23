@@ -1,0 +1,7 @@
+shortcut:
+    terminal -> preferences -> shortcuts
+
+
+    zoom in(放大):
+        ctrl和+键同时摁,注意键盘上的+号需要使用(shift和=一起摁,所以放大终端的快捷键是ctrl,shift,=三个键同时摁)
+        ctrl + + 

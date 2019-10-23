@@ -9,6 +9,7 @@ help:
     chgrp
     chgrp --h
     chgrp --help
+    man chgrp
     info chgrp
 
     

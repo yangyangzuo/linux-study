@@ -3,17 +3,35 @@ documents:
 
 
 description:
-  
+    查看当前文件夹下的内容
+    list information about the Files(the current directory by default)
 
 help:
-  
+    ls -help
+    man ls
+    info ls
     
 
 example:
 
+    #列出当前目录下的文件
+    ls
+
+    #按照列表形式列出文件
+    ls -l
 
 
+    #文件大小按照人类友好的方式阅读
+    ls -lh
 
+    #不会忽略以.开头的文件/目录,包含.和..和隐藏文件/目录(以.开头的文件/目录)
+    ls -a
+
+    #列出当前目录下的文件夹
+    ls -l | grep '^d'
+
+    #列出当前目录下的文件
+    ls -l | grep '^-'
 
 
 
