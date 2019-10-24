@@ -1,0 +1,28 @@
+documents:
+    
+
+
+description:
+    apt(advanced packaging tool),是linux下的一款安装包管理工具
+
+help:
+  
+    
+
+example:
+    #安装软件
+    sudo apt install 软件包
+
+    #卸载软件
+    sudo apt remove 软件名
+
+    #更新已经安装的包
+    sudo apt upgrade
+
+    
+
+
+
+
+
+

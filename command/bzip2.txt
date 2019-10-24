@@ -1,0 +1,27 @@
+documents:
+    tar和bzip2明星结合可以实现文件打包和压缩(用户和gzip一样)
+    tar负责打包文件，但不压缩
+    bzip2把tar打包后的文件进行压缩，扩展名一般是***.tar.bz2
+    tar命令中有一个-j选项可以调用bzip2，方便的实现压缩和解压缩功能
+
+
+description:
+   
+
+help:
+  
+    
+
+example:
+
+    #压缩文件
+    tar -jcvf 打包文件.tar.bz2 被压缩的文件/路径
+
+    #解压缩文件
+    tar -jxvf 打包文件.tar.bz2
+
+
+
+    
+
+

@@ -1,0 +1,8 @@
+vimscript:
+
+
+http://learnvimscriptthehardway.stevelosh.com/
+
+中文翻译：
+http://learnvimscriptthehardway.onefloweroneworld.com/
+

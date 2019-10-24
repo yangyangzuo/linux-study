@@ -3,13 +3,37 @@ documents:
 
 
 description:
-  
+    tar是linux中最常用的备份工具,才命令可以把一系列的文件打包到一个大文件中,也可以把一个打包的文件恢复成一系列文件
+    tar只负责文件的打包，并不会对文件进行压缩
 
+    
 help:
   
     
 
 example:
+    #打包文件
+    tar -cvf 打包后的文件名.tar  被打包的文件/路径
+
+    #解包文件
+    tar -xvf 打包的文件.tar
+
+    tar选项:
+        -c, --create               create a new archive
+        c 生成档案文件，创建打包文件
+
+        -x, --extract, --get       extract files from an archive
+        x 解开档案文件
+
+        -v, --verbose              verbosely list files processed
+        v 列出归档/解档的详细过程，显示进度
+
+        -f, --file=ARCHIVE         use archive file or device ARCHIVE
+        --force-local          archive file is local even if it has a colon
+        f 制定档案文件名称，f后面一定是.tar文件，所以必须放在选项的最后面,其他选项顺序任意
+
+
+
 
 
 

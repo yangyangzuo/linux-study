@@ -4,7 +4,8 @@ documents:
 
 description:
     动态显示运行中的进程并且排序
-
+    sudo apt-get install htop
+    htop是一个颜色更丰富的软件和top功能相同
 help:
    
     

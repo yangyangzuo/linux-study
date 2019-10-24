@@ -1,0 +1,933 @@
+参考文档，官方网站上有帮助文档
+官方网站：http://www.vim.org/
+
+英文文档: 
+http://vimdoc.sourceforge.net
+http://vimdoc.sf.net
+
+中文文档: 
+http://vimcdoc.sourceforge.net
+http://vimcdoc.sf.net
+
+
+快速入门文档：
+	linux/unix下命令行输入：vimtutor
+	windows下执行安装目录下的:vimtutor.bat文件
+这里已经把内容保存下来了，查看vimtutor.txt
+
+
+vimscript教程：
+http://learnvimscriptthehardway.stevelosh.com/
+
+
+安装gvim:
+带图形界面的vim,
+sudo apt-get install vim-gnome
+(或者 sudo apt-get install vim-gtk)
+安装了gvim,才可以使用特殊的配色原理，也不用再占用终端
+
+
+
+######################################################################
+###########################vim的配置文件
+######################################################################
+	通过配置文件配置:
+	linux/unix系统下：
+		vim默认配置配置文件是(所有用户都使用该配置)：
+		/etc/vim/vimrc
+		对于 Unix 和 Macintosh 系统，总是使用而且也推荐使用如下文件:
+                ~/.vimrc 
+		我们可以在家目录下建立自己的配置文件(当前用户使用该配置文件)
+		切换到家目录 #cd ~
+		创建一个名为.vimrc的文件（以.开头的为隐藏文件）
+		注意：.vimrc文件会覆盖/etc/vim/vimrc中的重复的配置内容
+	windows系统下:
+		$VIM/_vimc
+		$VIM是vim的安装文件夹
+	打开vim编辑器,输入命令:
+	:scriptname或者:scriptnames可以查找vim的所有配置文件,如果你的文件不在列表中，检查一下该文件的位置和文件名。
+	这些文件根据优先级别，会覆盖对应的配置，最上面的有最高的优先级别，即：最上面的文件中的配置会覆盖下面文件中和他相同的配置内容
+	例如：
+	在linux下显示：
+	  1: /usr/share/vim/vimrc
+	  2: /usr/share/vim/vim73/debian.vim
+	  3: /usr/share/vim/vim73/syntax/syntax.vim
+	  4: /usr/share/vim/vim73/syntax/synload.vim
+	  5: /usr/share/vim/vim73/syntax/syncolor.vim
+	  6: /usr/share/vim/vim73/filetype.vim
+	  7: /usr/share/vim/vim73/colors/darkblue.vim
+	  8: /usr/share/vim/vim73/syntax/nosyntax.vim
+	  9: /usr/share/vim/vim73/colors/murphy.vim
+	 10: /usr/share/vim/vim73/ftplugin.vim
+	 11: /usr/share/vim/vim73/indent.vim
+	 12: ~/.vimrc
+	 13: /usr/share/vim/vim73/plugin/getscriptPlugin.vim
+	 14: /usr/share/vim/vim73/plugin/gzip.vim
+	 15: /usr/share/vim/vim73/plugin/matchparen.vim
+	 16: /usr/share/vim/vim73/plugin/netrwPlugin.vim
+	 17: /usr/share/vim/vim73/plugin/rrhelper.vim
+	 18: /usr/share/vim/vim73/plugin/spellfile.vim
+	 19: /usr/share/vim/vim73/plugin/tarPlugin.vim
+	 20: /usr/share/vim/vim73/plugin/tohtml.vim
+	 21: /usr/share/vim/vim73/plugin/vimballPlugin.vim
+	 22: /usr/share/vim/vim73/plugin/zipPlugin.vim
+	在windows下显示：
+	1: C:\Program Files (x86)\Vim\_vimrc
+	2: C:\Program Files (x86)\Vim\vim74\vimrc_example.vim
+	3: C:\Program Files (x86)\Vim\vim74\syntax\syntax.vim
+	4: C:\Program Files (x86)\Vim\vim74\syntax\synload.vim
+	5: C:\Program Files (x86)\Vim\vim74\syntax\syncolor.vim
+	6: C:\Program Files (x86)\Vim\vim74\filetype.vim
+	7: C:\Program Files (x86)\Vim\vim74\ftplugin.vim
+	8: C:\Program Files (x86)\Vim\vim74\indent.vim
+	9: C:\Program Files (x86)\Vim\vim74\mswin.vim
+	10: C:\Program Files (x86)\Vim\vim74\autoload\paste.vim
+	11: C:\Program Files (x86)\Vim\vim74\plugin\getscriptPlugin.vim
+	12: C:\Program Files (x86)\Vim\vim74\plugin\gzip.vim
+	13: C:\Program Files (x86)\Vim\vim74\plugin\matchparen.vim
+	14: C:\Program Files (x86)\Vim\vim74\plugin\netrwPlugin.vim
+	15: C:\Program Files (x86)\Vim\vim74\plugin\rrhelper.vim
+	16: C:\Program Files (x86)\Vim\vim74\plugin\spellfile.vim
+	17: C:\Program Files (x86)\Vim\vim74\plugin\tarPlugin.vim
+	18: C:\Program Files (x86)\Vim\vim74\plugin\tohtml.vim
+	19: C:\Program Files (x86)\Vim\vim74\plugin\vimballPlugin.vim
+	20: C:\Program Files (x86)\Vim\vim74\plugin\zipPlugin.vim
+
+	
+######################################################################
+###########################打开vim编辑器后进行配置
+######################################################################
+进入底行模式:
+	set命令设置配置变量:
+		可以通过set来设置一些对应的设置，例如：
+		（:用来进入底行模式,set nu用来显示行号）
+		:set nu
+		这个命令表示在当前vim中显示行号
+		:set nonu
+		这个命令表示在当前vim中不显示行号
+		:set nu?
+		命令后面加一个?，表示可以查询当前具体的配置信息，这里表示配置下vim是否显示行号
+
+	查看具体的设置:
+		语法：
+			:echo &变量名称
+		例如：
+			:echo &enconding (查看当前文件内容的编码设定)
+			:echo &nu	(查看当前是否显示行号配置)
+
+
+
+
+
+
+查看当前的编辑模式:
+:set showmode?
+在配置文件中加入set showmode可以查看当前的文本处于什么模式,默认情况，在其他配置文件中已经设置
+
+######################################################################
+##############进入编辑模式/插入模式/insert mode：
+######################################################################
+	(插入模式下，输入的字符都当作文本来处理)
+	i, I 	進入插入模式
+	a, A 	進入插入模式
+	o, O 	進入插入模式
+	r, R 	進入取代模式
+	解释说明：
+		i 光标所在字符的前面开始编辑
+		I 插入到当前行的最前面开始编辑
+		a 光标所在字符的后面开始编辑
+		A 插入到当前行的最后面开始编辑
+		o 下一行行首开始编辑(创建一个新的空行，并进入插入模式)
+		O 上一行行首开始编辑
+		r		光标移动一个字符上，输入r后，在输入一个新字符，则当前字符会被输入的字符替代
+		通过计数前缀，"r" 命令可以使多个字符被同一个字符替换，例如:
+		5rh             当前坐标开始的5个字符，会被替换为h
+		
+		R		R命令和小写命令一样，用来覆盖文本，不同之处是，会进入覆盖模式，但是最多覆盖一行内容,
+		                "R" 命令启动替换模式。在这个模式下，你输入的每个字符都会覆盖当前光标上的字符。这会一直持续下去，直到你输入 <Esc>。
+		~		把光标移动到对应的字母上，输入~，则对应的小写字母会变成大写，大写字母会变成小写字母
+
+	插入键和数字的连用：
+	语法： 数字i文本
+	例如：
+	5iabc	输入abc后，esc键，输出结果:abcabcabcabcabc,会在连着5次输出abc 
+	3Ihello 输入hello后，esc键，则输出结果:hellohellohello,会在当前行最前面插入3个hello
+	2ahello
+	3A!!!
+	2ohello
+	3Ohello
+	4rhello
+	5Rhello
+	6~
+		
+
+########################################################
+############################进入命令行/底行模式：commond-line mode
+########################################################
+	:
+	查看相应的帮助文档：
+	语法：
+		:help {subject}
+		例如：
+		:help deleting
+		:help index
+	查看对应的命令，例如：
+		:help x	查看相关的x命令	
+	参考：http://vimdoc.sourceforge.net/htmldoc/usr_02.html
+	
+
+######################文档搜索
+	/
+	?
+	解释说明：
+	/字符	从当前光标向下搜索字符
+	?字符	从当前光标向上搜索字符
+	如果输出后，恩下了回车，则可以通过n/N来逐个查找
+	n	下一个
+	N	上一个
+	注意：.[]^%/\?~$这些字符有特殊的意义，如果想搜索这些字符，需要在字符前面输入\,例如：搜索*,输入/\*
+
+	在搜索的过程中，默认是严格区分大小写的，即：输入小写字母不会匹配大写字母，如果要忽略搜索大小写，设置
+	set ignorecase
+	高亮所有匹配的搜索结果
+	set hlsearch
+	在输入搜索单词的时候，会逐个高亮和当前匹配的字符，可以防止输入错误
+	set incsearch
+	设置搜索到文档底部后，自动跳转到文档的开始
+	set wrapscan
+
+
+
+	搜索功能带有历史记忆功能，当输入/后，先不要摁回车，通过上下箭头可以获得上次的查询结果
+	如果输入一个特定字符后，回自动查找以这个字符开头的搜索历史记录
+	(对于:开头的命令，同时具有记忆功能，通过上箭头也可以获得上次输入的命令)	
+
+	通过/或者?查找字符，默认是模糊匹配，即：只要句子中含有该字符，都会匹配
+	如果想要精确匹配，可以通过\<和\>
+	例如：
+	/\<a	查找以a开头的字符
+	/a\>	查找以a结尾的字符
+	/\<a\>	精确查找单字符a
+
+
+	如果字符太长，不想输入，可以把光标移动到对应的字符串上，然后输入*或者#
+	*	功能等价于/\<字符\>
+	#	功能等价于?\<字符\>
+	如果想模糊匹配，可以通过g*或者g#
+	g*	功能等价于/字符
+	g#	功能等价于?字符
+
+	
+	匹配模式：正则表达式
+	
+	1.行 首 与 行 尾:
+	^ 字符匹配行首,$ 字符匹配行尾
+	/^the	以the开
+	/the$	以the结尾
+	/^the$	单行完全匹配字符the
+
+        2.匹 配 任 何 单 个 字 符:
+        点 "." 字符匹配任何字符。
+        例如，模式 "c.m" 匹配一个字符串，它的第一个字符是 c，第二个字符是任意字符，而第三个字符是 m。
+        /c.m    com,cam,c-m
+        
+        3.匹 配 特 殊 字 符:
+        如果你确实想匹配点字符，可以在前面加一个反斜杠去消除它的特殊含义。
+        如果你用 "ter." 模式去查找，会匹配这些地方:
+        /ter\.  
+        
+        
+######################代标记的跳转：
+每次你执行一个会将光标移动到本行之外的命令，该移动即被称为一个 "跳转" 。
+这包括查找命令 "/" 和 "n" (无论跳转到多远的地方)。
+G,gg命令
+
+不包括 "fx" 和 "tx" 这些行内查找命令或者 "w" 和 "e" 等词移动命令。
+不包括 "j" 和 "k" 不会被当做是一次 "跳转"，即使你在前面加上计数前缀使之移动到很远的地方也不例外。
+
+:jumps 命令能输出一个你可以跳往的位置的列表。最后一个你使用的标记会用 ">" 符号标记出来。
+
+''或者``命令可以让你在最后两个位置上跳来跳去
+CTRL-O 命令则跳到一个 "较老" 的地方 (提示:  O 表示 older)。CTRL-I 则跳到一个 "较新" 的地方 (提示: I 在键盘上紧靠着O)。
+ctrl+0和ctrl+i甚至可以在不同的文件间跳转
+
+
+
+######################自定义标记用来跳转： 
+命令 "m标记名" 用 '标记名' 标记当前的光标位置。(m表示mark的意思)你可以在文本中使用 26 个标记 (a 到 z)。这些标记是不可见的，只是一个由 Vim 记住的位置.
+例如:ma标记，当前行被标记，当前行的标记名为a,
+使用'a会移动到标记的行首
+`a会移动到标记的行中标记时的列
+
+你可以用如下命令取得所有的标记的列表:
+        :marks
+你会注意到有一些特殊的标记，包括:
+        '       跳转前的光标位置
+        "       最后编辑的光标位置
+        [       最后修改的开始位置
+        ]       最后修改的结束位置
+
+
+
+
+
+######################文档替换：
+	:%s/w1/w2/g	把w1替换为w2
+	:%s/w1/w2/gc	把w1替换为w2,替换前请求确认
+
+
+
+
+
+
+########################################################
+##############进入标准模式/正常模式/normal mode:
+	(标准模式下，输入的字符都是命令)
+########################################################
+	esc
+
+	常用操作：
+###########光标的移动：
+j,enter键,小键盘的加号,大键盘的+(shift和等号同时摁下)		下移一行,可以和数字连用,例如：2j,下移2行，20j,下移20行
+k,小键盘的减号,大键盘的-					上移一行,可以和数字连用,例如：2k,上移2行，15k,上移15行
+h							左移动,可以和数字连用,例如：5h,左移动5个字符
+l,空格键(space)						右移动,可以和数字连用,例如：5l或者5空格键，右移动5个字符,
+	
+w 							移动到下一个单词的开始(引号会被认定为一个单词,连续的中文字符会被认为是一个单词)
+							这样的一个好处是，在删除一个单词的时候，连续的中文可以一次被删除)
+
+b							移动到上一个单词的开始(引号会被认定为一个单词)
+
+e							移动到下一个单词的结尾(引号会被认定为一个单词)
+ge							移动到上一个单词的结尾(引号会被认定为一个单词)						
+
+W,B,E,gE 						对应的大写，认定规则是只要不是空格，都认为是单词的一部分，这样可以快速的在同一行内移动
+
+
+0							(零,表示行开始)光标移动当当前行的第一个字符上
+^							光标移动当当前行的第一个非空字符上
+$							(美圆符号，表示行字符的结尾)	光标移动到当前行的最后一个字符上
+数字+$                                                   移动到当前行后面的特定行(冲当前行开始计算)的末尾字符
+
+f字符							当前行内，光标后查找对应的字符，例如：fa,在当前光标后面查找第一个字符a,并移动到对应的字符上
+F字符							当前行内，光标前查找对应的字符，例如：Fa,在当前光标前面查找第一个字符a,并移动到对应的字符上
+t字符							当前行内，光标后查找对应的字符，例如：ta,在当前光标后面查找第一个字符a,并移动到对应的字符前
+T字符							当前行内，光标前查找对应的字符，例如：Ta,在当前光标后面查找第一个字符a,并移动到对应的字符前
+上面4个命令，可以和数字连用，用于查找第几次出现的特定字符,还可以通过;和,来继续查找下一个,分号向后查找下一个字母，逗号向前查找上一个字母
+
+%	跳转到对应的(),[],{}上去，可以配置，通过:set mps+=<:>,具体的可以查看文档
+
+
+
+
+###########当前屏幕内容内的行操作:
+H								(home)光标移动到当前屏内容的左上方，第一个字符处,可以和数字连用
+数字H								光标移动到距离当前屏内容的左上方若干行，第一个字符处,例如：5H,移动到距离当前屏幕内容左上方第5行的内容的第一字符处
+M								(middle)光标移动到当前屏内容的中间行,第一个字符处,不可以数字连用
+L								(last)光标移动到当前屏内容的左下方，第一个字符处,可以和数字连用
+数字L								光标移动到距离当前屏内容的左下方若干行，第一个字符处,例如：5L,移动到距离当前屏幕内容左下方第5行的内容的第一字符处
+
+
+
+
+###########显示当前光标位于文档所在的行,列,百分比:
+set ruler 			会在Vim窗口的右下角显示当前光标的位置,它不占多少地方,从而可以留下更多的地方给你的文本.(显示的信息不详细)
+				如果设置 'rulerformat'，它决定标尺的内容。
+			        每个窗口都有自己的标尺。如果窗口有状态行，标尺在那里显示。否则，它显示
+			        在屏幕的最后一行上。如果通过 'statusline' 给出状态行，该 选项优先于 'ruler' 和 'rulerformat'。
+				如果你不想一直看到标尺但想知道现在在哪里，使用 "g CTRL-G"
+
+
+ctrl+g,:f,:fi,:file		输入以上命令后，可以显示当前光标位于内容所在的行,列,百分比等等信息
+
+set statusline 			由上面可以得知，如果设置了,statusline,则会优先与ruler和rulerformat设置来显示
+
+set laststatus 			本选项的值影响最后一个窗口何时有状态行:  0: 永不 1: 只有在有至少两个窗口时 2: 总是
+
+例如：
+set statusline=[%f]\ [行:%l/%L,%p%%,列:%v]\ [%{strftime(\"%Y/%m/%d\ %H:%M\")}]
+set laststatus=2	
+
+如果设置本选项statusline,(并且 'laststatus' 为 2 的话)，'ruler' 的唯一效果是控制 CTRL-G 的输出,即ctrl+g显示的是ruler指定的规则
+显示详细的统计信息可以通过ctrl+g或者g ctrl+g来显示
+
+
+###########滚屏操作：
+ctrl+u	向上滚动半屏(up)
+ctrl+d	向下滚动半屏(如果是在文字输入状态，则该快截键表示相左缩进)(down)
+
+ctrl+b	向上滚动一屏，和pageup功能一样(backward)
+ctrl+f	向下滚动一屏，和pagedown功能一样(forward)
+
+ctrl+e	光标位置不变，屏幕向上滚动一行
+ctrl+y	光标位置不变，屏幕向下滚动一行(对于window系统，在mswin.vim做了配置，注释即可使用vim中的功能)
+
+zz,z.		(注意是小写),输入这个命令后，当前行会位于当前屏幕的中间，即：文档内容滚动，使当前行的内容位于当前屏幕内容的中间
+zt,z<cr>	文档内容滚动，使当前行的内容位于当前屏幕内容的顶端(top)
+zb,z-		文档内容滚动，使当前行的内容位于当前屏幕内容的底端(bottom)
+
+
+###########所有文档内容内的行操作:
+数字%						光标移动到当前文档的百分比处
+gg						光标移动到文件所有内容的第一行
+G						光标移动到文件所有内容最后一行	，可以和数字连用，下面说明
+数字gg,数字G,:数字				移动特定的行(文档中所有内容都包括的行号)
+(例如：10G,移动到第10行开头，12G,移动到第12行开头,:5,回车后移动到对应的行,20gg,移动到第20行的开头)
+
+
+###########内容缩进操作：
+<<	左缩近(insert模式下可以用ctrl+d代替)
+>>	右缩近
+数字 + 缩近符号(<<或者>>)	光标所在行及其以下，缩近若干行
+:数字1,数字2(<或者>)		数字1到数字2行都进行缩近,一个>或者<表示缩近一次
+
+
+
+###########移动文本：
+当你用 "d"，"x" 或者其它命令删除文本的时候，这些文字会被存起来。
+你可以用 p 命令重新粘贴出来 (p 在 Vim 中表示 put，放置)
+
+"P" 命令象 "p" 一样也是插入字符,"P" 会把它插入到光标所在的前面
+"p" 和 "P" 命令接受计数前缀，被插入的文本就会被插入指定的次数。
+一个 "3p" 会把删除行的三个拷贝插入到文本中。
+
+
+###########删除：
+x	删除光标后一个字符(可以和数字联合使用)
+X	删除光标前一个字符(可以和数字联合使用)
+数字x,数字X 删除若干字符
+dd	删除当前行(可以和数字联合使用),注意和cc的区别，cc是删除当前行的内容，但没有删除当前行
+数字dd	删除若干行
+dgg	删除当前行到文本第一行的所有内容
+dG	删除当前行到文本最后一行的所有内容
+d$	删除当前行内的光标和其后面的所有字符
+d0	删除当前行内的光标前的所有字符
+de	删除当前光标开始到后面第一个非空格字符，单词后面如果有空格不会删除
+dE	删除当前光标开始到后面第一个非空格字符，标点也作为单词的一部分删除，单词后面如果有空格不会删除
+dw	删除当前光标开始到后面第一个非空格字符，单词后面如果有空格也会删除
+d数字e   删除当前光标所在单词的后面部分和后面若干个单词，单词后面如果有空格不会删除
+dw      删除当前光标所在单词的后面部分,单词后面如果又空格也会删除，
+d数字w   删除当前光标所在单词的后面部分和后面若干个单词,单词后面如果又空格也会删除，
+        
+格字符也被删除掉了。
+d^	删除当前光标前字符到当前行前第一个非空格字符
+J	(删除当前行的换行符号)会把光标移动到行末尾处，并删除当前行末尾处的换行符
+
+命令是 "c"，表示修改，change。它的作用方式与 "d" 操作符相似，只是完成后会切换到插入模式。
+例如，"cwhello",删除一个单词后，会插入hello,执行过程是，cw,删除一个单词，进入插入模式，然后在插入模式下输入hello
+
+cc(或者是S)	删除当前行的内容，光标移动到当前行的第一个字母所在的位置
+c0		删除当前光标到行的最前面，光标移动到行的最开头
+c$		删除当前光标到行的最后面的内容
+cw		删除一个单词的全部或者一部分，光标移动到一个单词上，输入cw,则会删除当前坐标到这个单词的末尾,然后进入插入模式
+数字+s		删除当前光标及后面的若干个字符,然后进入插入模式
+c和d的区别是，c进行删除后，默认进入插入模式，d不会自动进入插入模式
+s		删除光标上的一个字符，并进入插入模式,注意区别：x删除光标上的字符,不进入插入模式，s命令和cl等价，删除当前光标上的字符
+
+###########文本对象:
+1.aw,     "aw" 表示 "A Word" (一个单词),例如：
+daw     删除光标上的单词 (包括空白字符),
+        如果你在一个单词的中间而又想删掉这个单词，在你用 "dw" 前，你必须先移到这个单词的开始处。
+        这里还有一个更简单的方法: "daw"。"d" 是删除操作符。"aw" 是一个文本对象。
+        提示: "aw" 表示 "A Word" (一个单词)，这样，"daw" 就是 "Delete A Word" (删除一个单词)。确切地说，该单词后的空
+2.iw,   删除光标上的单词 (不包括空白字符)
+
+3.is    "is" 文本对象。这表示 "Inner Sentence"(内含句子),不包含空格,例如：
+cis     cis" 可以改变一个句子。会删除两个.之间的内容，(两个句号之间的内容,只对英文句号起作用),然后进入插入模式
+        包括 "c" (change，修改) 操作符和 "is" 文本对象。这表示 "Inner Sentence"(内含句子)。
+                
+4.as    "as" 包括句子后面的空白字符,而 "is"不包括。如果你要删除一个句子，而且你还想同时删除句子后面空白字符，就用 "das"；
+        如果你想保留空白字符而替换一个句子，则使用 "cis"。                
+        
+更多文本对象，查看http://vimcdoc.sourceforge.net/doc/motion.html#text-objects       
+
+还可以在可视模式下使用文本对象。这样会选中一个文本对象，而且继续留在可视模式，你可以继续多次执行文本对象命令。
+例如，先用 "v" 启动可视模式，再用 "as" 就可以选中一个句子。现在重复执行 "as"，就会继续选中更多的句子。最后你可以使用一个操作符去处理这些被选中的句子。        
+                
+
+
+###########复制：
+抽出 (yank)。"y" 命令可以把文字拷贝到寄存器中。然后用 "p" 命令粘贴到别处。
+"y" 是一个操作符，所以 "yw" 命令就是拷贝一个单词了。当然了，计数前缀也是有效的。要拷贝两个单词，就可以用 "y2w"
+"yw" 命令包括单词后面的空白字符。如果你不想要这个字符，改用 "ye" 命令。
+
+yy,Y	复制当前行,带换行符
+0y$		复制当前行，不带换行符
+
+y$		复制当前光标所在的位置到行尾,不会复制换行符
+y0		复制当前光标所在的位置到行首
+数字yy		复制若干行：3yy，即从当前光标+下两行。
+v+光标移动(h/j/k/l)	开始选取若干文字	
+y			选取文字后,y可以复制选取的文字
+
+###########剪切板：
+ 查看Vim是否支持clipboard和xterm_clipboard
+
+[root@Fedora fedora]# vim --version|grep clipboard
+-clientserver -clipboard +cmdline_compl +cmdline_hist +cmdline_info +comments
+-xterm_clipboard -xterm_save
+
+
+#可以看出不支持这两个功能
+
+[root@fedora fedora]# gvim --version|grep clipboard
++clientserver +clipboard +cmdline_compl +cmdline_hist +cmdline_info +comments
++xsmp_interact +xterm_clipboard -xterm_save
+
+
+#gvim是支持的
+
+如果不支持，到http://www.vim.org/download.php下载源码重新编译,我下载的是vim-7.3.tar.bz2
+./configure --prefix=/usr \
+--sysconfdir=/etc \
+--enable-tclinterp \
+--enable-pythoninterp \
+--enable-perlinterp \
+--enable-rubyinterp \
+--enable-cscope \
+--enable-multibyte \
+--enable-xim \
+--enable-gtk2-check \
+--enable-fontset \
+--with-x
+[root@fedora vim73]# make
+[root@fedora vim73]# make install
+
+
+对于window系统，系统各个文件和vim之间共享剪贴板：
+set clipboard+=unnamed
+
+对于X-windows 系统，有两个地方可以在程序间交换文本:
+1.当前选择区
+被存储在"*寄存器中，通过:reg可以看到
+通过"*y可以拷贝到该寄存器
+"*p可以粘贴
+
+它表示正被选中的文本。在 Vim 中，这表示可视区 (假定你正使用默认的设置)。
+选择区是程序拥有的，并在程序退出时 (如 Vim) 消失，因而数据也消失了。
+例如，你用鼠标在本文中选中一些文本。Vim 会自动切换到可视模式，并高亮这些文本。现在启动另一个 gVim，(由于没有指定文件名，它会显示出一个空窗口)。点击鼠标中键。被选中的文本就会被贴进来。"当前选择区" 会一直保持有效直到你选中其它文本。在另一个窗口中粘贴文本后，在这个窗口中选中一些文字，你会发现上一个窗口中选中的文字显示的方法跟原来有些区别了，这表示这些文字已经不是 "当前选择区" 了。
+
+
+2."真" 剪 贴 板(和系统剪贴板相通)
+被存储在"+寄存器中，通过:reg可以看到
+"+y可以拷贝
+"+p可以粘贴
+
+要把文字拷贝到真剪贴板，在一个 gVim 中选中一些文本，然后执行菜单命令Edit/Copy。这样文字就被拷贝到真剪贴板了。
+现在，切换到另一个 gVim，把光标停在某个位置，然后执行菜单命令 Edit/Paste菜单。你会看到真剪贴板中的内容被插入到当前的光标位置。
+
+你可以通过两个寄存器来使用 "当前选择区" 和 "真剪贴板" 两个剪贴板。
+"* 寄存器用于表示当前选择区。要使文本变成 "当前选择区"，只要使用可视模式即可。
+    例如，要选中一整行只要输入"V"。选中，即被放到当前的选择区寄存器中
+    要拷贝当前选择区的内容:
+        "*p
+        
+"+ 寄存器用于真剪贴板。例如，要把当前光标位置到行末的文本拷到真剪贴板:
+        "+y$
+        "+p
+
+即：如果想拷贝的东西，能在系统其他文件中使用，需要使用"+y来进行拷贝，通过"+p来进行粘贴
+例如：现通过v进入可视模式，然后移动选取文字，然后使用"+y来拷贝，最后使用"+p来进行粘贴
+
+
+x-window(x,x11):
+系统剪贴板的内容复制过来呢？简单！用另外一个快捷方式"Shift+Insert"就可以了，如果你在使用Gvim的话，直接用鼠标中键也可起到相同的作用。
+
+
+"+y 复制到系统剪切板
+"+p 把系统粘贴板里的内容粘贴到vim
+
+无论是vim内部抑或外部的复制（[y]ank）、删除（[d]elete）、粘贴（[p]ut），在vim中都是借助registers（寄存器）实现的，vim共有9类寄存器：
+无名（unnamed）寄存器：""，缓存最后一次操作内容；
+数字（numbered）寄存器："0 - "9，缓存最近操作内容，复制与删除有别；
+行内删除（small delete）寄存器："-，缓存行内删除内容；
+具名（named）寄存器："a - "z或"A - "Z，指定时可用；
+只读（read-only）寄存器：":, "., "%, "#，分别缓存最近命令、最近插入文本、当前文件名、当前交替文件名；
+表达式（expression）寄存器："=，只读，用于执行表达式命令；
+选择及拖拽（selection and drop）寄存器："*, "+, "~，存取GUI选择文本，可用于与外部应用交互，使用前提为系统剪切板（clipboard）可用；
+黑洞（black hole）寄存器："_，不缓存操作内容（干净删除）；
+模式寄存器（last search pattern）："/，缓存最近的搜索模式。
+
+
+
+
+	
+###########命令组合模式: 操作符－动作
+	
+操作符d-动作:
+        (快捷键x)dl  (删除当前光标下的字符)
+        (快捷键X)dh  (删除光标左边的字符)
+        (快捷键D)d$  (删除到行尾)
+
+
+操作符c
+        (快捷键C)c$  (修改到行尾,自动进入插入模式)
+        (快捷键s)cl  (删除当前光标下的字符,自动进入插入模式)
+        (快捷键X)dh  (删除光标左边的字符,自动进入插入模式)
+        (快捷键S)cc  (修改一整行,自动进入插入模式)	
+	
+d3w和3dw的区别：
+d3w 表示一次删除三个单词
+3dw 表示删除一个单词三次
+
+
+###########粘贴：
+p		如果复制的是行,则在当前行的下一行粘贴复制的内容,如果复制的是一段文字,则在当前光标的后面粘贴复制的内容
+P		在光标的上一行粘贴
+
+###########撤消和重做：
+u		撤消刚才的操作
+U 		大写的U,行撤销命令撤销所有在最近编辑的行上的操作,输入该命令两次取消前一个 U(注意,u可以撤消U，U被当作一个动作来对待的)
+ctrl+r		重做，redo,和撤消命令u相反
+. 		重复命令，重复一个修改,只要是对文本进行了修改(注意，必须是进行了修改)，这个命令会重复前面的操作，重复执行刚执行的那个命令,例如，执行了x命令，然后输入.会持续执行x命令
+                例如：输入模式下，输入了hello,然后esc返回命令模式，摁.还会输入hello
+                
+:reg 		查看剪贴板中的内容
+
+###########文件的保存与退出：
+:w 		保存当前内容
+:w!		强制保存文件
+:q 		退出(如果改变了文件，而没有保存，这个命令无法退出,该命令只能对于未修改的文件或者修改后的文件，已经保存过了)
+:q!		强制退出(如果文件保存过了，则正常退出，如果文件没有保存，则强制退出，不保存)
+:wq,:x,ZZ 		保存并退出
+:e!		内容恢复到上一次保存文件的时候
+:w文件名	编辑数据后另存为一个文件
+:r文件名	编辑数据时，读入另一个文件，内容会增加在当前光标的后面
+:!命令		暂时执行当前系统命令，例如：ipconfig,在window下执行windows命令，linux下执行linux的shell命令
+:r!命令		把执行的命令读入到当前文档内(光标的下一行)
+
+
+
+
+同时打开多个文件：
+:split		水平划分当前窗口
+:vsplit		垂直划分当前窗口
+在多个窗口文件中轮换：
+摁下ctrl+w,送开，然后摁下方向键hjkl或者箭头方向键,则根据方向在多个文件中替换
+
+
+
+多标签页：
+:tabnew (文件名)					新建标签页
+:tabe							新建标签页
+:tabs 							显示已打开标签页的列表
+:tabc 							关闭当前标签页
+:tabn							移动到下一个标签页
+:tabp						 	移动到上一个标签页
+:tabfirst 						移动到第一个标签页
+:tablast 						移动到最后一个标签页
+gt								移动到下一个标签页
+gT								移动到上一个标签页
+
+
+
+
+########################################################
+##############进入可视模式/选取模式/Visual mode:
+########################################################
+1."v" 命令启动可视模式:
+例如，要从一个单词的一半删除到下一个单词的一半:
+This is an examination sample of visual mode 
+               ---------->
+                 velllld
+
+2.如果你想对整行做操作:
+"V" 命令来启动可视模式。你会发现在你作任何移动
+之前，整行都被高亮显示了。左右移动不会有任何效果。而通过上下移动，你可以一次选
+择多行。
+    例如，用 "Vjj" 可以选中三行
+
+3.列 块 选 择:
+CTRL-V 启动可视模式
+如果你要处理一个矩形块内的文本 。这在处理表格时非常有用。
+
+
+4.移 动 到 另 一 端:
+ctrl+v模式下：
+如果你在可视模式下选中了一些文字，然后你又发现你需要改变被选择的文字的另一端，
+用 "o" 命令即可 (提示: "o" 表示 other end)，光标会移动到被选中文字的另一端，现
+在你可以移动光标去改变选中文字的开始点了。再按 "o" 光标还会回到另一端。
+
+当使用列块可视模式的时候，你会有四个角，
+"o" 只是把你移到对角上。
+"O" 则能移到同一行的另一个角上。
+
+v模式下：
+o会移动到最开始，O不起作用，没有同行另一角.
+备注: "o" 和 "O" 在可视模式下与在普通模式下的作用有很大的不同；在普通模式下，它们的作用是在光标后或前加入新的一行。
+
+
++-------------------------------------------------------------------------+
+文件编码设置：
+
+Vim 有四个跟字符编码方式有关的选项，encoding、fileencoding、fileencodings、termencoding (这些选项可能的取值请参考 Vim 在线帮助 :help encoding-names)，它们的意义如下:
+    encoding: Vim 内部使用的字符编码方式，包括 Vim 的 buffer (缓冲区)、菜单文本、消息文本等。
+    fileencoding: Vim 中当前编辑的文件的字符编码方式，Vim 保存文件时也会将文件保存为这种字符编码方式 (不管是否新文件都如此)。
+    fileencodings: Vim 启动时会按照它所列出的字符编码方式逐一探测即将打开的文件的字符编码方式，并且将 fileencoding 设置为最终探测到的字符编码方式。因此最好将 Unicode 编码方式放到这个列表的最前面，将拉丁语系编码方式 latin1 放到最后面。
+    termencoding: Vim 所工作的终端 (或者 Windows 的 Console 窗口) 的字符编码方式。这个选项在 Windows 下对我们常用的 GUI 模式的 gVim 无效，而对 Console 模式的 Vim 而言就是 Windows 控制台的代码页，并且通常我们不需要改变它。
+
+最好用英文菜单和提示最好，可以免去下面对菜单和提示信息（2，3部分）的设置，如果想用英文菜单和提示在安装gvim的时候，将支持本地语言的选项去掉。
+解决vim文件乱码，打开文件乱码，菜单，提示信息乱码：
+有四个跟字符编码方式有关的选项，encoding、fileencoding、fileencodings、termencoding
+
+配置文件:
+	linux中修改.vimrc（在win中修改_vimrc,windows系统也可以在vim菜单项中：编辑>启动设定，直接打开_vimrc文件）
+
+设置：
+1.设置文件的编码
+	set encoding=utf-8 "设置文件显示内容的编码 
+	set termencoding=utf-8
+	set fileencoding=utf-8
+	set fileencodings=ucs-bom,utf-8,chinese,cp936
+
+2.vim的菜单乱码解决：
+	(在 _vimrc文件里以上的中文设置后加上下列命令)
+	source $VIMRUNTIME/delmenu.vim
+	source $VIMRUNTIME/menu.vim
+
+3.vim提示信息乱码的解决
+	(在 _vimrc文件里以上的中文设置后加上下列命令)
+	language messages zh_CN.utf-8
+
++-------------------------------------------------------------------------+
+
+
+在特定的位置允许使用退格键(<--backspace)
+
+'backspace' 'bs'        字符串  (缺省为 "")
+                        全局
+                        {Vi 无此功能}
+        影响 <BS>、<Del>、CTRL-W 和 CTRL-U 在插入模式下的工作方式。它是逗号分
+        隔的项目列表。每个项目允许一种退格删除的内容:
+        值      效果    
+        indent  允许在自动缩进上退格
+        eol     允许在换行符上退格 (连接行)
+        start   允许在插入开始的位置上退格；CTRL-W 和 CTRL-U 到达插入开始的位
+                置时停留一次。
+        如果该值为空，使用 Vi 兼容的退格方式。
+        为了和 5.4 及更早的版本后向兼容:
+        值      效果    
+          0     等同于 ":set backspace=" (Vi 兼容)
+          1     等同于 ":set backspace=indent,eol"
+          2     等同于 ":set backspace=indent,eol,start"
+indent: 如果用了:set indent,:set ai 等自动缩进，想用退格键将字段缩进的删掉，必须设置这个选项。否则不响应。
+eol:如果插入模式下在行开头，想通过退格键合并两行，需要设置eol。
+start：要想删除此次插入前的输入，需设置这个。
+
+
+
++-------------------------------------------------------------------------+
+vim中执行系统命令:
+1.通过:!命令,的方式来执行系统命令,执行的命令结果会显示在vim的底端
+例如:
+:!ls -al |more
+
+2.可以在vim中打开一个终端，用来执行一系列的命令，此时vim并没有退出,当:
+例如：
+:!bash	会进入终端,
+:!sh    也会进入一个终端，终端是系统默认的bash(不是很好用)
+退出终端，可以通过exit命令，或者ctrl+d(终端退出快捷键)
+
+3.r!命令,把命令的输入结果，插入到当前vim行的下一行
+例如:
+:r!ls	会把ls的输出结果，插入到vim中当前光标所在行的下一行
+
+4.起始行号,结束行号!command
+将起始行号和结束行号指定的范围中的内容删除,shell命令把执行结果,插入到被删除的内容的地方.
+例如:
+:3,5!ls 
+
+5.起始行号,结束行号w !command
+将起始行号和结束行号所指定的范围的内容作为命令command的输入。不会改变当前编辑的文件的内容
+例如
+:62,72 w !sort，将62行到72行的内容进行排序，但排序的结果并不会直接输出到当前编辑的文件中，而是显示在vim敲命令的区域
+:62 w !bash，将会把第62行的内容作为bash命令来执行并显示结果，而且不会改变当前编辑的文件的内容
+:. w !bash，将当前行的内容作为bash命令来执行
+
+例如52行内容为ls -l
+:52 w !bash就跟执行!ls -l是一样的效果，如果你用的shell是bash shell
+:52 !bash，那么会把第52行的内容也就是ls -l作为命令执行，同时命令的输出结果会替换第52行的内容，注意其中的区别。
+将shell命令command的结果插入到当前行的下一行
+
+
+
++-------------------------------------------------------------------------+
+vim文件的的配置文件举例：
+
+"set shortmess=atI   			" 启动的时候不显示那个援助乌干达儿童的提示  
+"winpos 5 5          			" 设定窗口位置  
+"set lines=40 columns=155    	" 设定窗口大小 
+syntax on                   	" 自动语法高亮
+colorscheme darkblue         	" 设定配色方案
+set cursorline              	" 突出显示当前行
+
+	
+set  wrap						" 设置自动换行
+set ai							" 设置自动缩近
+set ignorcecase					" 搜索忽略大小写
+set go=							" 去除菜单栏和工具栏
+
+
+
+
+set foldenable      " 允许折叠  
+set foldmethod=manual   " 手动折叠  
+"set background=dark "背景使用黑色 
+" 设置当文件被改动时自动载入
+set autoread
+" quickfix模式
+autocmd FileType c,cpp map <buffer> <leader><space> :w<cr>:make<cr>
+"代码补全 
+set completeopt=preview,menu 
+"允许插件  
+filetype plugin on
+"make 运行
+:set makeprg=g++\ -Wall\ \ % "自动保存
+set autowrite
+set magic                   " 设置魔术
+set guioptions-=T           " 隐藏工具栏
+set guioptions-=m           " 隐藏菜单栏
+set foldcolumn=0
+set foldmethod=indent 
+set foldlevel=3 
+set foldenable              " 开始折叠
+" 语法高亮
+set syntax=on
+" 去掉输入错误的提示声音
+set noeb
+" 在处理未保存或只读文件的时候，弹出确认
+set confirm
+" Tab键的宽度
+set tabstop=4
+" 统一缩进为4
+set softtabstop=4
+set shiftwidth=4
+" 不要用空格代替制表符
+set noexpandtab
+" 在行和段开始处使用制表符
+set smarttab
+"行内替换
+set gdefault
+"编码设置
+set enc=utf-8
+set fencs=utf-8,ucs-bom,shift-jis,gb18030,gbk,gb2312,cp936
+"语言设置
+set langmenu=zh_CN.UTF-8
+set helplang=cn
+" 命令行（在状态行下）的高度，默认为1，这里是2
+set cmdheight=2
+" 侦测文件类型
+filetype on
+" 载入文件类型插件
+filetype plugin on
+" 为特定文件类型载入相关缩进文件
+filetype indent on
+" 保存全局变量
+set viminfo+=!
+" 带有如下符号的单词不要被换行分割
+set iskeyword+=_,$,@,%,#,-
+" 字符间插入的像素行数目
+set linespace=0
+" 增强模式中的命令行自动完成操作
+set wildmenu
+" 使回格键（backspace）正常处理indent, eol, start等
+set backspace=2
+" 允许backspace和光标键跨越行边界
+set whichwrap+=<,>,h,l
+" 可以在buffer的任何地方使用鼠标（类似office中在工作区双击鼠标定位）
+set mouse=a
+set selection=exclusive
+set selectmode=mouse,key
+" 通过使用: commands命令，告诉我们文件的哪一行被改变过
+set report=0
+" 在被分割的窗口间显示空白，便于阅读
+set fillchars=vert:\ ,stl:\ ,stlnc:\
+" 高亮显示匹配的括号
+set showmatch
+" 匹配括号高亮的时间（单位是十分之一秒）
+set matchtime=1
+" 光标移动到buffer的顶部和底部时保持3行距离
+set scrolloff=3
+" 为C程序提供自动缩进
+set smartindent
+" 高亮显示普通txt文件（需要txt.vim脚本）
+au BufRead,BufNewFile *  setfiletype txt
+"自动补全
+:inoremap ( ()<ESC>i
+:inoremap ) <c-r>=ClosePair(')')<CR>
+":inoremap { {<CR>}<ESC>O
+":inoremap } <c-r>=ClosePair('}')<CR>
+:inoremap [ []<ESC>i
+:inoremap ] <c-r>=ClosePair(']')<CR>
+:inoremap " ""<ESC>i
+:inoremap ' ''<ESC>i
+function! ClosePair(char)
+	if getline('.')[col('.') - 1] == a:char
+		return "\<Right>"
+	else
+		return a:char
+	endif
+endfunction
+filetype plugin indent on 
+"打开文件类型检测, 加了这句才可以用智能补全
+set completeopt=longest,menu
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+
+
+
+
+
+
+
+
+
+######################################################################
+###########################eclipe和vim集成:http://eclim.org/
+######################################################################
+
+######################################################################
+###########################http://vrapper.sourceforge.net/home/
+######################################################################
+下载插件后，直接解压(plugins,features)到myelcipse/dropins目录下，重启及可
+
+
+######################################################################
+###########################vim中的NERDtee插件设定
+######################################################################
+"NERDtee插件设定
+let NERDChristmasTree=1
+let NERDTreeAutoCenter=1
+let NERDTreeBookmarksFile=$VIM.'\Data\NerdBookmarks.txt'
+let NERDTreeMouseMode=2
+let NERDTreeShowBookmarks=1
+let NERDTreeShowFiles=1
+let NERDTreeShowHidden=1
+let NERDTreeShowLineNumbers=1
+let NERDTreeWinPos='left'
+let NERDTreeWinSize=31
+"映射f3,对应着NERDTreeMIrrow和NERDTreeToggle两个命令"
+map <F3> :NERDTreeMirror<CR>
+map <F3> :NERDTreeToggle<CR>
+
+
+
+
+
+
+######################################################################
+###########################vim中的代码自动补全插件设定
+######################################################################
+ctrl+然后xo	代码自动补全
+插件：
+1.英语单词的自动补全功能：
+	配置文件中添加如下内容：
+	set complete+=k
+	set dict=C:\Program\ Files\Vim\vimfiles\dict\usualwords.dict
+	拷贝词典到指定位置
+	自动补全功能键，ctrl+x再ctrl+k
+	
+
+
+

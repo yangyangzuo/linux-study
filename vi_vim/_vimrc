@@ -1,0 +1,87 @@
+"去掉对于vi的兼容性相关问题,
+"例如：在vi中u命令只能撤消一次，在vim中可以撤消任意次
+"如果没有关闭兼容性,则在使用vim的时候，u命令只能撤消一次
+set nocompatible
+
+
+
+"语法高亮
+syntax on
+
+"设置配色方案,desert,solarized,darkblue
+colorscheme desert
+
+"高亮当前行
+set cursorline
+"高亮当前列
+set cursorcolumn
+
+"设置文件的编码
+set encoding=utf-8 "设置文件显示内容的编码 
+set termencoding=utf-8
+set fileencoding=utf-8
+set fileencodings=ucs-bom,utf-8,chinese,cp936
+
+
+"设置字体和大小
+set guifont=Courier_New:h10		" 设置字体为courier new,这里空格用_代替，字体大小为13号，h表示字体的高度为10
+
+
+
+
+
+
+"禁止生成临时文件
+"禁止生成交换文件和备份文件
+set nobackup
+set noswapfile
+
+
+
+"共享剪贴板,windows下适用,添加了如下配置后，可以直接通过p命令和系统的剪贴扳交互
+"在linux系统中，需要使用"+p来和系统的剪贴板交互
+set clipboard+=unnamed
+
+
+"显示当前光标位于文档内容中的详细位置信息,可以通过ctrl+g 或者g ctrl+g来显示
+"覆盖set ruler设置,这里定义的更详细
+set statusline=%f\ [行:%l/%L,%p%%,列:%v]\ %{strftime(\"%Y/%m/%d\ %H:%M\")}
+set laststatus=2
+
+
+
+"显示行号
+set number
+
+"搜索相关
+"文本搜索忽略大小写
+set ignorecase
+"高亮所有匹配的搜索结果
+set hlsearch
+"在输入搜索单词的时候，会逐个高亮和当前匹配的字符，可以防止输入错误
+set incsearch
+"设置搜索到文档底部后，自动跳转到文档的开始
+set wrapscan
+
+"允许在特定的位置使用退格键backspace,默认值就是这个,等价于set backspace=indent,eol,start
+set backspace=2
+
+"设置文本的自动缩进，当使用回车，或者o,O时，文本自动和上一行缩进对齐
+set autoindent
+"设置tab键的宽度为4个字符
+set tabstop=4
+"设置通过>>自动缩进时的宽度为4个字符
+set shiftwidth=4
+
+
+
+"'history' 'hi'          数值型  (Vim 缺省: 20，Vi 缺省: 0) 全局 {Vi 无此功能}
+"":" 命令的历史和最近的搜索模式的历史会被记住。本选项决定每个历史分别记 住多少项 (见 |cmdline-editing|)。
+"这个命令保存 50 个命令和 50 个查找模式的历史
+"通过:history可以显示当前保存的命令
+set history=50
+
+"在 Vim 窗口右下角，标尺的右边显示未完成的命令
+set showcmd
+
+
