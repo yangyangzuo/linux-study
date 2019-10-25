@@ -4,7 +4,6 @@ http://vimcdoc.sourceforge.net/doc/fold.html
  
 
 
-
 1.手动折叠
 
 例如：
