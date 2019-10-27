@@ -1,0 +1,23 @@
+documents:
+
+
+
+description:
+  
+
+help:
+    
+    
+
+example:
+
+    #关机
+    init 0
+    
+    #重启
+    inti 6
+
+
+
+
+

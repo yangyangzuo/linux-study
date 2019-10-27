@@ -25,6 +25,7 @@ example:
     usermod -G 组 用户名
 
     #修改用户登录的shell(不同的shell,显示的内容和文字颜色可能不同)
+    #直接输入也可以切换,例如:bash切换为bash,zsh切换为zsh
     usermod -s /bin/bash
     
     #注意默认使用useradd添加的用户是没有权限使用sudo以root身份执行命令的,可以使用如下命令把用户添加到sudo附加组
