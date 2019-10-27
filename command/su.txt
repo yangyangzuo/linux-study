@@ -26,6 +26,12 @@ example:
     #等价于
     su root
 
+    #切换为root用户并且，切换到家目录/root
+    su - root
+    #或者
+    su -
+
+
     #默认情况下,root账户在每次开机的时候密码都会更改,需要对root用户设置密码后,才可以切换到root用户
     sudo passwd root
 

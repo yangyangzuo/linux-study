@@ -1,8 +1,5 @@
-https://www.gnu.org/software/coreutils/manual/
-或者
-终端下通过infocommand查看文档
-进入info文档后,通过H可以查看所有的可查看文档command
-移动箭头到coreutils,回车即可查看所有的文档信息
+https://www.gnu.org/doc/doc.html
+https://www.gnu.org/software/software.html
 
 
 help:
