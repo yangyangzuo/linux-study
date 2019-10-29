@@ -24,12 +24,13 @@ CUT(1)                                                       User Commands      
 
 NAME
        cut - remove sections from each line of files
-
+       剪切-从文件的每一行中删除节
 SYNOPSIS
-       cut OPTION... [FILE]...
+       cut OPTION... [FILE]...     
 
 DESCRIPTION
        Print selected parts of lines from each FILE to standard output.
+       将每个FILE中选定的行部分打印到标准输出。
 
        With no FILE, or when FILE is -, read standard input.
 
@@ -40,12 +41,86 @@ DESCRIPTION
 
        -c, --characters=LIST
               select only these characters
+              #以字符为单位进行分割,截取
+
+              #截取每行的第一个字符
+              ➜  nfancurve git:(master) ✗ cut -c1 /etc/passwd
+              r
+              d
+              b
+              s
+              s
+              g
+              ...
+
+              #截取每行的第2个到第5个字符
+              ➜  nfancurve git:(master) ✗ cut -c2-5 /etc/passwd
+              oot:
+              aemo
+              in:x
+              ys:x
+              ync:
+              ames
+              an:x
+              p:x:
+              ...
+
+              #截取每行的第2个和第5个字符
+              ➜  nfancurve git:(master) ✗ cut -c2,5 /etc/passwd
+              o:
+              ao
+              ix
+              yx
+              y:
+              as
+              ax
+              ...
+
+              #截取每行的第5个字符到行尾
+              ➜  nfancurve git:(master) ✗ cut -c5- /etc/passwd
+              on:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+              x:2:2:bin:/bin:/usr/sbin/nologin
+              x:3:3:sys:/dev:/usr/sbin/nologin
+              :x:4:65534:sync:/bin:/bin/sync
+              s:x:5:60:games:/usr/games:/usr/sbin/nologin
+              ....
+
+
+
 
        -d, --delimiter=DELIM
               use DELIM instead of TAB for field delimiter
+              自定义分隔符,默认为制表符\t
 
        -f, --fields=LIST
               select only these fields;  also print any line that contains no delimiter character, unless the -s option is specified
+              与-d一起使用,制定截取哪个区域
+
+              #截取以冒号(-d:)分割的每行的第一列(-f1)
+              ➜  nfancurve git:(master) ✗ cut -d : -f1 /etc/passwd
+              root
+              daemon
+              bin
+              sys
+              sync
+              games
+              man
+              lp
+              .....
+
+              #截取以冒号(-d:)分割的每行的第1列和第7列(-f1,7)
+              ➜  nfancurve git:(master) ✗ cut -d: -f1,3 /etc/passwd
+              root:/bin/bash
+              daemon:/usr/sbin/nologin
+              bin:/usr/sbin/nologin
+              sys:/usr/sbin/nologin
+              sync:/bin/sync
+              games:/usr/sbin/nologin
+              man:/usr/sbin/nologin
+              lp:/usr/sbin/nologin
+              .....
+
+
 
        -n     (ignored)
 
