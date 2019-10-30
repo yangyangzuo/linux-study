@@ -1,0 +1,108 @@
+documents:
+    
+
+
+
+
+description:
+       tee工具是从标准输入读取,并且写入(覆盖)到标准输出和文件
+
+
+help:
+    tee
+    tee --h
+    tee --help
+    man tee
+    info tee
+
+
+TEE(1)                                                        User Commands                                                       TEE(1)
+
+NAME
+       tee - read from standard input and write to standard output and files
+       从标准输入读取,写入(覆盖)到标准输出和文件中(屏幕和文件中)
+
+SYNOPSIS
+       tee [OPTION]... [FILE]...
+
+       #从管道中读取,显示到屏幕上
+       ➜  Desktop echo hello world | tee
+       hello world
+
+       #从管道中读取,显示到屏幕和文件上
+       ➜  Desktop echo helloworld | tee 1.txt
+       helloworld
+       ➜  Desktop cat 1.txt 
+       helloworld
+
+       #显示到屏幕,并覆盖1.txt
+       ➜  Desktop cat 1.txt 
+       helloworld
+       ➜  Desktop echo 111 | tee 1.txt
+       111
+       ➜  Desktop cat 1.txt 
+       111
+
+       #显示到屏幕,并追加到1.txt
+       ➜  Desktop cat 1.txt 
+       111
+       ➜  Desktop echo 222 | tee -a 1.txt 
+       222
+       ➜  Desktop cat 1.txt 
+       111
+       222
+
+
+
+
+DESCRIPTION
+       Copy standard input to each FILE, and also to standard output.
+
+       -a, --append
+              append to the given FILEs, do not overwrite
+              追加到制定文件中,而不覆盖
+
+
+       -i, --ignore-interrupts
+              ignore interrupt signals
+
+       -p     diagnose errors writing to non pipes
+
+       --output-error[=MODE]
+              set behavior on write error.  See MODE below
+
+       --help display this help and exit
+
+       --version
+              output version information and exit
+
+   MODE determines behavior with write errors on the outputs:
+       'warn' diagnose errors writing to any output
+
+       'warn-nopipe'
+              diagnose errors writing to any output not a pipe
+
+       'exit' exit on error writing to any output
+
+       'exit-nopipe'
+              exit on error writing to any output not a pipe
+
+       The  default MODE for the -p option is 'warn-nopipe'.  The default operation when --output-error is not specified, is to exit im‐
+       mediately on error writing to a pipe, and diagnose errors writing to non pipe outputs.
+
+AUTHOR
+       Written by Mike Parker, Richard M. Stallman, and David MacKenzie.
+
+REPORTING BUGS
+       GNU coreutils online help: <https://www.gnu.org/software/coreutils/>
+       Report tee translation bugs to <https://translationproject.org/team/>
+
+COPYRIGHT
+       Copyright © 2018 Free Software Foundation, Inc.  License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+       This is free software: you are free to change and redistribute it.  There is NO WARRANTY, to the extent permitted by law.
+
+SEE ALSO
+       Full documentation at: <https://www.gnu.org/software/coreutils/tee>
+       or available locally via: info '(coreutils) tee invocation'
+
+GNU coreutils 8.30                                            January 2019                                                        TEE(1)
