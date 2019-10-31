@@ -289,7 +289,7 @@ diffutils 3.7                                                 December 2018     
      7	world
 
 
-#正常模式/默认模式比较文件的不同
+#正常模式/默认模式比较文件的不同   
 ➜  Desktop diff file1 file2
 1c1,2         #第一个文件(c=change),第一个的第1行改变,才能和第2个文件的第1,第2行匹配
 < aaaa        #小于号<,表示左边文件(file1)文件的内容

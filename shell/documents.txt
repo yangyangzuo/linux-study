@@ -1,5 +1,38 @@
-https://www.gnu.org/software/bash/manual/html_node/index.html
-    https://www.gnu.org/ -> software -> bash -> https://www.gnu.org/software/bash/ -> documentation -> https://www.gnu.org/software/bash/manual/
-    -> https://www.gnu.org/software/bash/manual/html_node/index.html
+bash:
+    https://www.gnu.org/software/bash/manual/html_node/index.html
+    https://www.gnu.org/ -> software -> bash -> 
+    https://www.gnu.org/software/bash/ -> documentation -> https://www.gnu.org/software/bash/manual/-> 
+    https://www.gnu.org/software/bash/manual/html_node/index.html
+
+
+    
+
+
+shell分类:
+    1.sh(bourne shell):由ssteve bourne开发
+    2.csh(c shell):
+    3.ksh(k shell):很多unix系统标准的shell,在这些系统上/bin/sh往往指向/bin/ksh
+    4.tcsh(TENEX C shell):csh的增强版本,引入了命令补全功能,在freebsd,macosx等系统上替代了csh
+    5.bash(bournce again shell):gnu开发的shell,主要目标是与POSIX保持一致,同时兼容sh,是各种linux发行版标准配置的shell,linux系统中/bin/sh往往指向/bin/bash
+
+    #ubuntu默认指向dash
+    ➜  ~ ls -l /bin/sh
+    lrwxrwxrwx 1 root root 4 Oct  7 03:14 /bin/sh -> dash
+
+    #passwd每行的最后一列显示了用户使用的shell
+    ➜  ~ cat /etc/passwd
+    root:x:0:0:root:/root:/bin/bash
+    daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+    bin:x:2:2:bin:/bin:/usr/sbin/nologin
+    sys:x:3:3:sys:/dev:/usr/sbin/nologin
+    sync:x:4:65534:sync:/bin:/bin/sync
+
+    #查看当前系统默认使用的shell
+    echo $SHELL
+
+    #shell的切换,输入对应的shell名字即可
+    bash
+    dash
+    zsh
 
 
