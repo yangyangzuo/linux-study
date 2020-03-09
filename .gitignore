@@ -7,3 +7,5 @@ node_modules
 视频
 test
 教程
+#忽略c语言编译的可执行文件
+.o
