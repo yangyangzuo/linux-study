@@ -1,0 +1,447 @@
+    1.Vertex Specification(顶点规范/规格/明细单/说明书,按一定规则排列的顶点数据)
+             |
+            \|/
+    -----------------------------------------------------------------
+    //着色器处理阶段
+    2.Vertex Shader(顶点着色器)
+             |
+            \|/
+    3.Tessellation(细分)
+             |
+            \|/
+    4.Geometry Shader(几何着色器)
+    ------------------------------------------------------------------
+             |
+            \|/
+    5.Vertex Post Processing(顶点后期处理/后置处理)
+             |
+            \|/
+    6.Primitive Assembly(图元装配)
+             |
+            \|/
+    7.Rasterization(光栅化)
+             |
+            \|/
+    ------vertext shader---------------------------------------------- 
+    //着色器处理阶段
+    8.Fragment Shader(片元着色器)
+    ------------------------------------------------------------------
+             |
+            \|/
+    9.Per-sample Operations(逐样本/片元操作)
+
+
+
+
+
+
+
+
+
+
+
+
+
+     
+https://www.khronos.org/opengl/wiki/Rendering_Pipeline_Overview
+Pipeline
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    The OpenGL rendering pipeline is initiated when you perform a rendering operation. 
+    执行渲染操作时，将启动OpenGL渲染管道。
+    Rendering operations require the presence of a properly-defined vertex array object and a linked Program Object or Program Pipeline Object 
+    which provides the shaders for the programmable pipeline stages.
+    渲染操作需要存在正确定义的顶点数组对象以及链接的程序对象或程序管线对象(该对象为可编程管线阶段提供着色器)
+    (shader被编译并链接为一个program)
+
+    Once initiated, the pipeline operates in the following order:
+    一旦启动，管道将按以下顺序运行：
+
+    1.Vertex Processing:
+    顶点处理:
+        1.1.Each vertex retrieved from the vertex arrays (as defined by the VAO) is acted upon by a Vertex Shader. Each vertex in the stream is processed in turn into an output vertex.
+        从顶点数组（由VAO(vertexArrayObject)定义）中检索到的每个顶点都受“顶点着色器”作用。流中的每个顶点依次被处理为输出顶点。
+        1.2.Optional primitive tessellation stages.
+        可选的图元细分阶段。
+        1.3.Optional Geometry Shader primitive processing. The output is a sequence of primitives.
+        可选的Geometry Shader图元处理。输出是一系列图元
+    2.Vertex Post-Processing, the outputs of the last stage are adjusted or shipped to different locations.
+    顶点后置/后期处理，最后阶段的输出被调整或运送到不同的位置
+        Transform Feedback happens here.
+        顶点变换发生在这里
+        Primitive Clipping, the perspective divide, and the viewport transform to window space.
+        原始裁剪，透视图划分和视口转换为窗口空间。
+    3.Primitive Assembly
+    图元装配
+    4.Scan conversion and primitive parameter interpolation, which generates a number of Fragments.
+    扫描转换和图元参数插值，生成许多片段。
+    5.A Fragment Shader processes each fragment. Each fragment generates a number of outputs.
+    片段着色器处理每个片段。每个片段都会生成许多输出。
+    6.Per-Sample_Processing, including but not limited to:
+    Per-Sample_Processing，包括但不限于
+        Scissor Test(剪裁测试)
+        Stencil Test(模板测试)
+        Depth Test(深度测试)
+        Blending(混合)
+        Logical Operation(逻辑运算)
+        Write Mask(写蒙版)
+ 
+
+
+Vertex Specification
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    Main article: Vertex Specification
+    The process of vertex specification is where the application sets up an ordered list of vertices to send to the pipeline. These vertices define the boundaries of a primitive.
+    顶点数据处理的过程是应用程序设置要发送到管线的顶点有序列表。这些顶点定义了图元的边界。
+    Primitives are basic drawing shapes, like triangles, lines, and points. Exactly how the list of vertices is interpreted as primitives is handled via a later stage.
+    图元是基本的图形形状，例如三角形，直线和点。顶点列表如何确切地解释为图元，将在后面的阶段进行处理。
+    This part of the pipeline deals with a number of objects like Vertex Array Objects and Vertex Buffer Objects. 
+    Vertex Array Objects define what data each vertex has, while Vertex Buffer Objects store the actual vertex data itself.
+    流水线的这一部分处理许多对象，例如“顶点数组对象”和“顶点缓冲对象”。顶点数组对象定义每个顶点具有哪些数据，而顶点缓冲区对象存储实际顶点数据本身。
+    (顶点数组对象存储了所有的顶点数据信息,顶点缓冲区对象对应某个顶点的数据??????????)
+    A vertex's data is a series of attributes. Each attribute is a small set of data that the next stage will do computations on. 
+    While a set of attributes do specify a vertex, there is nothing that says that part of a vertex's attribute set needs to be a position or normal. 
+    Attribute data is entirely arbitrary; the only meaning assigned to any of it happens in the vertex processing stage.
+    顶点的数据是一系列属性。每个属性都是下一阶段要进行计算的一小组数据。
+    尽管一组属性确实指定了一个顶点，但没有什么能说出顶点属性集的一部分需要是位置或法线。
+    属性数据完全是任意的；分配给其中任何一个的唯一含义发生在顶点处理阶段。
+
+    Vertex Rendering
+    Main article: Vertex Rendering
+    Once the vertex data is properly specified, it is then rendered as a Primitive via a drawing command.
+    正确指定顶点数据后，即可通过绘图命令将其渲染为图元。
+
+
+
+ 
+
+
+Vertex Processing
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    Vertices fetched due to the prior vertex rendering stage begin their processing here. 
+    The vertex processing stages are almost all programmable operations. This allows user code to customize the way vertices are processed. 
+    Each stage represents a different kind of shader operation.
+    由先前的顶点渲染阶段而获取的顶点在此处开始其处理。
+    顶点处理阶段几乎是所有可编程操作。这允许用户编码来自定义顶点的处理方式。
+    每个阶段代表不同种类的着色器操作。
+
+
+    Many of these stages are optional.
+    这些阶段中的许多阶段都是可选的。
+
+    Vertex shader
+    Main article: Vertex Shader
+    Vertex shaders perform basic processing of each individual vertex. Vertex shaders receive the attribute inputs from the vertex rendering and converts each incoming vertex into a single outgoing vertex based on an arbitrary, user-defined program.
+
+    Vertex shaders can have user-defined outputs, but there is also a special output that represents the final position of the vertex. If there are no subsequent vertex processing stages, vertex shaders are expected to fill in this position with the clip-space position of the vertex, for rendering purposes.
+
+    One limitation on vertex processing is that each input vertex must map to a specific output vertex. And because vertex shader invocations cannot share state between them, the input attributes to output vertex data mapping is 1:1. That is, if you feed the exact same attributes to the same vertex shader in the same primitive, you will get the same output vertex data. This gives implementations the right to optimize vertex processing; if they can detect that they're about to process a previously processed vertex, they can use the previously processed data stored in a post-transform cache. Thus they do not have to run the vertex processing on that data again.
+
+    Vertex shaders are not optional.
+
+    Tessellation
+    Tessellation
+    Core in version	4.6
+    Core since version	4.0
+    Core ARB extension	ARB_tessellation_shader
+    Main article: Tessellation Shader
+    Primitives can be tessellated using two shader stages and a fixed-function tessellator between them. The Tessellation Control Shader (TCS) stage comes first, and it determines the amount of tessellation to apply to a primitive, as well as ensuring connectivity between adjacent tessellated primitives. The Tessellation Evaluation Shader (TES) stage comes last, and it applies the interpolation or other operations used to compute user-defined data values for primitives generated by the fixed-function tessellation process.
+
+    Tessellation as a process is optional. Tessellation is considered active if a TES is active. The TCS is optional, but a TCS can only be used alongside a TES.
+    Geometry Shader
+    Main article: Geometry Shader
+    Geometry shaders are user-defined programs that process each incoming primitive, returning zero or more output primitives.
+
+    The input primitives for geometry shaders are the output primitives from a subset of the Primitive Assembly process. So if you send a triangle strip as a single primitive, what the geometry shader will see is a series of triangles.
+
+    However, there are a number of input primitive types that are defined specifically for geometry shaders. These adjacency primitives give GS's a larger view of the primitives; they provide access to vertices of primitives adjacent to the current one.
+
+    The output of a GS is zero or more simple primitives, much like the output of primitive assembly. The GS is able to remove primitives, or tessellate them by outputting many primitives for a single input. The GS can also tinker with the vertex values themselves, either doing some of the work for the vertex shader, or just to interpolate the values when tessellating them. Geometry shaders can even convert primitives to different types; input point primitives can become triangles, or lines can become points.
+
+    Geometry shaders are optional.
+
+
+
+Vertex post-processing
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    Main article: Vertex Post-Processing
+    After the shader-based vertex processing, vertices undergo a number of fixed-function processing steps.
+
+    Transform Feedback
+    Main article: Transform Feedback
+    The outputs of the geometry shader or primitive assembly are written to a series of buffer objects that have been setup for this purpose. This is called transform feedback mode; it allows the user to transform data via vertex and geometry shaders, then hold on to that data for use later.
+
+    The data output into the transform feedback buffer is the data from each primitive emitted by this step.
+
+    Clipping
+    Main article: Clipping
+    The primitives are then clipped. Clipping means that primitives that lie on the boundary between the inside of the viewing volume and the outside are split into several primitives, such that the entire primitive lies in the volume. Also, the last Vertex Processing shader stage can specify user-defined clipping operations, on a per-vertex basis.
+
+    The vertex positions are transformed from clip-space to window space via the Perspective Divide and the Viewport Transform.
+
+
+
+
+
+Primitive assembly
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    Main article: Primitive Assembly
+    Primitive assembly is the process of collecting a run of vertex data output from the prior stages and composing it into a sequence of primitives. The type of primitive the user rendered with determines how this process works.
+
+    The output of this process is an ordered sequence of simple primitives (lines, points, or triangles). If the input is a triangle strip primitive containing 12 vertices, for example, the output of this process will be 10 triangles.
+
+    If tessellation or geometry shaders are active, then a limited form of primitive assembly is executed before these Vertex Processing stages. This is used to feed those particular shader stages with individual primitives, rather than a sequence of vertices.
+
+    The rendering pipeline can also be aborted at this stage. This allows the use of Transform Feedback operations, without having to actually render something.
+
+    Face culling
+    Main article: Face Culling
+    Triangle primitives can be culled (ie: discarded without rendering) based on the triangle's facing in window space. This allows you to avoid rendering triangles facing away from the viewer. For closed surfaces, such triangles would naturally be covered up by triangles facing the user, so there is never any need to render them. Face culling is a way to avoid rendering such primitives.
+
+
+
+
+Rasterization
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    Main article: Rasterization
+    Primitives that reach this stage are then rasterized in the order in which they were given. The result of rasterizing a primitive is a sequence of Fragments.
+
+    A fragment is a set of state that is used to compute the final data for a pixel (or sample if multisampling is enabled) in the output framebuffer. The state for a fragment includes its position in screen-space, the sample coverage if multisampling is enabled, and a list of arbitrary data that was output from the previous vertex or geometry shader.
+
+    This last set of data is computed by interpolating between the data values in the vertices for the fragment. The style of interpolation is defined by the shader that outputed those values.
+
+
+
+
+Fragment Processing
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    Main article: Fragment Shader
+    The data for each fragment from the rasterization stage is processed by a fragment shader. The output from a fragment shader is a list of colors for each of the color buffers being written to, a depth value, and a stencil value. Fragment shaders are not able to set the stencil data for a fragment, but they do have control over the color and depth values.
+
+    Fragment shaders are optional. If you render without a fragment shader, the depth (and stencil) values of the fragment get their usual values. But the value of all of the colors that a fragment could have are undefined. Rendering without a fragment shader is useful when rendering only a primitive's default depth information to the depth buffer, such as when performing Occlusion Query tests.
+
+
+
+
+
+Per-Sample Operations
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    Main article: Per-Sample_Processing
+    The fragment data output from the fragment processor is then passed through a sequence of steps.
+
+    The first step is a sequence of culling tests; if a test is active and the fragment fails the test, the underlying pixels/samples are not updated (usually). Many of these tests are only active if the user activates them. The tests are:
+
+    Pixel ownership test: Fails if the fragment's pixel is not "owned" by OpenGL (if another window is overlapping with the GL window). Always passes when using a Framebuffer Object. Failure means that the pixel contains undefined values.
+    Scissor Test: When enabled, the test fails if the fragment's pixel lies outside of a specified rectangle of the screen.
+    Stencil Test: When enabled, the test fails if the stencil value provided by the test does not compare as the user specifies against the stencil value from the underlying sample in the stencil buffer. Note that the stencil value in the framebuffer can still be modified even if the stencil test fails (and even if the depth test fails).
+    Depth Test: When enabled, the test fails if the fragment's depth does not compare as the user specifies against the depth value from the underlying sample in the depth buffer.
+    Note: Though these are specified to happen after the Fragment Shader, they can be made to happen before the fragment shader under certain conditions. If they happen before the FS, then any culling of the fragment will also prevent the fragment shader from executing, this saving performance.
+    After this, color blending happens. For each fragment color value, there is a specific blending operation between it and the color already in the framebuffer at that location. Logical Operations may also take place in lieu of blending, which perform bitwise operations between the fragment colors and framebuffer colors.
+
+    Lastly, the fragment data is written to the framebuffer. Masking operations allow the user to prevent writes to certain values. Color, depth, and stencil writes can be masked on and off; individual color channels can be masked as well.
+
+
+
+
+
+
+
+
+
+
+其他参考:
+
+
+https://www.geeksforgeeks.org/opengl-rendering-pipeline-overview/
+    1.Vertex Specification: 
+        In Vertex Specification, list an ordered list of vertices that define the boundaries of the primitive. 
+        在“Vertex Specification”中，列出一个有序的顶点列表 用来 定义图元边界
+        Along with this, one can define other vertex attributes like color, texture coordinates etc. 
+        同时，还可以定义其他顶点属性，例如颜色，纹理坐标等。
+        Later this data is sent down and manipulated by the pipeline.
+        随后,此数据被向下发送并由管线处理
+
+
+    2.Vertex Shader: 
+        The vertex specification defined above now pass through Vertex Shader. Vertex Shader is a program written in GLSL that manipulate the vertex data. 
+        上面的vertex specification中定义的顶点数据现在通过Vertex Shader传递。 Vertex Shader是用GLSL编写的用于处理顶点数据的程序。
+        The ultimate goal of vertex shader is to calculate final vertex position of each vertex. 
+        顶点着色器的最终目标是计算每个顶点的最终顶点位置。
+        Vertex shaders are executed once for every vertex(in case of a triangle it will execute 3-times) that the GPU processes. 
+        顶点着色器为GPU处理的每个顶点执行一次（如果为三角形，它将执行3次）。
+        So if the scene consists of one million vertices, the vertex shader will execute one million times once for each vertex. 
+        因此，如果场景包含一百万个顶点，则顶点着色器将为每个顶点执行一次一百万次。
+        The main job of a vertex shader is to calculate the final positions of the vertices in the scene.
+        顶点着色器的主要工作是计算场景中顶点的最终位置
+
+
+
+    3.Tessellation: 
+        曲面细分
+        This is a optional stage. In this stage primitives are tessellated i.e. divided into smoother mesh of triangles.
+        这是一个可选阶段。 在此阶段，将图元细分，即分为更平滑的三角形网格。
+
+    4.Geometry Shader: 
+        This shader stage is also optional. The work of Geometry Shader is to take an input primitive and generate zero or more output primitive. 
+        此着色器阶段也是可选的。 几何着色器的工作是获取输入图元并生成零个或多个输出图元。
+        If a triangle strip is sent as a single primitive, geometry shader will visualize a series of triangles. 
+        如果将三角形带作为单个图元发送，则几何着色器将可视化一系列三角形。
+        Geometry Shader is able to remove primitives or tessellate them by outputting many primitives for a single input. 
+        Geometry Shader通过单个输入图元生成许多输出图元，能够对图元进行删除或行细分
+        Geometry shaders can also convert primitives to different types. For example, point primitive can become triangles.
+        几何着色器也可以将图元转换为不同的类型。 例如，点图元可以变成三角形。
+         
+
+    5.Vertex Post Processing: 
+        顶点后期处理
+        Post Processing[poʊst ˈprɑːsesɪŋ]后处理模块;后处理器;后处理;后期处理;后置处理
+        This is a fixed function stage i.e. user has a very limited to no control over these stages.
+        这是一个固定功能阶段，即用户对这些阶段的控制非常有限。
+        The most important part of this stage is Clipping. Clipping discards the area of primitives that lie outside the viewing volume.
+        这个阶段最重要的部分是剪裁。剪裁将丢弃位于查看体积之外的图元区域。 
+
+
+    6.Primitive Assembly: 
+        图元装配
+        This stage collects the vertex data into a ordered sequence of simple primitives(lines, points or triangles).
+        此阶段将顶点数据放置到一个由简单图元(直线、点或三角形)组成的有序序列中。
+
+    7.Rasterization: 
+        光栅化
+        This is an important step in this pipeline. The output of rasterization is a fragments.
+        这是这条管道的重要一步。光栅化的输出是一个片段/片元/像素
+
+    8.Fragment Shader: 
+        Although not necessary a required stage but 96% of the time it is used. 
+        虽然不需要一个必要的阶段，但96%的时间是使用它。
+        This user-written program in GLSL calculates the color of each fragment that user sees on the screen. 
+        这个用户用GLSL编写的程序计算用户在屏幕上看到的每个片段的颜色。
+        The fragment shader runs for each fragment in the geometry. 
+        片段着色器为几何体中的每个片段(片元/像素)进行运算操作
+        The job of the fragment shader is to determine the final color for each fragment.
+        片段着色器的任务是确定每个片段的最终颜色。
+
+
+
+    9.Per-sample Operations:    
+        逐样本/片元的操作
+        There are few tests that are performed based on user has activated them or not. 
+        很少有基于用户激活或未激活的测试。
+        Some of these tests for example are Pixel ownership test, Scissor Test, Stencil Test, Depth Test.
+        这些测试中的一些例如是像素所有权测试，剪刀测试，模板测试，深度测试。
+
+
+
+
+
+
+
+
+
+
+
+
+https://en.wikipedia.org/wiki/Graphics_pipeline
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+简单描述:
+------------------------------------------------------------------------------------
+    cpu             |         gpu                       |               display
+                    |                                   |
+                    |                                   |
+                    |                                   |
+                    |                                   |
+    float32Array   ----->     buffer                    |      
+                    |           |                       |
+                    |           |                       |
+                    |           |                       |
+                    |          \|/                      |
+                    |     1.vertex shader(三维->二维)     |
+                    |        三维几何变换                 |
+                    |        投影                        |
+                    |        窗口剪裁                     |
+                    |        视口变换                     |
+                    |          /|\                      |
+                    |           |                       |
+                    |           |                       |
+                    |           |                       |
+                    |           |                       |
+                    |           |                       |
+                    |       2.光栅化                     |
+                    |           |                       |
+                    |           |                       |
+                    |           |                       |
+                    |           |                       |
+                    |           |                       |
+                    |          \|/                      |
+                    |     3.fragment shader        -------------->       screen
+                    |       纹理                         |
+                    |       雾化                         |                    
+                    |       深度/透明测试                 |
+                    |       混合                         |
+                    |     .......                       |
+                    |                                   |
+                    |                                   |
+------------------------------------------------------------------------------------
+
+
+https://www.ntu.edu.sg/home/ehchua/programming/opengl/CG_BasicsTheory.html
+
+    1.Coordinates Transformation(坐标变换)
+
+
+    2.Model Transform (or Local Transform, or World Transform)模型变换
+
+        局部坐标系变换(Local Transform):
+            物体坐标变换,视点不变
+            物体在自己局部坐标系变换
+
+        世界坐标系转换(World Transform):
+            视点变化,物体坐标系不变
+            世界坐标系变换,物体自己坐标系不变
+
+        旋转/平移/缩放物体
+
+        
+        
+        全局坐标系/局部坐标系变换:https://www.bilibili.com/video/BV1Kt411F7WR?p=19
+
+    3.View Transform(视图变换)
+        相机矩阵:
+        https://blog.csdn.net/popy007/article/details/5120158
+
+    4.Projection Transform - Perspective Projection(投影变换-透视投影)
+
+
+    5.Projection Transform - Orthographic Projection(投影变换-正交投影)
+
+      
+    6.Viewport Transform(视口变换)
+
+
+
+  
+
+
+
+webgl中的坐标系和单位:
+    https://www.bilibili.com/video/BV1Kt411F7WR?p=23
+
+
+
+
