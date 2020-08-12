@@ -1,0 +1,17 @@
+常见系统变量:
+    echo $HOME
+    用户家目录
+    /home/zuoyang
+
+    echo $PWD
+    用户单签所在目录
+    /home/zuoyang/Desktop/linux-study
+
+    echo $SHELL
+    用户系统默认使用的shell
+    /bin/bash
+
+
+    echo $USER
+    查看当前系统用户名
+    zuoyang

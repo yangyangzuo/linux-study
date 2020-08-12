@@ -1,5 +1,5 @@
-bash:
-    https://www.gnu.org/software/bash/manual/html_node/index.html
+bash:    
+    https://www.gnu.org/software/bash/manual/
     https://www.gnu.org/ -> software -> bash -> 
     https://www.gnu.org/software/bash/ -> documentation -> https://www.gnu.org/software/bash/manual/-> 
     https://www.gnu.org/software/bash/manual/html_node/index.html
@@ -15,9 +15,18 @@ shell分类:
     4.tcsh(TENEX C shell):csh的增强版本,引入了命令补全功能,在freebsd,macosx等系统上替代了csh
     5.bash(bournce again shell):gnu开发的shell,主要目标是与POSIX保持一致,同时兼容sh,是各种linux发行版标准配置的shell,linux系统中/bin/sh往往指向/bin/bash
 
+
+    bash和sh的关系:
+    ll /bin
+    可以看出sh指向当前系统的一种shell解释器,不同的系统指向不同
+    lrwxrwxrwx  1 root root       4 Jul  2 10:15 sh -> dash*
+
+
     #ubuntu默认指向dash
     ➜  ~ ls -l /bin/sh
     lrwxrwxrwx 1 root root 4 Oct  7 03:14 /bin/sh -> dash
+
+
 
     #passwd每行的最后一列显示了用户使用的shell
     ➜  ~ cat /etc/passwd
@@ -34,5 +43,28 @@ shell分类:
     bash
     dash
     zsh
+
+
+    查看当前系统支持的所有shell
+    cat /etc/shells
+
+    # /etc/shells: valid login shells
+    /bin/sh
+    /bin/bash
+    /bin/rbash
+    /bin/dash
+
+
+
+
+
+  
+
+
+
+
+
+
+
 
 
