@@ -1,0 +1,68 @@
+基本语法:
+    [ condition ] 
+    注意:condition前后要有空格,条件只要非空即为true,[a]返回true,[ ]返回false
+
+
+判断条件:
+    = 字符串比较
+    -lt 小于(less than)
+    -le 小于等于(less equal)
+    -eq 等于(equal)
+    -gt 大于(greater than)
+    -ge 大于等于（greate equal)
+    -ne 不等于(not equal)
+
+
+    //判断4>3
+    [ 4 -gt 3 ]
+    echo $?
+    结果:0
+
+
+    //判断4<=3
+    [ 4 -le 3 ]
+    echo $?
+    结果:1
+
+
+
+
+
+
+    -r 有读的权限(read)
+    -w 有写的权限(write)
+    -x 有执行权限(execute)
+
+
+    //判断文件是否有执行权限
+    [ -x a.txt ]
+    echo $?
+
+
+
+
+
+
+
+    -f 文件存在并且是一个常规文件(file)
+    -e 文件存在(exist)
+    -d 文件存在并且是一个目录(directory)
+
+
+    //判断文件是存在
+    [ -x a.txt ]
+    echo $?
+
+
+
+
+多条件判断:
+    && 
+    ||
+
+    例如:
+        [ aa ] && echo ok
+
+
+
+

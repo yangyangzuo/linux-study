@@ -25,7 +25,10 @@ shell分类:
     #ubuntu默认指向dash
     ➜  ~ ls -l /bin/sh
     lrwxrwxrwx 1 root root 4 Oct  7 03:14 /bin/sh -> dash
+    这里需要注意:如果sh指向dash,如果脚本中有for循环,则sh 脚本.sh会报错,dash应该是不支持for循环,因此需要执行:bash 脚本.sh
+    错误消息: Syntax error: Bad for loop variable
 
+    
 
 
     #passwd每行的最后一列显示了用户使用的shell

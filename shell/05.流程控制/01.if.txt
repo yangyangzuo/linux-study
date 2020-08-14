@@ -1,0 +1,50 @@
+语法:
+    if [ 条件 ];then
+        代码
+    fi
+    
+    或者
+    
+    if [ 条件 ]
+    then 代码
+    fi
+
+    注意:
+        1.[ 条件 ],条件和中括号之间要有空格
+        2.if后面要有空格,否则if[连成一起了,称为一个字符
+        3.if如果和其他语句写在一行,条件结束后要有分号
+
+
+
+
+    例如:
+        if [ a ]
+        then echo hello
+        fi
+
+        if [ a ];then echo hello 
+        fi
+
+        if [ a ];then 
+        echo hello 
+        fi
+
+
+
+
+        参数为1,显示你好,2,显示我好
+        if [ $1 -eq 1 ]
+        then 
+            echo 你好
+        elif [ $1 -eq 2 ]
+        then
+            echo 我好
+        fi
+
+        执行:
+            sh test.sh 1
+
+
+
+
+

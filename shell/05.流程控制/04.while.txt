@@ -1,0 +1,21 @@
+语法:
+    while [ 条件表达式 ]
+        do
+            代码
+    done
+
+
+    例子:
+        s=0
+        i=1
+        while [ $i -le 100 ]
+        do
+            s=$[$s+$i]
+            i=$[$i+1]
+        done
+        echo $s
+        echo $i
+
+
+  
+

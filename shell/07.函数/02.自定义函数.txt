@@ -1,0 +1,28 @@
+语法:
+    [ function ] functionname[()]
+    {
+        代码;
+        [return int;]
+    }
+
+注意:
+    1.函数先声明,再调用
+    2.函数返回值,只能通过$?系统变量获得,可以显示加 return 返回
+    如果不加,将以最后一条命令运行结果,作为返回值 
+    return 后面的是数值(0-255)
+
+
+
+    #定义函数
+    function sum(){
+        s=0;
+        s=$[$1+$2]
+        echo $s
+    }
+    
+    #等待用户输入参数
+    read -p "input parameter1" p1
+    read -p "input parameter2" p2
+
+    #调用函数求和
+    sum $p1 $p2
