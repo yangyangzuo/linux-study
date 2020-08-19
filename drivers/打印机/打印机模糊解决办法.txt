@@ -20,3 +20,8 @@ epson L360
 
 驱动:
 	http://download.ebz.epson.net/dsc/search/01/search/?OSC=LX
+    https://www.pianshen.com/article/5669265345/
+    https://blog.csdn.net/Gerald_Jones/article/details/80782049
+
+打印机管理:
+    https://github.com/apple/cups
