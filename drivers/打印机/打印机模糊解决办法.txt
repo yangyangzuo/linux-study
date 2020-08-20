@@ -6,9 +6,10 @@ epson L360
 
 
 打印模糊解决办法:
-	1.摁住喷头清洗按钮3秒后松开，则自动清洗喷头,灯不闪烁，则清洗完毕
-	2.打开墨水盒，底下垫东西，抬高墨水盒高度
-	3.喷头清洗完毕，灯不再闪烁，打印几张，测试，如果不行，再次清洗喷头，然后打印，直到打印清楚为止
+    1.没墨水了
+	2.摁住喷头清洗按钮3秒后松开，则自动清洗喷头,灯不闪烁，则清洗完毕
+	3.打开墨水盒，底下垫东西，抬高墨水盒高度
+	4.喷头清洗完毕，灯不再闪烁，打印几张，测试，如果不行，多次清洗喷头，隔天然后打印，直到打印清楚为止
 
 
 
@@ -20,8 +21,64 @@ epson L360
 
 驱动:
 	http://download.ebz.epson.net/dsc/search/01/search/?OSC=LX
-    https://www.pianshen.com/article/5669265345/
-    https://blog.csdn.net/Gerald_Jones/article/details/80782049
+        输入l360
+
+    操作步骤:
+        https://www.pianshen.com/article/5669265345/
+        或者
+        打印机驱动安装.png
+    
 
 打印机管理:
     https://github.com/apple/cups
+
+
+
+打印机纸张类型:
+    Premium Luster Photo Paper (250) (高质量绒面照片纸(250) 
+
+    Premium Glossy Photo Paper (250) (高质量光泽照片纸(250))  
+
+    Premium Semigloss Photo Paper (250)  (高质量亚光照片纸 (250))  
+
+    Premium Semimatte Photo Paper (250) (高质量半亚光照片纸 (250))  
+
+    Premium Glossy Photo Paper (高质量光泽照片纸)  
+
+    Premium Semigloss Photo Paper (高质量亚光照片纸)  
+
+    Premium Luster Photo Paper (高质量绒面照片纸)  
+
+    Photo Paper Gloss 250 (高级光泽照片纸250)  
+
+    Photo Glossy Paper (照片质量光泽纸)  
+
+    Photo Semigloss Paper (照片质量亚光纸)  
+
+    Proofing Paper Semimatte (爱普生半亚光数码打样纸（商用)） 
+
+    Photo Quality Ink Jet Paper (照片质量喷墨纸)  
+
+    Singleweight Matte Paper (轻磅粗面纸)  
+
+    Doubleweight Matte Paper (超重磅粗面纸)  Enhanced Matte Paper (增强粗面纸)  
+
+    Archival Matte Paper (粗面档案纸)  
+
+    Watercolor Paper - Radiant White (亮白水彩纸)  
+
+    Textured Fine Art Paper (织纹美术纸)  
+
+    Velvet Fine Art Paper (天鹅绒美术纸)  
+
+    UltraSmooth Fine Art Paper(超光滑美术纸) 
+
+    Canvas (油画布)  
+
+    Enhanced Matte Poster Board (增强粗面展板)  普通纸   （线条图）  
+
+    Singleweight Matte Paper (line drawing) (轻磅粗面纸)   描图纸 .  
+
+    Enhanced Synthetic Paper (增强合成纸)  
+
+    Enhanced Adhesive Synthetic Paper (增强背胶合成纸)
