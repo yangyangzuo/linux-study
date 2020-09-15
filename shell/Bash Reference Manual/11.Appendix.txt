@@ -1,0 +1,1027 @@
+
+Appendix A Reporting Bugs
+附录 a 报告错误
+Please report all bugs you find in Bash. But first, you should make sure that it really is a bug, and that it appears in the latest version of Bash. The latest version of Bash is always available for FTP from ftp://ftp.gnu.org/pub/gnu/bash/.
+
+请报告你在 Bash 中发现的所有错误。但首先，您应该确保它确实是一个 bug，并且出现在最新版本的 Bash 中。Bash 的最新版本始终可以通过 FTP://FTP.gnu. org/pub/gnu/Bash/获得。
+
+Once you have determined that a bug actually exists, use the bashbug command to submit a bug report. If you have a fix, you are encouraged to mail that as well! Suggestions and ‘philosophical’ bug reports may be mailed to bug-bash@gnu.org or posted to the Usenet newsgroup gnu.bash.bug.
+
+一旦确定 bug 确实存在，使用 bashbug 命令提交 bug 报告。如果你有一个补丁，你也被鼓励去邮寄它！建议和“哲学的” bug 报告可以邮寄到 bug-bash@gnu. org 或者发布到新闻组的 gnu/bash.bug。
+
+All bug reports should include:
+
+所有的错误报告应该包括:
+
+The version number of Bash. Bash 的版本号
+The hardware and operating system. 硬件和操作系统
+The compiler used to compile Bash. 用于编译 Bash 的编译器
+A description of the bug behaviour. 错误行为的描述
+A short script or ‘recipe’ which exercises the bug and may be used to reproduce it. 一个简短的脚本或者菜谱，用来练习这个错误并且可以用来重现它
+bashbug inserts the first three items automatically into the template it provides for filing a bug report.
+
+Bashbug 将前三项自动插入到它提供的用于填写错误报告的模板中。
+
+Please send all reports concerning this manual to bug-bash@gnu.org.
+
+请将所有与本手册有关的报告发送到 bug-bash@gnu. org。
+
+Next: GNU Free Documentation License, Previous: Reporting Bugs, Up: Top   [Contents][Index]
+
+下一页: GNU自由文档许可证，上一页: 报告错误，上一页: 顶部[目录][索引]
+
+Appendix B Major Differences From The Bourne Shell
+附录 b 与 Bourne Shell 的主要区别
+Bash implements essentially the same grammar, parameter and variable expansion, redirection, and quoting as the Bourne Shell. Bash uses the POSIX standard as the specification of how these features are to be implemented. There are some differences between the traditional Bourne shell and Bash; this section quickly details the differences of significance. A number of these differences are explained in greater depth in previous sections. This section uses the version of sh included in SVR4.2 (the last version of the historical Bourne shell) as the baseline reference.
+
+Bash 实现了与 Bourne Shell 基本相同的语法、参数和变量展开、重定向和引用。Bash 使用 POSIX 标准作为如何实现这些特性的规范。传统的 Bourne shell 和 Bash 之间存在一些差异; 本节将快速详细说明其重要性的差异。在前面的章节中将更深入地解释其中的一些差异。本节使用 SVR4.2(历史 Bourne shell 的最后一个版本)中包含的 sh 版本作为基线引用。
+
+Bash is 巴斯才是POSIX Posixth-conformant, even where the - 顺从，即使在那里POSIX Posixth specification differs from traditional 具体规定不同于传统的sh behavior (see 行为(见Bash POSIX Mode 重击 POSIX 模式).
+Bash has multi-character invocation options (see Bash 具有多字符调用选项(请参见Invoking Bash 调用 Bash).
+Bash has command-line editing (see Bash 具有命令行编辑功能(请参见Command Line Editing 命令行编辑) and the )及bind builtin. 内建的
+Bash provides a programmable word completion mechanism (see Bash 提供了一种可编程的字完成机制(请参见Programmable Completion 可编程完成), and builtin commands ) ，以及内建命令complete, compgen, and ，及compopt, to manipulate it. ，tomanipulate 它
+Bash has command history (see Bash 有命令历史(请参见Bash History Facilities 历史设施) and the )及history and 及fc builtins to manipulate it. The Bash history list maintains timestamp information and uses the value of the 历史记录列表维护时间戳信息，并使用HISTTIMEFORMAT variable to display it. 变量来显示它
+Bash implements 实现csh-like history expansion (see - 类似历史扩展(见History Interaction 历史互动).
+Bash has one-dimensional array variables (see Bash 具有一维数组变量(请参见Arrays 数组), and the appropriate variable expansions and assignment syntax to use them. Several of the Bash builtins take options to act on arrays. Bash provides a number of built-in array variables. ) ，以及适当的变量扩展和赋值语法来使用它们。有几个 Bash 内置函数采用选项对数组执行操作。Bash 提供了许多内置数组变量
+The 这个$'…' quoting syntax, which expands ANSI-C backslash-escaped characters in the text between the single quotes, is supported (see 支持引号语法，该语法在文本中的单引号之间展开 ansi-cbackslash 转义字符(参见ANSI-C Quoting ANSI-C 报价).
+Bash supports the 支持$"…" quoting syntax to do locale-specific translation of the characters between the double quotes. The 将语法引用到特定于 dolocale 的双引号之间的字符翻译-D - d, --dump-strings -- dump-strings, and ，及--dump-po-strings -- 转储-po-strings invocation options list the translatable strings found in a script (see 调用选项列出脚本中的可翻译字符串(请参见Locale Translation 场所翻译).
+Bash implements the 实现了! keyword to negate the return value of a pipeline (see 关键字来否定管道的返回值(参见Pipelines 管道). Very useful when an )。非常有用的时候if statement needs to act only if a test fails. The Bash ‘ 语句只有在测试失败时才需要执行-o pipefail O 管道故障’ option to ’选择权set will cause a pipeline to return a failure status if any command fails. 如果任何命令失败，将导致管道返回故障状态
+Bash has the 巴斯拥有time reserved word and command timing (see 保留字和命令计时(请参阅Pipelines 管道). The display of the timing statistics may be controlled with the )。时间统计数据的显示可以通过TIMEFORMAT variable. 变量
+Bash implements the 实现了for (( expr1 ; expr2 ; expr3 )) arithmetic for command, similar to the C language (see 命令的算法，类似于 c 语言(参见Looping Constructs 循环结构).
+Bash includes the Bash 包含select compound command, which allows the generation of simple menus (see 复合命令，它允许生成简单的菜单(参见Conditional Constructs 条件结构).
+Bash includes the Bash 包含[[ compound command, which makes conditional testing part of the shell grammar (see 复合命令，使条件测试成为 shell 语法的一部分(参见Conditional Constructs 条件结构), including optional regular expression matching. ) ，包括可选的正则表达式匹配
+Bash provides optional case-insensitive matching for the 属性提供可选的不区分大小写的匹配case and 及[[ constructs. 构造
+Bash includes brace expansion (see Bash 包括括号扩展(请参见Brace Expansion 支撑扩张) and tilde expansion (see )及倾斜膨胀法(见Tilde Expansion).
+Bash implements command aliases and the Bash 实现命令别名和alias and 及unalias builtins (see 内置物(见Aliases 别名).
+Bash provides shell arithmetic, the Bash 提供 shell 算法,(( compound command (see 复合命令(见Conditional Constructs 条件结构), and arithmetic expansion (see ) ，以及算术扩展(见Shell Arithmetic Shell 算术).
+Variables present in the shell’s initial environment are automatically exported to child processes. The Bourne shell does not normally do this unless the variables are explicitly marked using the Shell 初始环境中的变量是自动导出到子进程的。控件显式标记变量之前，Bourne shell 通常不会这样做export command. 命令
+Bash supports the ‘ 支持‘+=’ assignment operator, which appends to the value of the variable named on the left hand side. 赋值操作符，该操作符追加到左侧命名的变量的值
+Bash includes the Bash 包含POSIX Posixth pattern removal ‘ 图案去除%’, ‘ ’ ，’#’, ‘ ’ ，’%%’ and ‘ ’和’##’ expansions to remove leading or trailing substrings from variable values (see ’扩展以从变量值中删除前导或尾随子字符串(参见Shell Parameter Expansion 外壳参数展开).
+The expansion 扩张${#xx}, which returns the length of ，它返回${xx}, is supported (see ，是受支援的(见Shell Parameter Expansion 外壳参数展开).
+The expansion 扩张${var:offset 偏移[:length 长度]}, which expands to the substring of 的子字符串var’s value of length 长度值length 长度, beginning at ，由offset 偏移, is present (see ，在场(请参阅Shell Parameter Expansion 外壳参数展开).
+The expansion 扩张${var/[/]pattern 模式[/replacement 置换]}, which matches ，符合pattern 模式 and replaces it with 取而代之的replacement 置换 in the value of 按... 价值计算var, is available (see ，可供下载(见Shell Parameter Expansion 外壳参数展开).
+The expansion 扩张${!prefix*} expansion, which expands to the names of all shell variables whose names begin with 扩展到所有 shell 变量的名称prefix 前缀, is available (see ，可供下载(见Shell Parameter Expansion 外壳参数展开).
+Bash has 巴斯有indirect 间接的 variable expansion using 变量展开使用${!word} (see (见Shell Parameter Expansion 外壳参数展开).
+Bash can expand positional parameters beyond Bash 可以将位置参数扩展到$9 using 使用${num}.
+The 这个POSIX Posixth $() form of command substitution is implemented (see 实现了命令替换的形式(见Command Substitution 指令替代), and preferred to the Bourne shell’s ) ，而且比 Bourne shell 更喜欢`` (which is also implemented for backwards compatibility). (它也实现了向后兼容)
+Bash has process substitution (see bash 具有进程替换(请参见Process Substitution 过程替代).
+Bash automatically assigns variables that provide information about the current user ( Bash 会自动分配提供当前用户信息的变量(UID, EUID, and ，及GROUPS), the current host ( )、现时的主机(HOSTTYPE, OSTYPE, MACHTYPE, and ，及HOSTNAME), and the instance of Bash that is running ( ) ，以及正在运行的 Bash 实例(BASH, BASH_VERSION, and ，及BASH_VERSINFO). See )。请参阅Bash Variables Bash 变量, for details. ，了解详情
+The 这个IFS variable is used to split only the results of expansion, not all words (see 变量只用于拆分扩展的结果，而不是所有的单词(见Word Splitting 分词). This closes a longstanding shell security hole. )。这关闭了一个长期存在的 shell 安全漏洞
+The filename expansion bracket expression code uses ‘ 文件名扩展括号表达式代码使用‘!’ and ‘ ’和’^’ to negate the set of characters between the brackets. The Bourne shell uses only ‘ ’取消括号之间的字符集。 Bourne shell 只使用‘!’. ’
+Bash implements the full set of 实现了POSIX Posixth filename expansion operators, including 文件名扩展运算符，包括character classes 字符类, equivalence classes 等价类, and ，及collating symbols 校对符号 (see (见Filename Expansion 文件名扩展).
+Bash implements extended pattern matching features when the 实现了扩展的模式匹配特性extglob shell option is enabled (see 启用 shell 选项(请参见Pattern Matching 模式匹配).
+It is possible to have a variable and a function with the same name; 可以有一个变量和一个具有相同名称的函数;sh does not separate the two name spaces. 并没有将两个名称空格分开
+Bash functions are permitted to have local variables using the 方法允许 Bash 函数具有局部变量local builtin, and thus useful recursive functions may be written (see 因此，可以编写有用的递归函数(参见Bash Builtins).
+Variable assignments preceding commands affect only that command, even builtins and functions (see 命令前面的变量赋值只影响命令、甚至内建函数(参见Environment 环境). In )sh, all variable assignments preceding commands are global unless the command is executed from the file system. ，除非命令是从文件系统执行的，否则前面的所有变量赋值都是全局的
+Bash performs filename expansion on filenames specified as operands to input and output redirection operators (see Bash 对指定为 operandsto 输入和输出重定向运算符的文件名执行文件名扩展(参见Redirections 重定向).
+Bash contains the ‘ Bash 包含‘<>’ redirection operator, allowing a file to be opened for both reading and writing, and the ‘ “重定向”操作符，允许打开一个文件进行读写操作，而“&>’ redirection operator, for directing standard output and standard error to the same file (see ’重定向操作符，用于将标准输出和标准错误指向同一文件(参见Redirections 重定向).
+Bash includes the ‘ Bash 包含了<<<’ redirection operator, allowing a string to be used as the standard input to a command. ’重定向操作符，允许将字符串用作命令的标准输入
+Bash implements the ‘ 实现了‘[n]<& [ n ]word 字’ and ‘ ’和’[n]>& [ n ] >word 字’ redirection operators, which move one file descriptor to another. 重定向操作符，它将一个文件描述符移动到另一个文件描述符
+Bash treats a number of filenames specially when they are used in redirection operators (see 当在重定向操作符中使用一定数量的文件名时，Bash 会特别处理这些文件名(请参见Redirections 重定向).
+Bash can open network connections to arbitrary machines and services with the redirection operators (see Bash 可以使用重定向操作符打开到任意计算机和服务的网络连接(请参见Redirections 重定向).
+The 这个noclobber option is available to avoid overwriting existing files with output redirection (see 选项可用于避免使用输出重定向覆盖现有文件(请参见The Set Builtin 布景内置). The ‘ )>|’ redirection operator may be used to override ’重定向操作符可用于覆盖noclobber.
+The Bash 狂欢cd and 及pwd builtins (see 内置物(见Bourne Shell Builtins 伯恩壳内置) each take )每次拍摄-L - l and 及-P - p options to switch between logical and physical modes. 在逻辑和物理模式之间切换的选项
+Bash allows a function to override a builtin with the same name, and provides access to that builtin’s functionality within the function via the Bash 允许函数使用相同的名称覆盖内建函数，并通过builtin and 及command builtins (see 内置物(见Bash Builtins).
+The 这个command builtin allows selective disabling of functions when command lookup is performed (see 在执行命令查找时，允许选择性禁用功能(参见Bash Builtins).
+Individual builtins may be enabled or disabled using the 可以启用或禁用单个内置enable builtin (see 内建物(见Bash Builtins).
+The Bash 狂欢exec builtin takes additional options that allow users to control the contents of the environment passed to the executed command, and what the zeroth argument to the command is to be (see 内置函数采用额外的选项，允许用户控制传递给执行命令的环境内容，以及该命令的 zeroth 参数是什么(参见Bourne Shell Builtins 伯恩壳内置).
+Shell functions may be exported to children via the environment using 外壳功能可以通过环境使用导出到儿童export -f (see (见Shell Functions 外壳函数).
+The Bash 狂欢export, readonly, and ，及declare builtins can take a 内建物可以-f - f option to act on shell functions, a 选项对 shell 函数执行操作-p - p option to display variables with various attributes set in a format that can be used as shell input, a 选项以可用作 shell 输入的格式显示具有各种属性的变量-n - n option to remove various variable attributes, and ‘ 选项来移除各种不同的属性，并且‘name=value 名字 = 值’ arguments to set variable attributes and values simultaneously. 参数来同时设置变量的属性和值
+The Bash 狂欢hash builtin allows a name to be associated with an arbitrary filename, even when that filename cannot be found by searching the 内建语言允许名称与任意文件名相关联，即使通过搜索$PATH, using ‘ ，使用「hash -p 哈希-普’ (see ’(见Bourne Shell Builtins 伯恩壳内置).
+Bash includes a Bash 包含一个help builtin for quick reference to shell facilities (see 内置程式，以便快速参考空间站设施(参阅Bash Builtins).
+The 这个printf builtin is available to display formatted output (see 内置内置程序可用于显示格式化的输出(参见Bash Builtins).
+The Bash 狂欢read builtin (see 内建物(见Bash Builtins) will read a line ending in ‘ )将读取以‘结尾的一行\’ with the ”他说-r - r option, and will use the 选项，并将使用REPLY variable as a default if no non-option arguments are supplied. The Bash 如果没有提供非选项参数，则将变量作为 adedfaultread builtin also accepts a prompt string with the 方法接受提示字符串-p - p option and will use Readline to obtain the line when given the 选项，并将 useReadline 在给定-e - e option. The 选择read builtin also has additional options to control input: the 内置的还有其他控制输入的选项:-s - s option will turn off echoing of input characters as they are read, the 选项会在输入字符被读取时关闭它们的回应-t - t option will allow 选项将允许read to time out if input does not arrive within a specified number of seconds, the 如果 outif 输入没有在指定的秒数内到达，则-n - n option will allow reading only a specified number of characters rather than a full line, and the 选项将只允许读取指定数量的字符，而不是一整行，并且-d - d option will read until a particular character rather than newline. 选项将一直读到特定的字符，而不是换行符
+The 这个return builtin may be used to abort execution of scripts executed with the 方法执行的脚本中止执行. or 或source builtins (see 内置物(见Bourne Shell Builtins 伯恩壳内置).
+Bash includes the Bash 包含shopt builtin, for finer control of shell optional capabilities (see 内置，以便更好地控制货架能力(见The Shopt Builtin 商店大楼), and allows these options to be set and unset at shell invocation (see ) ，并允许在 shell 调用时设置和取消这些选项(参见Invoking Bash 调用 Bash).
+Bash has much more optional behavior controllable with the 的可选行为可以控制得更多set builtin (see 内建物(见The Set Builtin 布景内置).
+The ‘ 这是我们的工作-x - x’ ( (xtrace) option displays commands other than simple commands when performing an execution trace (see )选项在执行执行跟踪时显示除简单命令以外的命令(参见The Set Builtin 布景内置).
+The 这个test builtin (see 内建物(见Bourne Shell Builtins 伯恩壳内置) is slightly different, as it implements the )是稍微不同的，因为它实现了POSIX Posixth algorithm, which specifies the behavior based on the number of arguments. 算法，该算法根据参数数量指定行为
+Bash includes the Bash 包含caller builtin, which displays the context of any active subroutine call (a shell function or a script executed with the 方法执行的任何活动子例程调用(shell 函数或脚本)的上下文. or 或source builtins). This supports the bash debugger. 这支持 bashdebugger
+The 这个trap builtin (see 内建物(见Bourne Shell Builtins 伯恩壳内置) allows a )允许一个DEBUG pseudo-signal specification, similar to 伪信号规范，类似EXIT. Commands specified with a 指定的命令DEBUG trap are executed before every simple command, 在每个简单的命令之前执行 trap,for command, 命令,case command, 命令,select command, every arithmetic 命令，每个算术for command, and before the first command executes in a shell function. The 第一个命令在 shell 函数中执行之前DEBUG trap is not inherited by shell functions unless the function has been given the 函数不会被 shell 函数继承，除非函数被赋予trace attribute or the 属性或functrace option has been enabled using the 选项已启用shopt builtin. The 内置的extdebug shell option has additional effects on the Shell 选项对DEBUG trap. 陷阱
+The trap builtin (see Bourne Shell Builtins) allows an ERR pseudo-signal specification, similar to EXIT and DEBUG. Commands specified with an ERR trap are executed after a simple command fails, with a few exceptions. The ERR trap is not inherited by shell functions unless the -o errtrace option to the set builtin is enabled.
+
+这个陷阱内建(参见 Bourne Shell 内建)允许 ERR 伪信号规范，类似于 EXIT 和 DEBUG。使用 ERR 陷阱指定的命令在简单命令失败后执行，但有少数例外。除非启用了设置内置函数的 -o errtrace 选项，否则 shell 函数无法继承 ERR 陷阱。
+
+The trap builtin (see Bourne Shell Builtins) allows a RETURN pseudo-signal specification, similar to EXIT and DEBUG. Commands specified with an RETURN trap are executed before execution resumes after a shell function or a shell script executed with . or source returns. The RETURN trap is not inherited by shell functions unless the function has been given the trace attribute or the functrace option has been enabled using the shopt builtin.
+
+这个陷阱内置程序(参见 Bourne Shell 内置程序)允许使用 RETURN 伪信号规范，类似于 EXIT 和 DEBUG。使用 RETURN 陷阱指定的命令在执行 shell 函数或 shell 脚本之后恢复执行之前执行。或者源代码返回。RETURN 陷阱不会被 shell 函数继承，除非函数已经被赋予了 trace 属性，或者使用 shopt 内置选项启用了 functrace 选项。
+
+The Bash 狂欢type builtin is more extensive and gives more information about the names it finds (see 内建更广泛，并提供了更多的信息，有关名称，它找到(见Bash Builtins).
+The Bash 狂欢umask builtin permits a 内建许可证-p - p option to cause the output to be displayed in the form of a 选项使输出显示为一个umask command that may be reused as input (see 可以作为输入重用的命令(见Bourne Shell Builtins 伯恩壳内置).
+Bash implements a 实现了一个csh-like directory stack, and provides the - 类目录堆栈，并提供pushd, popd, and ，及dirs builtins to manipulate it (see 内建物来操纵它(见The Directory Stack 目录堆栈). Bash also makes the directory stack visible as the value of the )。 Bash 还使目录堆栈作为DIRSTACK shell variable. 外壳变量
+Bash interprets special backslash-escaped characters in the prompt strings when interactive (see 当交互时，Bash 在提示字符串中解释特殊的反斜杠转义字符(参见Controlling the Prompt 控制提示符).
+The Bash restricted mode is more useful (see Bash 限制模式更有用(参见The Restricted Shell 受限壳牌); the SVR4.2 shell restricted mode is too limited. ) ; SVR4.2 shell 限制模式太有限
+The 这个disown builtin can remove a job from the internal shell job table (see 内置程序可以从内部 shell 作业表中移除作业(参见Job Control Builtins 工作控制内置程序) or suppress the sending of )或抑制发送SIGHUP to a job when the shell exits as the result of a 当 shell 作为一个SIGHUP.
+Bash includes a number of features to support a separate debugger for shell scripts. Bash 包含许多特性，以支持针对 shell 脚本的单独调试器
+The SVR4.2 shell has two privilege-related builtins ( SVR4.2 shell 有两个与特权相关的内置程序(mldmode and 及priv) not present in Bash. )没有出现在 Bash 中
+Bash does not have the Bash 没有stop or 或newgrp builtins. 内建物
+Bash does not use the Bash 不使用SHACCT variable or perform shell accounting. 变量或执行外壳会计
+The SVR4.2 4.2sh uses a 使用TIMEOUT variable like Bash uses 类似于 Bash 使用的变量TMOUT.
+More features unique to Bash may be found in Bash Features.
+
+在 Bash 特性中可以找到更多 Bash 特有的特性。
+
+B.1 Implementation Differences From The SVR4.2 Shell
+1与 SVR4.2 Shell 的实现差异
+Since Bash is a completely new implementation, it does not suffer from many of the limitations of the SVR4.2 shell. For instance:
+
+由于 Bash 是一个全新的实现，它没有受到 SVR4.2 shell 的许多限制。例如:
+
+Bash does not fork a subshell when redirecting into or out of a shell control structure such as an 当重定向到或退出一个 shell 控件结构时，Bash 不会派生一个子 shellif or 或while statement. 语句
+Bash does not allow unbalanced quotes. The SVR4.2 shell will silently insert a needed closing quote at Bash 不允许不平衡的报价。 SVR4.2 shell 会静悄悄地插入所需的结束报价EOF under certain circumstances. This can be the cause of some hard-to-find errors. 在某些情况下。这可能是一些难以发现的错误的原因
+The SVR4.2 shell uses a baroque memory management scheme based on trapping SVR4.2 shell 使用基于陷阱的巴洛克式内存管理方案SIGSEGV. If the shell is started from a process with 。如果 shell 是从一个进程启动的SIGSEGV blocked (e.g., by using the 阻塞(例如，使用system() C library function call), it misbehaves badly. C 图书馆/函数调用) ，它表现不好
+In a questionable attempt at security, the SVR4.2 shell, when invoked without the 在进行安全性尝试时，如果调用 SVR4.2 shell 时没有-p - p option, will alter its real and effective 选项，将改变其现实和有效性UID and 及GID 肿胀性脑膜炎 if they are less than some magic threshold value, commonly 100. This can lead to unexpected results. 如果它们低于某些浮游阈值(通常为100) ，就会导致意外的结果
+The SVR4.2 shell does not allow users to trap SVR4.2 shell 不允许用户捕获SIGSEGV, SIGALRM, or ，或SIGCHLD.
+The SVR4.2 shell does not allow the SVR4.2 shell 不允许IFS, MAILCHECK, PATH, PS1, or ，或PS2 variables to be unset. 变量被取消设置
+The SVR4.2 shell treats ‘ 4.2的外壳对待‘^’ as the undocumented equivalent of ‘ 就像没有记录在案的|’. ’
+Bash allows multiple option arguments when it is invoked ( 当 Bash 被调用时，它允许多个选项参数-x -v); the SVR4.2 shell allows only one option argument ( ) ; SVR4.2 shell 只允许一个选项参数(-xv). In fact, some versions of the shell dump core if the second argument begins with a ‘ )。事实上，如果第二个参数以‘开头，那么某些版本的 shell 转储内核-’. ’
+The SVR4.2 shell exits a script if any builtin fails; Bash exits a script only if one of the 如果任何内置程序失败，SVR4.2 shell 将退出脚本; 如果POSIX Posixth special builtins fails, and only for certain failures, as enumerated in the 特殊的构建失败，并且仅对于某些失败，如POSIX Posixth standard. 标准
+The SVR4.2 shell behaves differently when invoked as SVR4.2 shell 在以下方式调用时行为不同jsh (it turns on job control). (它打开工作控制)
+Next: Indexes, Previous: Major Differences From The Bourne Shell, Up: Top   [Contents][Index]
+
+下一页: 索引，上一页: 与 Bourne Shell 的主要区别，上一页: Top [ Contents ][ Index ]
+
+Appendix C GNU Free Documentation License
+附录 c GNU自由文档许可证
+Version 1.3, 3 November 2008 1.3版，2008年11月3日
+Copyright © 2000, 2001, 2002, 2007, 2008 Free Software Foundation, Inc.
+http://fsf.org/
+
+Everyone is permitted to copy and distribute verbatim copies
+of this license document, but changing it is not allowed.
+PREAMBLE 序言
+The purpose of this License is to make a manual, textbook, or other functional and useful document free in the sense of freedom: to assure everyone the effective freedom to copy and redistribute it, with or without modifying it, either commercially or noncommercially. Secondarily, this License preserves for the author and publisher a way to get credit for their work, while not being considered responsible for modifications made by others.
+
+本许可证的目的是使手册、教科书或其他功能性和有用的文件在自由的意义上免费: 以确保每个人有效的自由复制和重新分发它，无论是否修改它，商业或非商业。其次，这个许可证为作者和出版商保留了一种获得作品荣誉的方式，而不会被认为对其他人的修改负责。
+
+This License is a kind of “copyleft”, which means that derivative works of the document must themselves be free in the same sense. It complements the GNU General Public License, which is a copyleft license designed for free software.
+
+这个许可证是一种“ copyleft” ，这意味着文档的衍生作品本身也必须是免费的。它补充了为自由软件设计的著作权许可 GNU通用公共许可协议。
+
+We have designed this License in order to use it for manuals for free software, because free software needs free documentation: a free program should come with manuals providing the same freedoms that the software does. But this License is not limited to software manuals; it can be used for any textual work, regardless of subject matter or whether it is published as a printed book. We recommend this License principally for works whose purpose is instruction or reference.
+
+我们设计这个许可证是为了使用它作为自由软件的手册，因为自由软件需要自由的文档: 一个自由的程序应该附带手册，提供与软件一样的自由。但是这个许可证不仅限于软件手册，它可以用于任何文本作品，不管主题是什么，也不管它是否以印刷书籍的形式出版。我们建议本许可证主要用于指导或参考作品。
+
+APPLICABILITY AND DEFINITIONS 适用性和定义
+This License applies to any manual or other work, in any medium, that contains a notice placed by the copyright holder saying it can be distributed under the terms of this License. Such a notice grants a world-wide, royalty-free license, unlimited in duration, to use that work under the conditions stated herein. The “Document”, below, refers to any such manual or work. Any member of the public is a licensee, and is addressed as “you”. You accept the license if you copy, modify or distribute the work in a way requiring permission under copyright law.
+
+本许可证适用于任何手册或其他作品，在任何媒体，其中包含版权持有人放置的通知，说明它可以根据本许可证的条款分发。这样的通知授予一个世界范围的，免版税的许可证，无限期的期限，使用该作品在条件下陈述。下面的“文件”指的是任何此类手册或工作。任何公众人士都是持牌人，并被称为“你”。如果你以版权法允许的方式复制、修改或传播作品，你就接受了许可。
+
+A “Modified Version” of the Document means any work containing the Document or a portion of it, either copied verbatim, or with modifications and/or translated into another language.
+
+文件的“修改版本”是指包含文件或其部分内容的任何作品，可以逐字复制，也可以经过修改和/或翻译成另一种语言。
+
+A “Secondary Section” is a named appendix or a front-matter section of the Document that deals exclusively with the relationship of the publishers or authors of the Document to the Document’s overall subject (or to related matters) and contains nothing that could fall directly within that overall subject. (Thus, if the Document is in part a textbook of mathematics, a Secondary Section may not explain any mathematics.) The relationship could be a matter of historical connection with the subject or with related matters, or of legal, commercial, philosophical, ethical or political position regarding them.
+
+“第二部分”是文件的附录或前言部分，专门处理文件的出版者或作者与文件的总主题(或相关事项)之间的关系，不包含任何可直接属于该总主题的内容。(因此，如果该文件是数学教科书的一部分，中学部分可能不解释任何数学。)这种关系可以是与主题或相关事项的历史联系，或者是与它们有关的法律、商业、哲学、道德或政治立场。
+
+The “Invariant Sections” are certain Secondary Sections whose titles are designated, as being those of Invariant Sections, in the notice that says that the Document is released under this License. If a section does not fit the above definition of Secondary then it is not allowed to be designated as Invariant. The Document may contain zero Invariant Sections. If the Document does not identify any Invariant Sections then there are none.
+
+“不变章节”是指在本许可证下发布文档的通知中指定为不变章节标题的某些次要章节。如果一个部分不符合上述次要的定义，那么它就不能被指定为不变式。文件可以包含零个不变部分。如果文件没有标识任何固定章节，那么就没有固定章节。
+
+The “Cover Texts” are certain short passages of text that are listed, as Front-Cover Texts or Back-Cover Texts, in the notice that says that the Document is released under this License. A Front-Cover Text may be at most 5 words, and a Back-Cover Text may be at most 25 words.
+
+“封面文本”是某些文本的短段落，作为封面文本或封底文本，在通知中说明该文件是根据本许可证发布的。封面文本最多5个单词，封底文本最多25个单词。
+
+A “Transparent” copy of the Document means a machine-readable copy, represented in a format whose specification is available to the general public, that is suitable for revising the document straightforwardly with generic text editors or (for images composed of pixels) generic paint programs or (for drawings) some widely available drawing editor, and that is suitable for input to text formatters or for automatic translation to a variety of formats suitable for input to text formatters. A copy made in an otherwise Transparent file format whose markup, or absence of markup, has been arranged to thwart or discourage subsequent modification by readers is not Transparent. An image format is not Transparent if used for any substantial amount of text. A copy that is not “Transparent” is called “Opaque”.
+
+文件的“透明”副本是指一种机器可读的副本，其格式规格可供一般公众查阅，适于用通用文本编辑器直接修改文件，或(对于由像素组成的图像)通用绘图程序或(对于绘图)一些广泛可用的绘图编辑器，并适于输入文本格式器或自动转换为适于输入文本格式器的各种格式。以其他透明文件格式制作的副本，其标记(或缺少标记)被安排用于阻止或阻止读者后续修改，这种副本不透明。如果图像格式用于任何大量的文本，那么它是不透明的。不是“透明”的副本称为“不透明”。
+
+Examples of suitable formats for Transparent copies include plain ASCII without markup, Texinfo input format, LaTeX input format, SGML or XML using a publicly available DTD, and standard-conforming simple HTML, PostScript or PDF designed for human modification. Examples of transparent image formats include PNG, XCF and JPG. Opaque formats include proprietary formats that can be read and edited only by proprietary word processors, SGML or XML for which the DTD and/or processing tools are not generally available, and the machine-generated HTML, PostScript or PDF produced by some word processors for output purposes only.
+
+透明拷贝的合适格式包括无标记的纯 ASCII 格式、 Texinfo 输入格式、 LaTeX 输入格式、使用公开的 DTD 的 SGML 或 XML 格式，以及为人工修改而设计的符合标准的简单 HTML、 PostScript 或 PDF 格式。透明图像格式的例子包括 PNG、 XCF 和 JPG。不透明格式包括只能由专有文字处理程序读取和编辑的专有格式、 DTD 和/或处理工具通常无法获得的 SGML 或 XML，以及某些文字处理程序为输出目的而生成的机器生成的 HTML、 PostScript 或 PDF。
+
+The “Title Page” means, for a printed book, the title page itself, plus such following pages as are needed to hold, legibly, the material this License requires to appear in the title page. For works in formats which do not have any title page as such, “Title Page” means the text near the most prominent appearance of the work’s title, preceding the beginning of the body of the text.
+
+“标题页”指的是，对于印刷书籍，标题页本身，加上需要持有本许可证要求出现在标题页上的清晰的下列页面。对于没有任何标题页的格式的作品，“标题页”是指作品标题最显著外观附近的文本，位于正文开头之前。
+
+The “publisher” means any person or entity that distributes copies of the Document to the public.
+
+“发行人”指向公众分发文件副本的任何人或实体。
+
+A section “Entitled XYZ” means a named subunit of the Document whose title either is precisely XYZ or contains XYZ in parentheses following text that translates XYZ in another language. (Here XYZ stands for a specific section name mentioned below, such as “Acknowledgements”, “Dedications”, “Endorsements”, or “History”.) To “Preserve the Title” of such a section when you modify the Document means that it remains a section “Entitled XYZ” according to this definition.
+
+“标题为 XYZ”的部分是指文档中的一个命名子单元，它的标题要么是 XYZ，要么在翻译另一种语言的 XYZ 文本之后的括号中包含 XYZ。(在这里 XYZ 代表下面提到的一个特定的部分名称，例如“鸣谢”、“致敬”、“背书”或“历史”。)当您修改文档时，“保留该部分的标题”意味着根据此定义，该部分仍然是“标题 XYZ”部分。
+
+The Document may include Warranty Disclaimers next to the notice which states that this License applies to the Document. These Warranty Disclaimers are considered to be included by reference in this License, but only as regards disclaiming warranties: any other implication that these Warranty Disclaimers may have is void and has no effect on the meaning of this License.
+
+该文件可以在声明本许可证适用于该文件的通知旁边包括担保免责声明。这些免责声明被认为是本许可证的参考内容，但仅限于否认保证: 任何其他暗示，这些免责声明可能是无效的，并不影响本许可证的含义。
+
+VERBATIM COPYING 逐字复制
+You may copy and distribute the Document in any medium, either commercially or noncommercially, provided that this License, the copyright notices, and the license notice saying this License applies to the Document are reproduced in all copies, and that you add no other conditions whatsoever to those of this License. You may not use technical measures to obstruct or control the reading or further copying of the copies you make or distribute. However, you may accept compensation in exchange for copies. If you distribute a large enough number of copies you must also follow the conditions in section 3.
+
+你可以在任何媒介上复制和分发文件，无论是商业的还是非商业的，只要本许可证、版权声明和许可声明适用于本文件的复制件，并且你没有在本许可证中添加任何其他条件。你不得使用技术手段阻碍或控制阅读或进一步复制你制作或分发的副本。不过，你可以接受补偿，以换取副本。如果您分发了足够多的副本，那么您还必须遵循第3节中的条件。
+
+You may also lend copies, under the same conditions stated above, and you may publicly display copies.
+
+您也可以出借副本，在相同的条件下，以上所述，您可以公开显示副本。
+
+COPYING IN QUANTITY 大量抄袭
+If you publish printed copies (or copies in media that commonly have printed covers) of the Document, numbering more than 100, and the Document’s license notice requires Cover Texts, you must enclose the copies in covers that carry, clearly and legibly, all these Cover Texts: Front-Cover Texts on the front cover, and Back-Cover Texts on the back cover. Both covers must also clearly and legibly identify you as the publisher of these copies. The front cover must present the full title with all words of the title equally prominent and visible. You may add other material on the covers in addition. Copying with changes limited to the covers, as long as they preserve the title of the Document and satisfy these conditions, can be treated as verbatim copying in other respects.
+
+如果你出版的文件的印刷本(或通常有印刷封面的媒体)超过100份，而且文件的许可证通知要求封面文本，你必须在封面内附上这些封面文本: 封面文本为正面封面文本，封底文本为背面封面文本。这两个封面还必须清楚易读地标明你是这些副本的出版商。封面必须显示标题的完整标题，标题的所有词语必须同样突出和可见。您可以添加其他材料的封面除外。只限于封面的复制，只要保留文件的标题并符合这些条件，在其他方面可视为逐字复制。
+
+If the required texts for either cover are too voluminous to fit legibly, you should put the first ones listed (as many as fit reasonably) on the actual cover, and continue the rest onto adjacent pages.
+
+如果任何一个封面所需的文字太长，以至于难以阅读，你应该在实际封面上列出第一个文字(尽可能多) ，然后在相邻的页面上继续。
+
+If you publish or distribute Opaque copies of the Document numbering more than 100, you must either include a machine-readable Transparent copy along with each Opaque copy, or state in or with each Opaque copy a computer-network location from which the general network-using public has access to download using public-standard network protocols a complete Transparent copy of the Document, free of added material. If you use the latter option, you must take reasonably prudent steps, when you begin distribution of Opaque copies in quantity, to ensure that this Transparent copy will remain thus accessible at the stated location until at least one year after the last time you distribute an Opaque copy (directly or through your agents or retailers) of that edition to the public.
+
+如果发布或分发文件编号超过100的不透明副本，则必须在每份不透明副本中附上一份机器可读的透明副本，或者在每份不透明副本中或附上一个计算机网络位置，使用一般网络的公众可从该位置使用公共标准网络协议下载该文件的完整透明副本，不附加任何材料。如果你使用后者，你必须采取相当谨慎的步骤，当你开始分发不透明的副本数量，以确保这种透明的副本将继续保持这样的位置，直到至少一年后，你最后一次分发不透明的副本(直接或通过你的代理商或零售商)的版本向公众。
+
+It is requested, but not required, that you contact the authors of the Document well before redistributing any large number of copies, to give them a chance to provide you with an updated version of the Document.
+
+在重新分发任何大量副本之前，请尽早与文档的作者联系，以便他们有机会向您提供文档的更新版本，但这并非必要。
+
+MODIFICATIONS 修改
+You may copy and distribute a Modified Version of the Document under the conditions of sections 2 and 3 above, provided that you release the Modified Version under precisely this License, with the Modified Version filling the role of the Document, thus licensing distribution and modification of the Modified Version to whoever possesses a copy of it. In addition, you must do these things in the Modified Version:
+
+你可以在上面第2和第3节的条件下复制和分发文件的修改版本，只要你根据本授权发布修改版本，修改版本充当文件的角色，从而授权分发和修改修改版本给任何拥有它的人。另外，你必须在修改版本中做这些事情:
+
+Use in the Title Page (and on the covers, if any) a title distinct from that of the Document, and from those of previous versions (which should, if there were any, be listed in the History section of the Document). You may use the same title as a previous version if the original publisher of that version gives permission. 在标题页(以及封面，如果有的话)使用与文件标题不同的标题，以及与以前版本的标题不同的标题(如果有的话，应该列在文件的历史部分)。如果该版本的原始发行者允许，您可以使用与前一版本相同的标题
+List on the Title Page, as authors, one or more persons or entities responsible for authorship of the modifications in the Modified Version, together with at least five of the principal authors of the Document (all of its principal authors, if it has fewer than five), unless they release you from this requirement. 在标题页上列出作者、一个或多个负责修改本的作者或实体，以及至少五个文件的主要作者(如果文件少于五个，所有主要作者) ，除非他们解除这一要求
+State on the Title page the name of the publisher of the Modified Version, as the publisher. 在“标题”页上说明“修改版本”的发行者的名称，作为发行者
+Preserve all the copyright notices of the Document. 保存文件的所有版权声明
+Add an appropriate copyright notice for your modifications adjacent to the other copyright notices. 在其他版权声明旁边为您的修改添加适当的版权声明
+Include, immediately after the copyright notices, a license notice giving the public permission to use the Modified Version under the terms of this License, in the form shown in the Addendum below. 在版权声明之后立即包括一个许可证声明，允许公众在本许可证的条款下使用修改版本，如下面的附录所示
+Preserve in that license notice the full lists of Invariant Sections and required Cover Texts given in the Document’s license notice. 在该许可证通知中保留文件许可证通知中所给出的不变章节和所需封面文本的完整列表
+Include an unaltered copy of this License. 包括本许可证未经修改的副本
+Preserve the section Entitled “History”, Preserve its Title, and add to it an item stating at least the title, year, new authors, and publisher of the Modified Version as given on the Title Page. If there is no section Entitled “History” in the Document, create one stating the title, year, authors, and publisher of the Document as given on its Title Page, then add an item describing the Modified Version as stated in the previous sentence. 保留标题为“历史”的部分，保留其标题，并添加一个项目，说明至少标题，年份，新的作者和修改版本的出版商给出的标题页。如果文档中没有标题为“历史”的部分，请创建一个标题栏，在标题页上注明文档的标题、年份、作者和出版者，然后添加一个项目，描述前一句中所述的修改版本
+Preserve the network location, if any, given in the Document for public access to a Transparent copy of the Document, and likewise the network locations given in the Document for previous versions it was based on. These may be placed in the “History” section. You may omit a network location for a work that was published at least four years before the Document itself, or if the original publisher of the version it refers to gives permission. 保留文档中给出的网络位置(如果有的话) ，以便公开访问文档的透明副本，同样保留文档中给出的以前版本所基于的网络位置。这些可以放在“历史”部分。对于至少在文档本身出版前四年出版的作品，或者如果所引用的版本的原始出版者给予许可，则可以省略网络位置
+For any section Entitled “Acknowledgements” or “Dedications”, Preserve the Title of the section, and preserve in the section all the substance and tone of each of the contributor acknowledgements and/or dedications given therein. 对于任何题为“鸣谢”或“致献”的章节，请保留该章节的标题，并在该章节中保留每个贡献者鸣谢和/或致献的所有实质内容和语调
+Preserve all the Invariant Sections of the Document, unaltered in their text and in their titles. Section numbers or the equivalent are not considered part of the section titles. 保留文件的所有不变章节，不改变其文本和标题。节号或同等的号码不被认为是节标题的一部分
+Delete any section Entitled “Endorsements”. Such a section may not be included in the Modified Version. 删除任何标题为“背书”的部分。该部分不得包括在修改版本中
+Do not retitle any existing section to be Entitled “Endorsements” or to conflict in title with any Invariant Section. 不要将任何现有的章节改名为“背书”或与任何不变章节的标题发生冲突
+Preserve any Warranty Disclaimers. 保留任何免责声明
+If the Modified Version includes new front-matter sections or appendices that qualify as Secondary Sections and contain no material copied from the Document, you may at your option designate some or all of these sections as invariant. To do this, add their titles to the list of Invariant Sections in the Modified Version’s license notice. These titles must be distinct from any other section titles.
+
+如果修改后的版本包括新的前面部分或附录，这些部分或附录有资格作为次要部分，并且不包含从文件复制的材料，您可以选择指定这些部分或全部为不变部分。为此，将它们的标题添加到修改版本许可通知中的不变部分列表中。这些标题必须有别于任何其他部分的标题。
+
+You may add a section Entitled “Endorsements”, provided it contains nothing but endorsements of your Modified Version by various parties—for example, statements of peer review or that the text has been approved by an organization as the authoritative definition of a standard.
+
+你可以增加一个题为”背书”的章节，但条件是该章节只载有各方对你的修改版本的背书ー例如，同行评审声明，或该文本已被某个组织认可为标准的权威定义。
+
+You may add a passage of up to five words as a Front-Cover Text, and a passage of up to 25 words as a Back-Cover Text, to the end of the list of Cover Texts in the Modified Version. Only one passage of Front-Cover Text and one of Back-Cover Text may be added by (or through arrangements made by) any one entity. If the Document already includes a cover text for the same cover, previously added by you or by arrangement made by the same entity you are acting on behalf of, you may not add another; but you may replace the old one, on explicit permission from the previous publisher that added the old one.
+
+你可以在修改版本的封面文本列表末尾添加最多五个单词的文章作为封面文本，最多二十五个单词的文章作为封底文本。只有一段封面文字和一个封底文字可以添加(或通过安排)任何一个实体。如果文档已经包含了同一封面的封面文字，以前是由你添加的，或者是由你所代表的同一个实体安排的，你不能添加另一封面文字; 但是你可以替换旧的，只要前一个添加旧封面的出版商明确允许。
+
+The author(s) and publisher(s) of the Document do not by this License give permission to use their names for publicity for or to assert or imply endorsement of any Modified Version.
+
+本许可证不允许文件的作者和出版者使用他们的名字进行宣传，也不允许声称或暗示对任何修改版本的认可。
+
+COMBINING DOCUMENTS 合并文件
+You may combine the Document with other documents released under this License, under the terms defined in section 4 above for modified versions, provided that you include in the combination all of the Invariant Sections of all of the original documents, unmodified, and list them all as Invariant Sections of your combined work in its license notice, and that you preserve all their Warranty Disclaimers.
+
+你可以根据上面第4节对修改版本定义的条款，将文档与本许可证下发布的其他文档合并，但是你必须将所有原始文档的所有不变部分包含在合并版本中，并且在许可证通知中将它们作为合并版本的不变部分列出，并且保留它们的保证免责声明。
+
+The combined work need only contain one copy of this License, and multiple identical Invariant Sections may be replaced with a single copy. If there are multiple Invariant Sections with the same name but different contents, make the title of each such section unique by adding at the end of it, in parentheses, the name of the original author or publisher of that section if known, or else a unique number. Make the same adjustment to the section titles in the list of Invariant Sections in the license notice of the combined work.
+
+合并的作品只需包含本许可证的一个副本，多个相同的恒常章节可以用一个副本替换。如果有多个具有相同名称但内容不同的恒常章节，请在每个章节的末尾添加独特的标题，如果知道该章节的原作者或出版者的名称，则在括号内添加该章节的原作者或出版者的名称，或添加唯一的数字。对合并作品的许可证通知中的不变部分列表中的部分标题进行相同的调整。
+
+In the combination, you must combine any sections Entitled “History” in the various original documents, forming one section Entitled “History”; likewise combine any sections Entitled “Acknowledgements”, and any sections Entitled “Dedications”. You must delete all sections Entitled “Endorsements.”
+
+在这个组合中，你必须合并各种原始文件中任何题为“历史”的部分，形成一个题为“历史”的部分; 同样地，合并任何题为“鸣谢”的部分和题为“奉献”的部分。您必须删除所有标题为“背书”的部分
+
+COLLECTIONS OF DOCUMENTS 收集文件
+You may make a collection consisting of the Document and other documents released under this License, and replace the individual copies of this License in the various documents with a single copy that is included in the collection, provided that you follow the rules of this License for verbatim copying of each of the documents in all other respects.
+
+您可以将本许可证发布的文档和其他文档组成一个集合，并将本许可证在各种文档中的单个副本替换为该集合中包含的单个副本，但您必须遵守本许可证在所有其他方面逐字复制每个文档的规则。
+
+You may extract a single document from such a collection, and distribute it individually under this License, provided you insert a copy of this License into the extracted document, and follow this License in all other respects regarding verbatim copying of that document.
+
+您可以从这样的集合中提取单个文档，并根据本许可证单独分发，只要您将本许可证的副本插入所提取的文档中，并在所有其他方面遵循本许可证的规定逐字复制该文档。
+
+AGGREGATION WITH INDEPENDENT WORKS 独立作品的聚合
+A compilation of the Document or its derivatives with other separate and independent documents or works, in or on a volume of a storage or distribution medium, is called an “aggregate” if the copyright resulting from the compilation is not used to limit the legal rights of the compilation’s users beyond what the individual works permit. When the Document is included in an aggregate, this License does not apply to the other works in the aggregate which are not themselves derivative works of the Document.
+
+如果汇编所产生的版权没有用于限制汇编使用者的合法权利，使其超出个别作品的许可范围，则在储存或分发媒介中或在一卷中汇编该文件或其衍生物与其他单独和独立的文件或作品称为”汇编”。当文件被包含在一个聚合体中时，本许可证不适用于其他聚合体中本身不是文件衍生作品的作品。
+
+If the Cover Text requirement of section 3 is applicable to these copies of the Document, then if the Document is less than one half of the entire aggregate, the Document’s Cover Texts may be placed on covers that bracket the Document within the aggregate, or the electronic equivalent of covers if the Document is in electronic form. Otherwise they must appear on printed covers that bracket the whole aggregate.
+
+如果第3节的封面案文要求适用于文件的这些副本，那么如果该文件的封面案文少于整个文件总数的一半，该文件的封面案文可以放在该文件总数中括号内的封面上，如果该文件是电子形式的，封面案文可以放在同等电子形式的封面上。否则他们必须出现在包括整个集合的印刷封面上。
+
+TRANSLATION 翻译
+Translation is considered a kind of modification, so you may distribute translations of the Document under the terms of section 4. Replacing Invariant Sections with translations requires special permission from their copyright holders, but you may include translations of some or all Invariant Sections in addition to the original versions of these Invariant Sections. You may include a translation of this License, and all the license notices in the Document, and any Warranty Disclaimers, provided that you also include the original English version of this License and the original versions of those notices and disclaimers. In case of a disagreement between the translation and the original version of this License or a notice or disclaimer, the original version will prevail.
+
+翻译被认为是一种修改，因此您可以根据第4节的条款分发文档的翻译。用翻译替换不变部分需要版权所有者的特别许可，但是除了这些不变部分的原始版本之外，还可以包括部分或全部不变部分的翻译。您可以包括本许可证的翻译，文件中的所有许可证通知，以及任何保证免责声明，只要您还包括本许可证的原始英文版本以及这些通知和免责声明的原始版本。如果翻译版本与本许可证的原始版本或通知或免责声明有异议，将以原始版本为准。
+
+If a section in the Document is Entitled “Acknowledgements”, “Dedications”, or “History”, the requirement (section 4) to Preserve its Title (section 1) will typically require changing the actual title.
+
+如果文件中有一节标题为“鸣谢”、“致献”或“历史” ，那么保留标题(第1节)的要求(第4节)通常需要修改实际标题。
+
+TERMINATION 终止
+You may not copy, modify, sublicense, or distribute the Document except as expressly provided under this License. Any attempt otherwise to copy, modify, sublicense, or distribute it is void, and will automatically terminate your rights under this License.
+
+除非本许可证明确规定，否则您不得复制、修改、再授权或分发本文档。任何试图以其他方式复制、修改、再授权或分发该许可证的行为均属无效，并将自动终止您在本许可证下的权利。
+
+However, if you cease all violation of this License, then your license from a particular copyright holder is reinstated (a) provisionally, unless and until the copyright holder explicitly and finally terminates your license, and (b) permanently, if the copyright holder fails to notify you of the violation by some reasonable means prior to 60 days after the cessation.
+
+然而，如果你停止所有违反本许可证的行为，那么你从某个版权持有者那里得到的许可将被暂时恢复(a) ，除非并直到版权持有者明确终止你的许可证; 以及(b)永久终止，如果版权持有者未能在停止后60天之前以某种合理的方式通知你违反了许可证。
+
+Moreover, your license from a particular copyright holder is reinstated permanently if the copyright holder notifies you of the violation by some reasonable means, this is the first time you have received notice of violation of this License (for any work) from that copyright holder, and you cure the violation prior to 30 days after your receipt of the notice.
+
+此外，如果版权所有者通过某种合理的方式通知你违反了版权许可，你从某个版权所有者那里得到的许可将被永久恢复，这是你第一次从版权所有者那里收到违反本许可的通知，而且你在收到通知30天之前就已经纠正了这种违反。
+
+Termination of your rights under this section does not terminate the licenses of parties who have received copies or rights from you under this License. If your rights have been terminated and not permanently reinstated, receipt of a copy of some or all of the same material does not give you any rights to use it.
+
+终止您在本节下的权利并不终止从您那里获得本许可证的副本或权利的各方的许可证。如果你的权利已经被终止，而且没有永久恢复，收到一份部分或全部相同材料的副本并不给予你使用它的任何权利。
+
+FUTURE REVISIONS OF THIS LICENSE 本许可证的未来修订
+The Free Software Foundation may publish new, revised versions of the GNU Free Documentation License from time to time. Such new versions will be similar in spirit to the present version, but may differ in detail to address new problems or concerns. See http://www.gnu.org/copyleft/.
+
+自由软件基金会可能会不时地出版新的、修订过的 GNU自由文档许可证版本。这些新版本在精神上与现有版本相似，但为了解决新的问题或关注点，可能在细节上有所不同。参见 http://www.gnu.org/copyleft/。
+
+Each version of the License is given a distinguishing version number. If the Document specifies that a particular numbered version of this License “or any later version” applies to it, you have the option of following the terms and conditions either of that specified version or of any later version that has been published (not as a draft) by the Free Software Foundation. If the Document does not specify a version number of this License, you may choose any version ever published (not as a draft) by the Free Software Foundation. If the Document specifies that a proxy can decide which future versions of this License can be used, that proxy’s public statement of acceptance of a version permanently authorizes you to choose that version for the Document.
+
+许可证的每个版本都有一个区分的版本号。如果文档指定本许可证的特定编号版本“或任何以后的版本”适用于它，您可以选择遵循指定版本或自由软件基金会发布的任何以后版本(而不是草稿)的条款和条件。如果文档没有指定许可证的版本号，您可以选择由自由软件基金会发布的任何版本(不是草稿)。如果文档指定代理可以决定将来可以使用哪个版本的许可证，代理的公开声明接受一个版本永久授权您为文档选择该版本。
+
+RELICENSING Reicensing
+“Massive Multiauthor Collaboration Site” (or “MMC Site”) means any World Wide Web server that publishes copyrightable works and also provides prominent facilities for anybody to edit those works. A public wiki that anybody can edit is an example of such a server. A “Massive Multiauthor Collaboration” (or “MMC”) contained in the site means any set of copyrightable works thus published on the MMC site.
+
+“大规模多作者协作网站”(或“ MMC 网站”)是指发布版权作品并为任何人编辑这些作品提供突出设施的任何万维网服务器。任何人都可以编辑的公共 wiki 就是这样一个服务器的例子。网站中包含的“大规模多作者合作”(或“ MMC”)意味着在 MMC 网站上发表的任何版权作品。
+
+“CC-BY-SA” means the Creative Commons Attribution-Share Alike 3.0 license published by Creative Commons Corporation, a not-for-profit corporation with a principal place of business in San Francisco, California, as well as future copyleft versions of that license published by that same organization.
+
+“ CC-BY-SA”是指由加利福尼亚州旧金山一家主要营业地的非营利性公司---- 知识共享知识共享公司发布的授权归属-相同方式共享3.0许可证，以及该组织发布的该授权未来版权版本。
+
+“Incorporate” means to publish or republish a Document, in whole or in part, as part of another Document.
+
+“合并”是指将一份文件全部或部分作为另一份文件的一部分出版或再出版。
+
+An MMC is “eligible for relicensing” if it is licensed under this License, and if all works that were first published under this License somewhere other than this MMC, and subsequently incorporated in whole or in part into the MMC, (1) had no cover texts or invariant sections, and (2) were thus incorporated prior to November 1, 2008.
+
+如果 MMC 是根据本许可证获得许可的，并且如果所有首次根据本许可证在本许可证以外的其他地方发布的作品，随后全部或部分并入 MMC，(1)没有封面文本或不变章节，(2)因此在2008年11月1日之前被并入 MMC，那么 MMC 就“有资格获得重新加入许可”。
+
+The operator of an MMC Site may republish an MMC contained in the site under CC-BY-SA on the same site at any time before August 1, 2009, provided the MMC is eligible for relicensing.
+
+在2009年8月1日前的任何时间，MMC 网站的营办商可在同一网站重新发布 CC-BY-SA 网站所载的 MMC，但须符合重新发布的资格。
+
+ADDENDUM: How to use this License for your documents
+附录: 如何为您的文档使用本许可证
+To use this License in a document you have written, include a copy of the License in the document and put the following copyright and license notices just after the title page:
+
+在你写的文档中使用许可证，在文档中包含许可证的副本，并在标题页后面加上以下版权和许可声明:
+
+  Copyright (C)  year  your name.
+  Permission is granted to copy, distribute and/or modify this document
+  under the terms of the GNU Free Documentation License, Version 1.3
+  or any later version published by the Free Software Foundation;
+  with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+  Texts.  A copy of the license is included in the section entitled ``GNU
+  Free Documentation License''.
+If you have Invariant Sections, Front-Cover Texts and Back-Cover Texts, replace the “with…Texts.” line with this:
+
+如果你有不变部分，封面文本和封底文本，用下面这行代替“ ... 文本” :
+
+    with the Invariant Sections being list their titles, with
+    the Front-Cover Texts being list, and with the Back-Cover Texts
+    being list.
+If you have Invariant Sections without Cover Texts, or some other combination of the three, merge those two alternatives to suit the situation.
+
+如果你有没有封面文本的不变部分，或者其他三者的组合，合并这两个选择以适应情况。
+
+If your document contains nontrivial examples of program code, we recommend releasing these examples in parallel under your choice of free software license, such as the GNU General Public License, to permit their use in free software.
+
+如果你的文档包含了一些重要的程序代码示例，我们建议在你选择的自由软件许可协议下并行发布这些示例，比如 GNU通用公共许可协议许可协议，以允许它们在自由软件中使用。
+
+Previous: GNU Free Documentation License, Up: Top   [Contents][Index]
+
+上一页: GNU自由文档许可证，向上: 顶部[目录][索引]
+
+Appendix D Indexes
+附录 d 索引
+• Builtin Index 内建索引:	  	Index of Bash builtin commands. Bash 内置命令的索引
+• Reserved Word Index 保留字索引:	  	Index of Bash reserved words. Bash 保留字索引
+• Variable Index 可变索引:	  	Quick reference helps you find the variable you want. 快速引用可帮助您找到所需的变量
+• Function Index 功能索引:	  	Index of bindable Readline functions. 可绑定的 Readline 函数的索引
+• Concept Index 概念索引:	  	General index for concepts described in this manual. 本手册中描述的概念的一般索引
+Next: Reserved Word Index, Up: Indexes   [Contents][Index]
+
+下一步: 保留字索引，向上: 索引[目录][索引]
+
+D.1 Index of Shell Builtin Commands
+1 Shell 内建命令的索引
+Jump to:   跳转到:	.   :   [  
+A   B   C   D   E   F   G   H   J   K   L   M   P   R   S   T   U   W  
+Index Entry 索引条目	 	Section 部分
+.		
+.:	 	Bourne Shell Builtins 伯恩壳内置
+:		
+::	 	Bourne Shell Builtins 伯恩壳内置
+[		
+[:	 	Bourne Shell Builtins 伯恩壳内置
+A		
+alias:	 	Bash Builtins
+B		
+bg:	 	Job Control Builtins 工作控制内置程序
+bind:	 	Bash Builtins
+break:	 	Bourne Shell Builtins 伯恩壳内置
+builtin:	 	Bash Builtins
+C		
+caller:	 	Bash Builtins
+cd:	 	Bourne Shell Builtins 伯恩壳内置
+command:	 	Bash Builtins
+compgen:	 	Programmable Completion Builtins 可编程完成内置程序
+complete:	 	Programmable Completion Builtins 可编程完成内置程序
+compopt:	 	Programmable Completion Builtins 可编程完成内置程序
+continue:	 	Bourne Shell Builtins 伯恩壳内置
+D		
+declare:	 	Bash Builtins
+dirs:	 	Directory Stack Builtins 目录堆栈构建
+disown:	 	Job Control Builtins 工作控制内置程序
+E		
+echo:	 	Bash Builtins
+enable:	 	Bash Builtins
+eval:	 	Bourne Shell Builtins 伯恩壳内置
+exec:	 	Bourne Shell Builtins 伯恩壳内置
+exit:	 	Bourne Shell Builtins 伯恩壳内置
+export:	 	Bourne Shell Builtins 伯恩壳内置
+F		
+fc:	 	Bash History Builtins 重击历史内置程序
+fg:	 	Job Control Builtins 工作控制内置程序
+G		
+getopts:	 	Bourne Shell Builtins 伯恩壳内置
+H		
+hash:	 	Bourne Shell Builtins 伯恩壳内置
+help:	 	Bash Builtins
+history:	 	Bash History Builtins 重击历史内置程序
+J		
+jobs:	 	Job Control Builtins 工作控制内置程序
+K		
+kill:	 	Job Control Builtins 工作控制内置程序
+L		
+let:	 	Bash Builtins
+local:	 	Bash Builtins
+logout:	 	Bash Builtins
+M		
+mapfile:	 	Bash Builtins
+P		
+popd:	 	Directory Stack Builtins 目录堆栈构建
+printf:	 	Bash Builtins
+pushd:	 	Directory Stack Builtins 目录堆栈构建
+pwd:	 	Bourne Shell Builtins 伯恩壳内置
+R		
+read:	 	Bash Builtins
+readarray:	 	Bash Builtins
+readonly:	 	Bourne Shell Builtins 伯恩壳内置
+return:	 	Bourne Shell Builtins 伯恩壳内置
+S		
+set:	 	The Set Builtin 布景内置
+shift:	 	Bourne Shell Builtins 伯恩壳内置
+shopt:	 	The Shopt Builtin 商店大楼
+source:	 	Bash Builtins
+suspend:	 	Job Control Builtins 工作控制内置程序
+T		
+test:	 	Bourne Shell Builtins 伯恩壳内置
+times:	 	Bourne Shell Builtins 伯恩壳内置
+trap:	 	Bourne Shell Builtins 伯恩壳内置
+type:	 	Bash Builtins
+typeset:	 	Bash Builtins
+U		
+ulimit:	 	Bash Builtins
+umask:	 	Bourne Shell Builtins 伯恩壳内置
+unalias:	 	Bash Builtins
+unset:	 	Bourne Shell Builtins 伯恩壳内置
+W		
+wait:	 	Job Control Builtins 工作控制内置程序
+Jump to:   跳转到:	.   :   [  
+A   B   C   D   E   F   G   H   J   K   L   M   P   R   S   T   U   W  
+Next: Variable Index, Previous: Builtin Index, Up: Indexes   [Contents][Index]
+
+下一步: 变量索引，上一步: 内建索引，上升: 索引[目录][索引]
+
+D.2 Index of Shell Reserved Words
+外壳保留字索引
+Jump to:   跳转到:	!   [   ]   {   }  
+C   D   E   F   I   S   T   U   W  
+Index Entry 索引条目	 	Section 部分
+!		
+!:	 	Pipelines 管道
+[		
+[[:	 	Conditional Constructs 条件结构
+]		
+]]:	 	Conditional Constructs 条件结构
+{		
+{:	 	Command Grouping 命令分组
+}		
+}:	 	Command Grouping 命令分组
+C		
+case:	 	Conditional Constructs 条件结构
+D		
+do:	 	Looping Constructs 循环结构
+done:	 	Looping Constructs 循环结构
+E		
+elif:	 	Conditional Constructs 条件结构
+else:	 	Conditional Constructs 条件结构
+esac:	 	Conditional Constructs 条件结构
+F		
+fi:	 	Conditional Constructs 条件结构
+for:	 	Looping Constructs 循环结构
+function:	 	Shell Functions 外壳函数
+I		
+if:	 	Conditional Constructs 条件结构
+in:	 	Conditional Constructs 条件结构
+S		
+select:	 	Conditional Constructs 条件结构
+T		
+then:	 	Conditional Constructs 条件结构
+time:	 	Pipelines 管道
+U		
+until:	 	Looping Constructs 循环结构
+W		
+while:	 	Looping Constructs 循环结构
+Jump to:   跳转到:	!   [   ]   {   }  
+C   D   E   F   I   S   T   U   W  
+Next: Function Index, Previous: Reserved Word Index, Up: Indexes   [Contents][Index]
+
+下一步: 功能索引，上一步: 保留字索引，上一步: 索引[目录][索引]
+
+D.3 Parameter and Variable Index
+3参数和变量索引
+Jump to:   跳转到:	!   #   $   *   -   0   ?   @   _  
+A   B   C   D   E   F   G   H   I   K   L   M   O   P   R   S   T   U   V  
+Index Entry 索引条目	 	Section 部分
+!		
+!:	 	Special Parameters 特别参数
+#		
+#:	 	Special Parameters 特别参数
+$		
+$:	 	Special Parameters 特别参数
+$!:	 	Special Parameters 特别参数
+$#:	 	Special Parameters 特别参数
+$$:	 	Special Parameters 特别参数
+$*:	 	Special Parameters 特别参数
+$-:	 	Special Parameters 特别参数
+$0:	 	Special Parameters 特别参数
+$?:	 	Special Parameters 特别参数
+$@:	 	Special Parameters 特别参数
+$_:	 	Special Parameters 特别参数
+*		
+*:	 	Special Parameters 特别参数
+-		
+-:	 	Special Parameters 特别参数
+0		
+0:	 	Special Parameters 特别参数
+?		
+?:	 	Special Parameters 特别参数
+@		
+@:	 	Special Parameters 特别参数
+_		
+_:	 	Special Parameters 特别参数
+A		
+auto_resume:	 	Job Control Variables 作业控制变量
+B		
+BASH:	 	Bash Variables Bash 变量
+BASHOPTS:	 	Bash Variables Bash 变量
+BASHPID:	 	Bash Variables Bash 变量
+BASH_ALIASES:	 	Bash Variables Bash 变量
+BASH_ARGC:	 	Bash Variables Bash 变量
+BASH_ARGV:	 	Bash Variables Bash 变量
+BASH_ARGV0:	 	Bash Variables Bash 变量
+BASH_CMDS:	 	Bash Variables Bash 变量
+BASH_COMMAND:	 	Bash Variables Bash 变量
+BASH_COMPAT:	 	Bash Variables Bash 变量
+BASH_ENV:	 	Bash Variables Bash 变量
+BASH_EXECUTION_STRING:	 	Bash Variables Bash 变量
+BASH_LINENO:	 	Bash Variables Bash 变量
+BASH_LOADABLES_PATH:	 	Bash Variables Bash 变量
+BASH_REMATCH:	 	Bash Variables Bash 变量
+BASH_SOURCE:	 	Bash Variables Bash 变量
+BASH_SUBSHELL:	 	Bash Variables Bash 变量
+BASH_VERSINFO:	 	Bash Variables Bash 变量
+BASH_VERSION:	 	Bash Variables Bash 变量
+BASH_XTRACEFD:	 	Bash Variables Bash 变量
+bell-style:	 	Readline Init File Syntax 文件语法
+bind-tty-special-chars:	 	Readline Init File Syntax 文件语法
+blink-matching-paren:	 	Readline Init File Syntax 文件语法
+C		
+CDPATH:	 	Bourne Shell Variables 外壳变量
+CHILD_MAX:	 	Bash Variables Bash 变量
+colored-completion-prefix:	 	Readline Init File Syntax 文件语法
+colored-stats:	 	Readline Init File Syntax 文件语法
+COLUMNS:	 	Bash Variables Bash 变量
+comment-begin:	 	Readline Init File Syntax 文件语法
+completion-display-width:	 	Readline Init File Syntax 文件语法
+completion-ignore-case:	 	Readline Init File Syntax 文件语法
+completion-map-case:	 	Readline Init File Syntax 文件语法
+completion-prefix-display-length:	 	Readline Init File Syntax 文件语法
+completion-query-items:	 	Readline Init File Syntax 文件语法
+COMPREPLY:	 	Bash Variables Bash 变量
+COMP_CWORD:	 	Bash Variables Bash 变量
+COMP_KEY:	 	Bash Variables Bash 变量
+COMP_LINE:	 	Bash Variables Bash 变量
+COMP_POINT:	 	Bash Variables Bash 变量
+COMP_TYPE:	 	Bash Variables Bash 变量
+COMP_WORDBREAKS:	 	Bash Variables Bash 变量
+COMP_WORDS:	 	Bash Variables Bash 变量
+convert-meta:	 	Readline Init File Syntax 文件语法
+COPROC:	 	Bash Variables Bash 变量
+D		
+DIRSTACK:	 	Bash Variables Bash 变量
+disable-completion:	 	Readline Init File Syntax 文件语法
+E		
+echo-control-characters:	 	Readline Init File Syntax 文件语法
+editing-mode:	 	Readline Init File Syntax 文件语法
+EMACS:	 	Bash Variables Bash 变量
+emacs-mode-string:	 	Readline Init File Syntax 文件语法
+enable-bracketed-paste:	 	Readline Init File Syntax 文件语法
+enable-keypad:	 	Readline Init File Syntax 文件语法
+ENV:	 	Bash Variables Bash 变量
+EPOCHREALTIME:	 	Bash Variables Bash 变量
+EPOCHSECONDS:	 	Bash Variables Bash 变量
+EUID:	 	Bash Variables Bash 变量
+EXECIGNORE:	 	Bash Variables Bash 变量
+expand-tilde:	 	Readline Init File Syntax 文件语法
+F		
+FCEDIT:	 	Bash Variables Bash 变量
+FIGNORE:	 	Bash Variables Bash 变量
+FUNCNAME:	 	Bash Variables Bash 变量
+FUNCNEST:	 	Bash Variables Bash 变量
+G		
+GLOBIGNORE:	 	Bash Variables Bash 变量
+GROUPS:	 	Bash Variables Bash 变量
+H		
+histchars:	 	Bash Variables Bash 变量
+HISTCMD:	 	Bash Variables Bash 变量
+HISTCONTROL:	 	Bash Variables Bash 变量
+HISTFILE:	 	Bash Variables Bash 变量
+HISTFILESIZE:	 	Bash Variables Bash 变量
+HISTIGNORE:	 	Bash Variables Bash 变量
+history-preserve-point:	 	Readline Init File Syntax 文件语法
+history-size:	 	Readline Init File Syntax 文件语法
+HISTSIZE:	 	Bash Variables Bash 变量
+HISTTIMEFORMAT:	 	Bash Variables Bash 变量
+HOME:	 	Bourne Shell Variables 外壳变量
+horizontal-scroll-mode:	 	Readline Init File Syntax 文件语法
+HOSTFILE:	 	Bash Variables Bash 变量
+HOSTNAME:	 	Bash Variables Bash 变量
+HOSTTYPE:	 	Bash Variables Bash 变量
+I		
+IFS:	 	Bourne Shell Variables 外壳变量
+IGNOREEOF:	 	Bash Variables Bash 变量
+input-meta:	 	Readline Init File Syntax 文件语法
+INPUTRC:	 	Bash Variables Bash 变量
+INSIDE_EMACS:	 	Bash Variables Bash 变量
+isearch-terminators:	 	Readline Init File Syntax 文件语法
+K		
+keymap:	 	Readline Init File Syntax 文件语法
+L		
+LANG:	 	Bash Variables Bash 变量
+LC_ALL:	 	Bash Variables Bash 变量
+LC_COLLATE:	 	Bash Variables Bash 变量
+LC_CTYPE:	 	Bash Variables Bash 变量
+LC_MESSAGES:	 	Locale Translation 场所翻译
+LC_MESSAGES:	 	Bash Variables Bash 变量
+LC_NUMERIC:	 	Bash Variables Bash 变量
+LC_TIME:	 	Bash Variables Bash 变量
+LINENO:	 	Bash Variables Bash 变量
+LINES:	 	Bash Variables Bash 变量
+M		
+MACHTYPE:	 	Bash Variables Bash 变量
+MAIL:	 	Bourne Shell Variables 外壳变量
+MAILCHECK:	 	Bash Variables Bash 变量
+MAILPATH:	 	Bourne Shell Variables 外壳变量
+MAPFILE:	 	Bash Variables Bash 变量
+mark-modified-lines:	 	Readline Init File Syntax 文件语法
+mark-symlinked-directories:	 	Readline Init File Syntax 文件语法
+match-hidden-files:	 	Readline Init File Syntax 文件语法
+menu-complete-display-prefix:	 	Readline Init File Syntax 文件语法
+meta-flag:	 	Readline Init File Syntax 文件语法
+O		
+OLDPWD:	 	Bash Variables Bash 变量
+OPTARG:	 	Bourne Shell Variables 外壳变量
+OPTERR:	 	Bash Variables Bash 变量
+OPTIND:	 	Bourne Shell Variables 外壳变量
+OSTYPE:	 	Bash Variables Bash 变量
+output-meta:	 	Readline Init File Syntax 文件语法
+P		
+page-completions:	 	Readline Init File Syntax 文件语法
+PATH:	 	Bourne Shell Variables 外壳变量
+PIPESTATUS:	 	Bash Variables Bash 变量
+POSIXLY_CORRECT:	 	Bash Variables Bash 变量
+PPID:	 	Bash Variables Bash 变量
+PROMPT_COMMAND:	 	Bash Variables Bash 变量
+PROMPT_DIRTRIM:	 	Bash Variables Bash 变量
+PS0:	 	Bash Variables Bash 变量
+PS1:	 	Bourne Shell Variables 外壳变量
+PS2:	 	Bourne Shell Variables 外壳变量
+PS3:	 	Bash Variables Bash 变量
+PS4:	 	Bash Variables Bash 变量
+PWD:	 	Bash Variables Bash 变量
+R		
+RANDOM:	 	Bash Variables Bash 变量
+READLINE_LINE:	 	Bash Variables Bash 变量
+READLINE_POINT:	 	Bash Variables Bash 变量
+REPLY:	 	Bash Variables Bash 变量
+revert-all-at-newline:	 	Readline Init File Syntax 文件语法
+S		
+SECONDS:	 	Bash Variables Bash 变量
+SHELL:	 	Bash Variables Bash 变量
+SHELLOPTS:	 	Bash Variables Bash 变量
+SHLVL:	 	Bash Variables Bash 变量
+show-all-if-ambiguous:	 	Readline Init File Syntax 文件语法
+show-all-if-unmodified:	 	Readline Init File Syntax 文件语法
+show-mode-in-prompt:	 	Readline Init File Syntax 文件语法
+skip-completed-text:	 	Readline Init File Syntax 文件语法
+T		
+TEXTDOMAIN:	 	Locale Translation 场所翻译
+TEXTDOMAINDIR:	 	Locale Translation 场所翻译
+TIMEFORMAT:	 	Bash Variables Bash 变量
+TMOUT:	 	Bash Variables Bash 变量
+TMPDIR:	 	Bash Variables Bash 变量
+U		
+UID:	 	Bash Variables Bash 变量
+V		
+vi-cmd-mode-string:	 	Readline Init File Syntax 文件语法
+vi-ins-mode-string:	 	Readline Init File Syntax 文件语法
+visible-stats:	 	Readline Init File Syntax 文件语法
+Jump to:   跳转到:	!   #   $   *   -   0   ?   @   _  
+A   B   C   D   E   F   G   H   I   K   L   M   O   P   R   S   T   U   V  
+Next: Concept Index, Previous: Variable Index, Up: Indexes   [Contents][Index]
+
+下一步: 概念索引，上一步: 变量索引，上一步: 索引[目录][索引]
+
+D.4 Function Index
+D. 4功能索引
+Jump to:   跳转到:	A   B   C   D   E   F   G   H   I   K   M   N   O   P   Q   R   S   T   U   Y  
+Index Entry 索引条目	 	Section 部分
+A		
+abort (C-g):	 	Miscellaneous Commands 杂项命令
+accept-line (Newline or Return):	 	Commands For History 历史记录命令
+alias-expand-line ():	 	Miscellaneous Commands 杂项命令
+B		
+backward-char (C-b):	 	Commands For Moving 移动命令
+backward-delete-char (Rubout):	 	Commands For Text 文本命令
+backward-kill-line (C-x Rubout):	 	Commands For Killing 杀戮指令
+backward-kill-word (M-DEL):	 	Commands For Killing 杀戮指令
+backward-word (M-b):	 	Commands For Moving 移动命令
+beginning-of-history (M-<):	 	Commands For History 历史记录命令
+beginning-of-line (C-a):	 	Commands For Moving 移动命令
+bracketed-paste-begin ():	 	Commands For Text 文本命令
+C		
+call-last-kbd-macro (C-x e):	 	Keyboard Macros 键盘宏
+capitalize-word (M-c):	 	Commands For Text 文本命令
+character-search (C-]):	 	Miscellaneous Commands 杂项命令
+character-search-backward (M-C-]):	 	Miscellaneous Commands 杂项命令
+clear-screen (C-l):	 	Commands For Moving 移动命令
+complete (TAB):	 	Commands For Completion 完成命令
+complete-command (M-!):	 	Commands For Completion 完成命令
+complete-filename (M-/):	 	Commands For Completion 完成命令
+complete-hostname (M-@):	 	Commands For Completion 完成命令
+complete-into-braces (M-{):	 	Commands For Completion 完成命令
+complete-username (M-~):	 	Commands For Completion 完成命令
+complete-variable (M-$):	 	Commands For Completion 完成命令
+copy-backward-word ():	 	Commands For Killing 杀戮指令
+copy-forward-word ():	 	Commands For Killing 杀戮指令
+copy-region-as-kill ():	 	Commands For Killing 杀戮指令
+D		
+dabbrev-expand ():	 	Commands For Completion 完成命令
+delete-char (C-d):	 	Commands For Text 文本命令
+delete-char-or-list ():	 	Commands For Completion 完成命令
+delete-horizontal-space ():	 	Commands For Killing 杀戮指令
+digit-argument (M-0, M-1, … M--):	 	Numeric Arguments 数字参数
+display-shell-version (C-x C-v):	 	Miscellaneous Commands 杂项命令
+do-lowercase-version (M-A, M-B, M-x, …):	 	Miscellaneous Commands 杂项命令
+downcase-word (M-l):	 	Commands For Text 文本命令
+dump-functions ():	 	Miscellaneous Commands 杂项命令
+dump-macros ():	 	Miscellaneous Commands 杂项命令
+dump-variables ():	 	Miscellaneous Commands 杂项命令
+dynamic-complete-history (M-TAB):	 	Commands For Completion 完成命令
+E		
+edit-and-execute-command (C-x C-e):	 	Miscellaneous Commands 杂项命令
+end-kbd-macro (C-x )):	 	Keyboard Macros 键盘宏
+end-of-file (usually C-d):	 	Commands For Text 文本命令
+end-of-history (M->):	 	Commands For History 历史记录命令
+end-of-line (C-e):	 	Commands For Moving 移动命令
+exchange-point-and-mark (C-x C-x):	 	Miscellaneous Commands 杂项命令
+F		
+forward-backward-delete-char ():	 	Commands For Text 文本命令
+forward-char (C-f):	 	Commands For Moving 移动命令
+forward-search-history (C-s):	 	Commands For History 历史记录命令
+forward-word (M-f):	 	Commands For Moving 移动命令
+G		
+glob-complete-word (M-g):	 	Miscellaneous Commands 杂项命令
+glob-expand-word (C-x *):	 	Miscellaneous Commands 杂项命令
+glob-list-expansions (C-x g):	 	Miscellaneous Commands 杂项命令
+H		
+history-and-alias-expand-line ():	 	Miscellaneous Commands 杂项命令
+history-expand-line (M-^):	 	Miscellaneous Commands 杂项命令
+history-search-backward ():	 	Commands For History 历史记录命令
+history-search-forward ():	 	Commands For History 历史记录命令
+history-substring-search-backward ():	 	Commands For History 历史记录命令
+history-substring-search-forward ():	 	Commands For History 历史记录命令
+I		
+insert-comment (M-#):	 	Miscellaneous Commands 杂项命令
+insert-completions (M-*):	 	Commands For Completion 完成命令
+insert-last-argument (M-. or M-_):	 	Miscellaneous Commands 杂项命令
+K		
+kill-line (C-k):	 	Commands For Killing 杀戮指令
+kill-region ():	 	Commands For Killing 杀戮指令
+kill-whole-line ():	 	Commands For Killing 杀戮指令
+kill-word (M-d):	 	Commands For Killing 杀戮指令
+M		
+magic-space ():	 	Miscellaneous Commands 杂项命令
+menu-complete ():	 	Commands For Completion 完成命令
+menu-complete-backward ():	 	Commands For Completion 完成命令
+N		
+next-history (C-n):	 	Commands For History 历史记录命令
+next-screen-line ():	 	Commands For Moving 移动命令
+non-incremental-forward-search-history (M-n):	 	Commands For History 历史记录命令
+non-incremental-reverse-search-history (M-p):	 	Commands For History 历史记录命令
+O		
+operate-and-get-next (C-o):	 	Miscellaneous Commands 杂项命令
+overwrite-mode ():	 	Commands For Text 文本命令
+P		
+possible-command-completions (C-x !):	 	Commands For Completion 完成命令
+possible-completions (M-?):	 	Commands For Completion 完成命令
+possible-filename-completions (C-x /):	 	Commands For Completion 完成命令
+possible-hostname-completions (C-x @):	 	Commands For Completion 完成命令
+possible-username-completions (C-x ~):	 	Commands For Completion 完成命令
+possible-variable-completions (C-x $):	 	Commands For Completion 完成命令
+prefix-meta (ESC):	 	Miscellaneous Commands 杂项命令
+previous-history (C-p):	 	Commands For History 历史记录命令
+previous-screen-line ():	 	Commands For Moving 移动命令
+print-last-kbd-macro ():	 	Keyboard Macros 键盘宏
+Q		
+quoted-insert (C-q or C-v):	 	Commands For Text 文本命令
+R		
+re-read-init-file (C-x C-r):	 	Miscellaneous Commands 杂项命令
+redraw-current-line ():	 	Commands For Moving 移动命令
+reverse-search-history (C-r):	 	Commands For History 历史记录命令
+revert-line (M-r):	 	Miscellaneous Commands 杂项命令
+S		
+self-insert (a, b, A, 1, !, …):	 	Commands For Text 文本命令
+set-mark (C-@):	 	Miscellaneous Commands 杂项命令
+shell-backward-kill-word ():	 	Commands For Killing 杀戮指令
+shell-backward-word ():	 	Commands For Moving 移动命令
+shell-expand-line (M-C-e):	 	Miscellaneous Commands 杂项命令
+shell-forward-word ():	 	Commands For Moving 移动命令
+shell-kill-word ():	 	Commands For Killing 杀戮指令
+skip-csi-sequence ():	 	Miscellaneous Commands 杂项命令
+start-kbd-macro (C-x ():	 	Keyboard Macros 键盘宏
+T		
+tilde-expand (M-&):	 	Miscellaneous Commands 杂项命令
+transpose-chars (C-t):	 	Commands For Text 文本命令
+transpose-words (M-t):	 	Commands For Text 文本命令
+U		
+undo (C-_ or C-x C-u):	 	Miscellaneous Commands 杂项命令
+universal-argument ():	 	Numeric Arguments 数字参数
+unix-filename-rubout ():	 	Commands For Killing 杀戮指令
+unix-line-discard (C-u):	 	Commands For Killing 杀戮指令
+unix-word-rubout (C-w):	 	Commands For Killing 杀戮指令
+upcase-word (M-u):	 	Commands For Text 文本命令
+Y		
+yank (C-y):	 	Commands For Killing 杀戮指令
+yank-last-arg (M-. or M-_):	 	Commands For History 历史记录命令
+yank-nth-arg (M-C-y):	 	Commands For History 历史记录命令
+yank-pop (M-y):	 	Commands For Killing 杀戮指令
+Jump to:   跳转到:	A   B   C   D   E   F   G   H   I   K   M   N   O   P   Q   R   S   T   U   Y  
+Previous: Function Index, Up: Indexes   [Contents][Index]
+
+上一页: 函数索引，向上: 索引[目录][索引]
+
+D.5 Concept Index
+D. 5概念索引
+Jump to:   跳转到:	A   B   C   D   E   F   H   I   J   K   L   M   N   O   P   Q   R   S   T   V   W   Y  
+Index Entry 索引条目	 	Section 部分
+A		
+alias expansion 别名展开式:	 	Aliases 别名
+arithmetic evaluation 算术计算:	 	Shell Arithmetic Shell 算术
+arithmetic expansion 算术展开:	 	Arithmetic Expansion 算术扩展
+arithmetic, shell 算术，shell:	 	Shell Arithmetic Shell 算术
+arrays 数组:	 	Arrays 数组
+B		
+background 背景:	 	Job Control Basics 工作控制基础
+Bash configuration Bash 配置:	 	Basic Installation 基本安装
+Bash installation Bash 安装:	 	Basic Installation 基本安装
+Bourne shell:	 	Basic Shell Features 基本外壳功能
+brace expansion 支撑伸缩:	 	Brace Expansion 支撑扩张
+builtin 内建的:	 	Definitions 定义
+C		
+command editing 命令编辑:	 	Readline Bare Essentials
+command execution 命令执行:	 	Command Search and Execution 命令搜索和执行
+command expansion 命令扩展:	 	Simple Command Expansion 简单的命令扩展
+command history 命令历史:	 	Bash History Facilities 历史设施
+command search 命令搜索:	 	Command Search and Execution 命令搜索和执行
+command substitution 指令替代:	 	Command Substitution 指令替代
+command timing 命令计时:	 	Pipelines 管道
+commands, compound 命令，复合:	 	Compound Commands 复合命令
+commands, conditional 命令，条件:	 	Conditional Constructs 条件结构
+commands, grouping 命令，分组:	 	Command Grouping 命令分组
+commands, lists 命令，列表:	 	Lists 名单
+commands, looping 命令，循环:	 	Looping Constructs 循环结构
+commands, pipelines 命令，管道:	 	Pipelines 管道
+commands, shell 命令 shell:	 	Shell Commands 命令行命令
+commands, simple 命令，很简单:	 	Simple Commands 简单命令
+comments, shell 评论，shell:	 	Comments 评论
+completion builtins 完工建筑物:	 	Programmable Completion Builtins 可编程完成内置程序
+configuration 配置:	 	Basic Installation 基本安装
+control operator 控制操作员:	 	Definitions 定义
+coprocess 共处理:	 	Coprocesses
+D		
+directory stack 目录栈:	 	The Directory Stack 目录堆栈
+E		
+editing command lines 编辑命令行:	 	Readline Bare Essentials
+environment 环境:	 	Environment 环境
+evaluation, arithmetic 评估，算术:	 	Shell Arithmetic Shell 算术
+event designators 事件指示器:	 	Event Designators 事件指示器
+execution environment 执行环境:	 	Command Execution Environment 命令执行环境
+exit status 出口状态:	 	Definitions 定义
+exit status 出口状态:	 	Exit Status 退出状态
+expansion 膨胀:	 	Shell Expansions Shell 扩展
+expansion, arithmetic 扩展，算术:	 	Arithmetic Expansion 算术扩展
+expansion, brace 伸展，支撑:	 	Brace Expansion 支撑扩张
+expansion, filename 扩展，文件名:	 	Filename Expansion 文件名扩展
+expansion, parameter 膨胀，参数:	 	Shell Parameter Expansion 外壳参数展开
+expansion, pathname 扩展，路径名:	 	Filename Expansion 文件名扩展
+expansion, tilde 扩张，蒂尔德:	 	Tilde Expansion
+expressions, arithmetic 表达式，算术:	 	Shell Arithmetic Shell 算术
+expressions, conditional 表达式，条件:	 	Bash Conditional Expressions 重击条件表达式
+F		
+field 字段:	 	Definitions 定义
+filename 文件名:	 	Definitions 定义
+filename expansion 文件名扩展:	 	Filename Expansion 文件名扩展
+foreground 前景:	 	Job Control Basics 工作控制基础
+functions, shell 函数，shell:	 	Shell Functions 外壳函数
+H		
+history builtins 历史积累:	 	Bash History Builtins 重击历史内置程序
+history events 历史事件:	 	Event Designators 事件指示器
+history expansion 历史展开:	 	History Interaction 历史互动
+history list 历史表:	 	Bash History Facilities 历史设施
+History, how to use 历史，如何使用:	 	A Programmable Completion Example 一个可编程完成例子
+I		
+identifier 标识符:	 	Definitions 定义
+initialization file, readline 初始化文件，读线:	 	Readline Init File 读取 Init 文件
+installation 安装:	 	Basic Installation 基本安装
+interaction, readline 相互作用，读线:	 	Readline Interaction 读线相互作用
+interactive shell 交互式外壳:	 	Invoking Bash 调用 Bash
+interactive shell 交互式外壳:	 	Interactive Shells 交互式 shell
+internationalization 国际化:	 	Locale Translation 场所翻译
+J		
+job 工作:	 	Definitions 定义
+job control 作业控制:	 	Definitions 定义
+job control 作业控制:	 	Job Control Basics 工作控制基础
+K		
+kill ring 杀伤环:	 	Readline Killing Commands 阅读杀人命令
+killing text 终止信息:	 	Readline Killing Commands 阅读杀人命令
+L		
+localization 定位:	 	Locale Translation 场所翻译
+login shell 登录 shell:	 	Invoking Bash 调用 Bash
+M		
+matching, pattern 匹配，模式:	 	Pattern Matching 模式匹配
+metacharacter 异种动物:	 	Definitions 定义
+N		
+name 名称:	 	Definitions 定义
+native languages 土著语言:	 	Locale Translation 场所翻译
+notation, readline 符号，读线:	 	Readline Bare Essentials
+O		
+operator, shell 接线员，总部:	 	Definitions 定义
+P		
+parameter expansion 参数展开:	 	Shell Parameter Expansion 外壳参数展开
+parameters 参数:	 	Shell Parameters 外壳参数
+parameters, positional 参数，位置:	 	Positional Parameters 位置参数
+parameters, special 参数，特殊:	 	Special Parameters 特别参数
+pathname expansion 路径名展开:	 	Filename Expansion 文件名扩展
+pattern matching 模式匹配:	 	Pattern Matching 模式匹配
+pipeline 管道:	 	Pipelines 管道
+POSIX Posixth:	 	Definitions 定义
+POSIX Mode POSIX 模式:	 	Bash POSIX Mode 重击 POSIX 模式
+process group 过程组:	 	Definitions 定义
+process group ID 进程组 ID:	 	Definitions 定义
+process substitution 过程替换:	 	Process Substitution 过程替代
+programmable completion 可编程序完井:	 	Programmable Completion 可编程完成
+prompting 提示:	 	Controlling the Prompt 控制提示符
+Q		
+quoting 引用:	 	Quoting 引用
+quoting, ANSI 引用，ANSI:	 	ANSI-C Quoting ANSI-C 报价
+R		
+Readline, how to use 阅读行，如何使用:	 	Job Control Variables 作业控制变量
+redirection 重定向:	 	Redirections 重定向
+reserved word 保留字:	 	Definitions 定义
+restricted shell 受限壳体:	 	The Restricted Shell 受限壳牌
+return status 返回状态:	 	Definitions 定义
+S		
+shell arithmetic 外壳算法:	 	Shell Arithmetic Shell 算术
+shell function 外壳函数:	 	Shell Functions 外壳函数
+shell script 外壳脚本:	 	Shell Scripts Shell 脚本
+shell variable 外壳变量:	 	Shell Parameters 外壳参数
+shell, interactive Shell，交互式的:	 	Interactive Shells 交互式 shell
+signal 信号:	 	Definitions 定义
+signal handling 信号处理:	 	Signals 信号
+special builtin 特殊内建物:	 	Definitions 定义
+special builtin 特殊内建物:	 	Special Builtins 特殊内建物
+startup files 启动文件:	 	Bash Startup Files Bash 启动文件
+suspending jobs 暂停工作:	 	Job Control Basics 工作控制基础
+T		
+tilde expansion 波浪形膨胀:	 	Tilde Expansion
+token 令牌:	 	Definitions 定义
+translation, native languages 翻译，本地语言:	 	Locale Translation 场所翻译
+V		
+variable, shell 变量 shell:	 	Shell Parameters 外壳参数
+variables, readline 变量，读线:	 	Readline Init File Syntax 文件语法
+W		
+word 字:	 	Definitions 定义
+word splitting 字分裂:	 	Word Splitting 分词
+Y		
+yanking text 猛拉文本:	 	Readline Killing Commands 阅读杀人命令
+Jump to:   跳转到:	A   B   C   D   E   F   H   I   J   K   L   M   N   O   P   Q   R   S   T   V   W   Y  

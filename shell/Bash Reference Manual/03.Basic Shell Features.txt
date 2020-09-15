@@ -1,0 +1,2083 @@
+
+
+
+3 Basic Shell Features
+3个基本外壳功能
+Bash is an acronym for ‘Bourne-Again SHell’. The Bourne shell is the traditional Unix shell originally written by Stephen Bourne. All of the Bourne shell builtin commands are available in Bash, The rules for evaluation and quoting are taken from the POSIX specification for the ‘standard’ Unix shell.
+
+Bash 是“ Bourne-Again SHell”的首字母缩写。Bourne shell 是最初由 Stephen Bourne 编写的传统 Unix shell。所有的 Bourne shell 内置命令都可以在 Bash 中使用，计算和引用的规则来自于标准的 Unix shell 的 POSIX 规范。
+
+This chapter briefly summarizes the shell’s ‘building blocks’: commands, control structures, shell functions, shell parameters, shell expansions, redirections, which are a way to direct input and output from and to named files, and how the shell executes commands.
+
+本章简要总结了 shell 的‘构建块’ : 命令、控制结构、 shell 函数、 shell 参数、 shell 扩展、重定向，这些都是指定文件的输入和输出，以及 shell 是如何执行命令的。
+
+• Shell Syntax 外壳语法:	  	What your input means to the shell. 您的输入对 shell 的意义
+• Shell Commands 命令行命令:	  	The types of commands you can use. 您可以使用的命令类型
+• Shell Functions 外壳函数:	  	Grouping commands by name. 按名称对命令进行分组
+• Shell Parameters 外壳参数:	  	How the shell stores values. Shell 如何存储值
+• Shell Expansions Shell 扩展:	  	How Bash expands parameters and the various expansions available. Bash 如何扩展参数和各种可用的扩展
+• Redirections 重定向:	  	A way to control where input and output go. 一种控制输入和输出去向的方法
+• Executing Commands 执行命令:	  	What happens when you run a command. 当你运行命令时会发生什么
+• Shell Scripts Shell 脚本:	  	Executing files of shell commands. 执行 shell 命令的文件
+Next: Shell Commands, Up: Basic Shell Features   [Contents][Index]
+
+下一步: Shell 命令，向上: 基本 Shell 特性[目录][索引]
+
+3.1 Shell Syntax
+3.1 Shell 语法
+• Shell Operation 外壳操作:	  	The basic operation of the shell. Shell 的基本操作
+• Quoting 引用:	  	How to remove the special meaning from characters. 如何去除汉字中的特殊含义
+• Comments 评论:	  	How to specify comments. 如何指定注释
+When the shell reads input, it proceeds through a sequence of operations. If the input indicates the beginning of a comment, the shell ignores the comment symbol (‘#’), and the rest of that line.
+
+当 shell 读取输入时，它会执行一系列操作。如果输入指示注释的开头，shell 将忽略注释符号(“ # ”)和该行的其余部分。
+
+Otherwise, roughly speaking, the shell reads its input and divides the input into words and operators, employing the quoting rules to select which meanings to assign various words and characters.
+
+否则，粗略地说，shell 读取其输入，并将输入分为单词和运算符，使用引号规则选择哪些意义来分配各种单词和字符。
+
+The shell then parses these tokens into commands and other constructs, removes the special meaning of certain words or characters, expands others, redirects input and output as needed, executes the specified command, waits for the command’s exit status, and makes that exit status available for further inspection or processing.
+
+然后，shell 将这些令牌解析成命令和其他结构，删除某些单词或字符的特殊含义，扩展其他单词或字符，根据需要重定向输入和输出，执行指定的命令，等待命令的退出状态，并使退出状态可用于进一步检查或处理。
+
+Next: Quoting, Up: Shell Syntax   [Contents][Index]
+
+下一步: 引号，向上: Shell 语法[内容][索引]
+
+3.1.1 Shell Operation
+3.1.1 Shell 操作
+The following is a brief description of the shell’s operation when it reads and executes a command. Basically, the shell does the following:
+
+以下是 shell 在读取和执行命令时的操作的简要描述。基本上，shell 做以下事情:
+
+Reads its input from a file (see 从文件中读取其输入(参见Shell Scripts Shell 脚本), from a string supplied as an argument to the ) ，从作为参数的一条线到-c - c invocation option (see 调用选项(请参见Invoking Bash 调用 Bash), or from the user’s terminal. ) ，或从用户的终端机
+Breaks the input into words and operators, obeying the quoting rules described in 将输入分解为单词和运算符，遵守中描述的引用规则Quoting 引用. These tokens are separated by 。这些代币之间metacharacters. Alias expansion is performed by this step (see 。别名展开由此步骤执行(请参阅Aliases 别名).
+Parses the tokens into simple and compound commands (see 将标记分解为简单命令和复合命令(参见Shell Commands 命令行命令).
+Performs the various shell expansions (see 执行各种 shell 扩展(参见Shell Expansions Shell 扩展), breaking the expanded tokens into lists of filenames (see ) ，将扩展的标记分解为文件名列表(参见Filename Expansion 文件名扩展) and commands and arguments. )、命令和参数
+Performs any necessary redirections (see 执行任何必要的重定向(请参阅Redirections 重定向) and removes the redirection operators and their operands from the argument list. ) ，并将重定向运算符及其操作数从参数列表中移除
+Executes the command (see 执行命令(参见Executing Commands 执行命令).
+Optionally waits for the command to complete and collects its exit status (see 可以选择等待命令完成并收集其 exitstatus (请参见Exit Status 退出状态).
+Next: Comments, Previous: Shell Operation, Up: Shell Syntax   [Contents][Index]
+
+下一步: 注释，上一步: Shell 操作，向上: Shell 语法[目录][索引]
+
+3.1.2 Quoting
+3.1.2引用
+• Escape Character 转义字符:	  	How to remove the special meaning from a single character. 如何从单个字符中去除特殊含义
+• Single Quotes 单引号:	  	How to inhibit all interpretation of a sequence of characters. 如何抑制对字符序列的所有解释
+• Double Quotes 双引号:	  	How to suppress most of the interpretation of a sequence of characters. 如何抑制一个字符序列的大部分解释
+• ANSI-C Quoting ANSI-C 报价:	  	How to expand ANSI-C sequences in quoted strings. 如何在引用字符串中展开 ANSI-C 序列
+• Locale Translation 场所翻译:	  	How to translate strings into different languages. 如何将字符串翻译成不同的语言
+Quoting is used to remove the special meaning of certain characters or words to the shell. Quoting can be used to disable special treatment for special characters, to prevent reserved words from being recognized as such, and to prevent parameter expansion.
+
+引号用于删除某些字符或单词的特殊含义。引号可用于禁用特殊字符的特殊处理，防止保留字被识别为特殊字符，并防止参数扩展。
+
+Each of the shell metacharacters (see Definitions) has special meaning to the shell and must be quoted if it is to represent itself. When the command history expansion facilities are being used (see History Interaction), the history expansion character, usually ‘!’, must be quoted to prevent history expansion. See Bash History Facilities, for more details concerning history expansion.
+
+每个 shell 元字符(请参阅定义)对于 shell 都有特殊的意义，如果要表示它自己，则必须引用它。当使用命令历史记录扩展工具时(请参阅历史记录交互) ，历史记录扩展字符通常是“ ! ”，必须引用，以防止历史扩张。有关历史扩展的详细信息，请参阅 Bash 历史工具。
+
+There are three quoting mechanisms: the escape character, single quotes, and double quotes.
+
+有三种引号机制: 转义字符、单引号和双引号。
+
+Next: Single Quotes, Up: Quoting   [Contents][Index]
+
+下一步: 单引号，向上: 引用[目录][索引]
+
+3.1.2.1 Escape Character
+3.1.2.1转义字符
+A non-quoted backslash ‘\’ is the Bash escape character. It preserves the literal value of the next character that follows, with the exception of newline. If a \newline pair appears, and the backslash itself is not quoted, the \newline is treated as a line continuation (that is, it is removed from the input stream and effectively ignored).
+
+非引号反斜杠“”是 Bash 转义字符。它保留下一个字符的字面值，但换行除外。如果出现一个换行对，并且反斜杠本身没有被引用，那么换行将被视为行继续(也就是说，它从输入流中移除并被有效地忽略)。
+
+Next: Double Quotes, Previous: Escape Character, Up: Quoting   [Contents][Index]
+
+下一步: 双引号，上一步: 转义字符，上一步: 引用[目录][索引]
+
+3.1.2.2 Single Quotes
+3.1.2.2单引号
+Enclosing characters in single quotes (‘'’) preserves the literal value of each character within the quotes. A single quote may not occur between single quotes, even when preceded by a backslash.
+
+用单引号(‘’)括起来的字符保留了引号中每个字符的字面值。单引号不能出现在单引号之间，即使前面加反斜杠也不行。
+
+Next: ANSI-C Quoting, Previous: Single Quotes, Up: Quoting   [Contents][Index]
+
+下一步: ANSI-C 引用，上一步: 单引用，上一步: 引用[目录][索引]
+
+3.1.2.3 Double Quotes
+3.1.2.3双引号
+Enclosing characters in double quotes (‘"’) preserves the literal value of all characters within the quotes, with the exception of ‘$’, ‘`’, ‘\’, and, when history expansion is enabled, ‘!’. When the shell is in POSIX mode (see Bash POSIX Mode), the ‘!’ has no special meaning within double quotes, even when history expansion is enabled. The characters ‘$’ and ‘`’ retain their special meaning within double quotes (see Shell Expansions). The backslash retains its special meaning only when followed by one of the following characters: ‘$’, ‘`’, ‘"’, ‘\’, or newline. Within double quotes, backslashes that are followed by one of these characters are removed. Backslashes preceding characters without a special meaning are left unmodified. A double quote may be quoted within double quotes by preceding it with a backslash. If enabled, history expansion will be performed unless an ‘!’ appearing in double quotes is escaped using a backslash. The backslash preceding the ‘!’ is not removed.
+
+用双引号(‘’)括起来的字符保留了引号中所有字符的字面值，除了‘ $’、‘’、‘’以及启用历史展开时的‘ .当 shell 处于 POSIX 模式(参见 Bash POSIX 模式)时，“ ! ”在双引号中没有特殊意义，即使启用了历史扩展。字符“ $”和“’在双引号中保留了它们的特殊含义(参见 Shell 扩展)。反斜杠只有在后跟以下字符之一时才保留其特殊含义: “ $”、“”、“”、“”或换行符。在双引号中，后跟这些字符之一的反斜杠将被删除。没有特殊含义的字符前面的反斜杠不会被修改。双引号可以在双引号之前加上反斜杠。如果启用，将执行历史扩展，除非“ ! ”出现在双引号中，用反斜杠进行转义。前面的反斜杠并没有被移除。
+
+The special parameters ‘*’ and ‘@’ have special meaning when in double quotes (see Shell Parameter Expansion).
+
+特殊参数‘ * ’和‘@’在双引号中有特殊含义(参见 Shell 参数展开)。
+
+Next: Locale Translation, Previous: Double Quotes, Up: Quoting   [Contents][Index]
+
+下一步: 语言环境翻译，上一步: 双引号，向上: 引用[目录][索引]
+
+3.1.2.4 ANSI-C Quoting
+3.1.2.4 ANSI-C 引用
+Words of the form $'string' are treated specially. The word expands to string, with backslash-escaped characters replaced as specified by the ANSI C standard. Backslash escape sequences, if present, are decoded as follows:
+
+字符串形式的单词是特殊处理的。该单词扩展为字符串，并由 ansic 标准指定的反斜杠转义字符替换。反斜杠转义序列，如果存在，解码如下:
+
+\a
+alert (bell)
+
+警报(铃)
+
+\b
+backspace
+
+退格
+
+\e
+\E
+an escape character (not ANSI C)
+
+转义字符(不是 ANSI c)
+
+\f
+form feed
+
+模板进给
+
+\n
+newline
+
+换行
+
+\r
+carriage return
+
+回车
+
+\t
+horizontal tab
+
+水平制动片
+
+\v
+vertical tab
+
+垂直调整片
+
+\\
+backslash
+
+反斜杠
+
+\'
+single quote
+
+单引号
+
+\"
+double quote
+
+双引号
+
+\?
+question mark
+
+问号
+
+\nnn
+the eight-bit character whose value is the octal value nnn (one to three octal digits)
+
+值为八进制值 nnn (一到三个八进制数字)的八位字符
+
+\xHH
+the eight-bit character whose value is the hexadecimal value HH (one or two hex digits)
+
+八位字符，其值为十六进制值 HH (一个或两个十六进制数字)
+
+\uHHHH
+the Unicode (ISO/IEC 10646) character whose value is the hexadecimal value HHHH (one to four hex digits)
+
+Unicode (ISO/IEC 10646)字符，其值为十六进制值 HHHH (一个至四个十六进制数字)
+
+\UHHHHHHHH
+the Unicode (ISO/IEC 10646) character whose value is the hexadecimal value HHHHHHHH (one to eight hex digits)
+
+Unicode (ISO/IEC 10646)字符，其值为十六进制值 HHHHHHHH (一个到八个十六进制数字)
+
+\cx
+a control-x character
+
+Control-x 字符
+
+The expanded result is single-quoted, as if the dollar sign had not been present.
+
+扩展后的结果是单一报价，就好像美元符号不存在一样。
+
+Previous: ANSI-C Quoting, Up: Quoting   [Contents][Index]
+
+上一页: ANSI-C 引用，向上: 引用[目录][索引]
+
+3.1.2.5 Locale-Specific Translation
+3.1.2.5特定地点的翻译
+A double-quoted string preceded by a dollar sign (‘$’) will cause the string to be translated according to the current locale. If the current locale is C or POSIX, the dollar sign is ignored. If the string is translated and replaced, the replacement is double-quoted.
+
+前面带有美元符号(‘ $’)的双引号字符串将导致该字符串根据当前区域设置进行翻译。如果当前语言环境是 c 或 POSIX，则忽略美元符号。如果字符串被翻译和替换，替换就是双引号的。
+
+Some systems use the message catalog selected by the LC_MESSAGES shell variable. Others create the name of the message catalog from the value of the TEXTDOMAIN shell variable, possibly adding a suffix of ‘.mo’. If you use the TEXTDOMAIN variable, you may need to set the TEXTDOMAINDIR variable to the location of the message catalog files. Still others use both variables in this fashion: TEXTDOMAINDIR/LC_MESSAGES/LC_MESSAGES/TEXTDOMAIN.mo.
+
+有些系统使用 lc_messages shell 变量选择的消息目录。其他人根据 TEXTDOMAIN shell 变量的值创建消息目录的名称，可能会添加‘的后缀。莫’。如果使用 TEXTDOMAIN 变量，则可能需要将 TEXTDOMAINDIR 变量设置为消息目录文件的位置。还有一些以这种方式使用两个变量: TEXTDOMAINDIR/LC _ MESSAGES/LC _ MESSAGES/TEXTDOMAIN。莫。
+
+Previous: Quoting, Up: Shell Syntax   [Contents][Index]
+
+上一页: 引号，向上: Shell 语法[目录][索引]
+
+3.1.3 Comments
+In a non-interactive shell, or an interactive shell in which the interactive_comments option to the shopt builtin is enabled (see The Shopt Builtin), a word beginning with ‘#’ causes that word and all remaining characters on that line to be ignored. An interactive shell without the interactive_comments option enabled does not allow comments. The interactive_comments option is on by default in interactive shells. See Interactive Shells, for a description of what makes a shell interactive.
+
+在非交互式 shell 或交互式 shell 中，启用了 Shopt 内置的交互式 _comments 选项(参见 The Shopt Builtin) ，以 # 开头的单词会导致该单词和该行上所有剩余字符被忽略。没有启用交互式 _comments 选项的交互式 shell 不允许注释。在交互式 shell 中，交互式 _comments 选项默认是打开的。请参阅交互式 shell，以了解什么使 shell 具有交互性。
+
+Next: Shell Functions, Previous: Shell Syntax, Up: Basic Shell Features   [Contents][Index]
+
+下一步: Shell 函数，上一步: Shell 语法，向上: 基本 Shell 特性[目录][索引]
+
+3.2 Shell Commands
+3.2 Shell 命令
+A simple shell command such as echo a b c consists of the command itself followed by arguments, separated by spaces.
+
+简单的 shell 命令(比如 echo a b c)由命令本身和参数组成，后面用空格分隔。
+
+More complex shell commands are composed of simple commands arranged together in a variety of ways: in a pipeline in which the output of one command becomes the input of a second, in a loop or conditional construct, or in some other grouping.
+
+更复杂的 shell 命令由以各种方式排列在一起的简单命令组成: 在一个管道中，一个命令的输出成为第二个命令的输入，在一个循环或条件构造中，或在其他一些分组中。
+
+• Simple Commands 简单命令:	  	The most common type of command. 最常见的命令类型
+• Pipelines 管道:	  	Connecting the input and output of several commands. 连接几个命令的输入和输出
+• Lists 名单:	  	How to execute commands sequentially. 如何按顺序执行命令
+• Compound Commands 复合命令:	  	Shell commands for control flow. 控制流的 Shell 命令
+• Coprocesses:	  	Two-way communication between commands. 命令之间的双向通信
+• GNU Parallel:	  	Running commands in parallel. 并行运行命令
+Next: Pipelines, Up: Shell Commands   [Contents][Index]
+
+下一步: 管道，向上: Shell 命令[内容][索引]
+
+3.2.1 Simple Commands
+3.2.1简单命令
+A simple command is the kind of command encountered most often. It’s just a sequence of words separated by blanks, terminated by one of the shell’s control operators (see Definitions). The first word generally specifies a command to be executed, with the rest of the words being that command’s arguments.
+
+简单的命令是最常遇到的命令类型。它只是一个由空格分隔的字序列，由 shell 的控制操作符之一结束(请参阅定义)。第一个单词通常指定要执行的命令，其余单词为该命令的参数。
+
+The return status (see Exit Status) of a simple command is its exit status as provided by the POSIX 1003.1 waitpid function, or 128+n if the command was terminated by signal n.
+
+简单命令的返回状态(请参阅退出状态)是其退出状态，如 POSIX 1003.1 waitpid 函数所提供，或者如果命令被 signal n 终止，则为128 + n。
+
+Next: Lists, Previous: Simple Commands, Up: Shell Commands   [Contents][Index]
+
+下一步: 列表，上一步: 简单命令，向上: Shell 命令[目录][索引]
+
+3.2.2 Pipelines
+3.2.2管道
+A pipeline is a sequence of one or more commands separated by one of the control operators ‘|’ or ‘|&’.
+
+管道是一个或多个命令的序列，由一个控制操作符“ | ”或“ | & ”分隔。
+
+The format for a pipeline is
+
+管道的格式是
+
+[time [-p]] [!] command1 [ | or |& command2 ] …
+The output of each command in the pipeline is connected via a pipe to the input of the next command. That is, each command reads the previous command’s output. This connection is performed before any redirections specified by the command.
+
+管道中每个命令的输出通过管道连接到下一个命令的输入。也就是说，每个命令都读取前一个命令的输出。此连接在命令指定的任何重定向之前执行。
+
+If ‘|&’ is used, command1’s standard error, in addition to its standard output, is connected to command2’s standard input through the pipe; it is shorthand for 2>&1 |. This implicit redirection of the standard error to the standard output is performed after any redirections specified by the command.
+
+如果使用 | &'，除了标准输出之外，command1的标准错误通过管道连接到 command2的标准输入; 它是2 & 1 | 的简写。 在命令指定任何重定向之后，将隐式地将标准错误重定向到标准输出。
+
+The reserved word time causes timing statistics to be printed for the pipeline once it finishes. The statistics currently consist of elapsed (wall-clock) time and user and system time consumed by the command’s execution. The -p option changes the output format to that specified by POSIX. When the shell is in POSIX mode (see Bash POSIX Mode), it does not recognize time as a reserved word if the next token begins with a ‘-’. The TIMEFORMAT variable may be set to a format string that specifies how the timing information should be displayed. See Bash Variables, for a description of the available formats. The use of time as a reserved word permits the timing of shell builtins, shell functions, and pipelines. An external time command cannot time these easily.
+
+保留字时间导致在管道完成后为其打印时间统计信息。 统计信息当前包括命令执行所消耗的经过时间(挂钟时间)、用户和系统时间。 P 选项将输出格式更改为 POSIX 指定的格式。 当 shell 处于 POSIX 模式(请参见 Bash POSIX 模式)时，如果下一个标记以"-"开头，它不会将时间识别为保留字。 Timeformat 变量可以设置为指定如何显示计时信息的格式字符串。 有关可用格式的说明，请参见 bashvariables。 时间作为保留字的使用允许 shell 内置、 shell 函数和管道的计时。 一个外部时间命令不能很容易地计时这些。
+
+When the shell is in POSIX mode (see Bash POSIX Mode), time may be followed by a newline. In this case, the shell displays the total user and system time consumed by the shell and its children. The TIMEFORMAT variable may be used to specify the format of the time information.
+
+当 shell 处于 POSIX 模式(请参阅 bashposix 模式)时，时间之后可能会出现换行符。在这种情况下，shell 显示 shell 及其子系统消耗的总用户时间和系统时间。TIMEFORMAT 变量可用于指定时间信息的格式。
+
+If the pipeline is not executed asynchronously (see Lists), the shell waits for all commands in the pipeline to complete.
+
+如果管道没有异步执行(请参阅列表) ，shell 将等待管道中的所有命令完成。
+
+Each command in a pipeline is executed in its own subshell, which is a separate process (see Command Execution Environment). If the lastpipe option is enabled using the shopt builtin (see The Shopt Builtin), the last element of a pipeline may be run by the shell process.
+
+管道中的每个命令都在其自己的子 shell 中执行，子 shell 是一个单独的进程(参见 Command Execution Environment)。如果使用 Shopt Builtin 启用 lastpipe 选项(参见 The Shopt Builtin) ，那么管道的最后一个元素可以由 shell 进程运行。
+
+The exit status of a pipeline is the exit status of the last command in the pipeline, unless the pipefail option is enabled (see The Set Builtin). If pipefail is enabled, the pipeline’s return status is the value of the last (rightmost) command to exit with a non-zero status, or zero if all commands exit successfully. If the reserved word ‘!’ precedes the pipeline, the exit status is the logical negation of the exit status as described above. The shell waits for all commands in the pipeline to terminate before returning a value.
+
+管道的退出状态是管道中最后一个命令的退出状态，除非启用了管道失败选项(参见 The Set Builtin)。如果启用了 pipepfail，那么管道的返回状态就是最后一个(最右边的)命令的值，该命令以非零状态退出，如果所有命令都成功退出，则为零。如果保留字“ ! ”在管道之前，退出状态是上述退出状态的逻辑非。Shell 将等待管道中的所有命令终止后才返回值。
+
+Next: Compound Commands, Previous: Pipelines, Up: Shell Commands   [Contents][Index]
+
+下一步: 复合命令，上一步: 管道，上一步: Shell 命令[内容][索引]
+
+3.2.3 Lists of Commands
+3.2.3命令列表(2)
+A list is a sequence of one or more pipelines separated by one of the operators ‘;’, ‘&’, ‘&&’, or ‘||’, and optionally terminated by one of ‘;’, ‘&’, or a newline.
+
+列表是一个或多个管道的序列，由一个操作符";"、"&"、"& &"或"| |"分隔，可以以";"、"&"或换行符之一终止。
+
+Of these list operators, ‘&&’ and ‘||’ have equal precedence, followed by ‘;’ and ‘&’, which have equal precedence.
+
+在这些列表运算符中，“ & & ”和“ | | ”具有同样的优先级，其次是“ ; ”和“ & ” ，它们具有同样的优先级。
+
+A sequence of one or more newlines may appear in a list to delimit commands, equivalent to a semicolon.
+
+一个或多个换行符序列可以出现在列表中以分隔命令，相当于一个分号。
+
+If a command is terminated by the control operator ‘&’, the shell executes the command asynchronously in a subshell. This is known as executing the command in the background, and these are referred to as asynchronous commands. The shell does not wait for the command to finish, and the return status is 0 (true). When job control is not active (see Job Control), the standard input for asynchronous commands, in the absence of any explicit redirections, is redirected from /dev/null.
+
+如果命令被控制操作符“ & ”终止，shell 将在子 shell 中异步执行该命令。这称为在后台执行命令，这些命令称为异步命令。Shell 不等待命令完成，并且返回状态为0(true)。当作业控制处于非活动状态时(请参阅作业控制) ，在没有任何显式重定向的情况下，异步命令的标准输入将从/dev/null 重定向。
+
+Commands separated by a ‘;’ are executed sequentially; the shell waits for each command to terminate in turn. The return status is the exit status of the last command executed.
+
+以‘ ; ’分隔的命令按顺序执行; shell 等待每个命令依次终止。返回状态是最后执行的命令的退出状态。
+
+AND and OR lists are sequences of one or more pipelines separated by the control operators ‘&&’ and ‘||’, respectively. AND and OR lists are executed with left associativity.
+
+AND 和 OR 列表是由控制操作符“ & & ”和“ | | ”分隔的一个或多个管道的序列。AND 和 OR 列表使用左结合性执行。
+
+An AND list has the form
+
+And 列表具有表单
+
+command1 && command2
+command2 is executed if, and only if, command1 returns an exit status of zero (success).
+
+如果 command1返回退出状态为零(成功) ，并且只有在这种情况下，command2才被执行。
+
+An OR list has the form
+
+一个 OR 列表具有该表单
+
+command1 || command2
+command2 is executed if, and only if, command1 returns a non-zero exit status.
+
+当且仅当 command1返回非零退出状态时，将执行 command2。
+
+The return status of AND and OR lists is the exit status of the last command executed in the list.
+
+AND 和 OR 列表的返回状态是列表中最后执行的命令的退出状态。
+
+Next: Coprocesses, Previous: Lists, Up: Shell Commands   [Contents][Index]
+
+接下来: Coprocesses，Previous: Lists，Up: Shell 命令[ Contents ][ Index ]
+
+3.2.4 Compound Commands
+3.2.4复合命令
+• Looping Constructs 循环结构:	  	Shell commands for iterative action. 用于迭代操作的 Shell 命令
+• Conditional Constructs 条件结构:	  	Shell commands for conditional execution. 条件执行的 Shell 命令
+• Command Grouping 命令分组:	  	Ways to group commands. 分组命令的方法
+Compound commands are the shell programming language constructs. Each construct begins with a reserved word or control operator and is terminated by a corresponding reserved word or operator. Any redirections (see Redirections) associated with a compound command apply to all commands within that compound command unless explicitly overridden.
+
+复合命令是 shell 编程语言构造。 每个构造以一个保留字或控制运算符开始，并以相应的保留字或运算符结束。 与复合命令关联的任何重定向(请参阅重定向)都适用于该复合命令中的所有命令，除非显式重写。
+
+In most cases a list of commands in a compound command’s description may be separated from the rest of the command by one or more newlines, and may be followed by a newline in place of a semicolon.
+
+在大多数情况下，复合命令描述中的命令列表可以用一个或多个换行符与命令的其余部分分开，后面可以用一个换行符代替分号。
+
+Bash provides looping constructs, conditional commands, and mechanisms to group commands and execute them as a unit.
+
+Bash 提供循环结构、条件命令和机制，以便对命令进行分组并将其作为一个单元执行。
+
+Next: Conditional Constructs, Up: Compound Commands   [Contents][Index]
+
+下一步: 条件结构，向上: 复合命令[目录][索引]
+
+3.2.4.1 Looping Constructs
+3.2.4.1循环结构
+Bash supports the following looping constructs.
+
+Bash 支持以下循环结构。
+
+Note that wherever a ‘;’ appears in the description of a command’s syntax, it may be replaced with one or more newlines.
+
+请注意，在命令语法的描述中出现‘ ; ’的任何地方，都可以用一个或多个换行代替。
+
+until
+The syntax of the until command is:
+
+命令的语法是:
+
+until test-commands; do consequent-commands; done
+Execute consequent-commands as long as test-commands has an exit status which is not zero. The return status is the exit status of the last command executed in consequent-commands, or zero if none was executed.
+
+只要 test-commands 的退出状态不是零，就执行 sequential-commands。 返回状态是在 sequential-commands 中执行的最后一个命令的退出状态，如果没有执行，返回状态为零。
+
+while
+The syntax of the while command is:
+
+命令的语法是:
+
+while test-commands; do consequent-commands; done
+Execute consequent-commands as long as test-commands has an exit status of zero. The return status is the exit status of the last command executed in consequent-commands, or zero if none was executed.
+
+只要 test-commands 的退出状态为零，就执行 sequential-commands。返回状态是在 sequential-commands 中执行的最后一个命令的退出状态，如果没有执行，返回状态为零。
+
+for
+The syntax of the for command is:
+
+命令的语法是:
+
+for name [ [in [words …] ] ; ] do commands; done
+Expand words (see Shell Expansions), and execute commands once for each member in the resultant list, with name bound to the current member. If ‘in words’ is not present, the for command executes the commands once for each positional parameter that is set, as if ‘in "$@"’ had been specified (see Special Parameters).
+
+展开 words (请参阅 Shell 扩展) ，并为结果列表中的每个成员执行一次命令，并将名称绑定到当前成员。如果没有“ in words” ，则 for 命令将对设置的每个位置参数执行一次命令，就像指定了“ in“ $@ ”一样(请参阅特殊参数)。
+
+The return status is the exit status of the last command that executes. If there are no items in the expansion of words, no commands are executed, and the return status is zero.
+
+返回状态是最后执行的命令的退出状态。如果单词展开中没有项，则不执行命令，并且返回状态为零。
+
+An alternate form of the for command is also supported:
+
+还支持 for 命令的另一种形式:
+
+for (( expr1 ; expr2 ; expr3 )) ; do commands ; done
+First, the arithmetic expression expr1 is evaluated according to the rules described below (see Shell Arithmetic). The arithmetic expression expr2 is then evaluated repeatedly until it evaluates to zero. Each time expr2 evaluates to a non-zero value, commands are executed and the arithmetic expression expr3 is evaluated. If any expression is omitted, it behaves as if it evaluates to 1. The return value is the exit status of the last command in commands that is executed, or false if any of the expressions is invalid.
+
+首先，根据下面描述的规则计算算术表达式 expr1(参见 Shell 算术)。然后重复计算算术表达式 expr2，直到计算结果为零。每当 expr2计算为非零值时，执行命令并计算算术表达式 expr3。如果省略了任何表达式，它的行为就好像计算结果为1。返回值是执行的命令中最后一个命令的退出状态，如果任何表达式无效，返回值为 false。
+
+The break and continue builtins (see Bourne Shell Builtins) may be used to control loop execution.
+
+中断和继续内建(参见 Bourne Shell 内建)可用于控制循环执行。
+
+Next: Command Grouping, Previous: Looping Constructs, Up: Compound Commands   [Contents][Index]
+
+下一步: 命令分组，上一步: 循环结构，向上: 复合命令[目录][索引]
+
+3.2.4.2 Conditional Constructs
+3.2.4.2条件结构
+if
+The syntax of the if command is:
+
+If 命令的语法是:
+
+if test-commands; then
+  consequent-commands;
+[elif more-test-commands; then
+  more-consequents;]
+[else alternate-consequents;]
+fi
+The test-commands list is executed, and if its return status is zero, the consequent-commands list is executed. If test-commands returns a non-zero status, each elif list is executed in turn, and if its exit status is zero, the corresponding more-consequents is executed and the command completes. If ‘else alternate-consequents’ is present, and the final command in the final if or elif clause has a non-zero exit status, then alternate-consequents is executed. The return status is the exit status of the last command executed, or zero if no condition tested true.
+
+执行 test-commands 列表，如果其返回状态为零，则执行 sequential-commands 列表。 如果 test-commands 返回一个非零状态，则依次执行每个 elif 列表，如果其退出状态为零，则执行相应的更多结果，并完成命令。 如果"else 交替结果"存在，并且最终的 If 或 elif 子句中的最终命令具有非零的退出状态，那么交替结果将被执行。 返回状态是最后执行的命令的退出状态，如果没有条件测试为真，返回状态为零。
+
+case
+The syntax of the case command is:
+
+Case 命令的语法是:
+
+case word in
+    [ [(] pattern [| pattern]…) command-list ;;]…
+esac
+case will selectively execute the command-list corresponding to the first pattern that matches word. The match is performed according to the rules described below in Pattern Matching. If the nocasematch shell option (see the description of shopt in The Shopt Builtin) is enabled, the match is performed without regard to the case of alphabetic characters. The ‘|’ is used to separate multiple patterns, and the ‘)’ operator terminates a pattern list. A list of patterns and an associated command-list is known as a clause.
+
+Case 将有选择地执行与第一个匹配单词的模式相对应的命令列表。比赛是按照以下模式匹配的规则进行的。如果启用了 nocasematch shell 选项(参见 Shopt Builtin 中对 Shopt 的描述) ，匹配将不考虑字母字符的大小写。“ | ”用于分隔多个模式，“)”操作符终止一个模式列表。模式列表和关联的命令列表称为子句。
+
+Each clause must be terminated with ‘;;’, ‘;&’, or ‘;;&’. The word undergoes tilde expansion, parameter expansion, command substitution, arithmetic expansion, and quote removal (see Shell Parameter Expansion) before matching is attempted. Each pattern undergoes tilde expansion, parameter expansion, command substitution, and arithmetic expansion.
+
+每个子句必须以‘ ; ; ’、‘ ; & ’或‘ ; ; ; & ’结束。在进行匹配之前，该单词经历波浪线展开、参数展开、指令替代展开、算术展开和报价删除(参见 Shell 参数展开)。每种模式都经历波浪展开、参数展开、指令替代展开和算术展开。
+
+There may be an arbitrary number of case clauses, each terminated by a ‘;;’, ‘;&’, or ‘;;&’. The first pattern that matches determines the command-list that is executed. It’s a common idiom to use ‘*’ as the final pattern to define the default case, since that pattern will always match.
+
+可能有任意数量的 case 子句，每个子句都以‘ ; ; ’、‘ ; & ’或‘ ; ; ; & ’结尾。匹配的第一个模式确定执行的命令列表。使用“ * ”作为定义默认情况的最终模式是一种常见的习惯用法，因为该模式将始终匹配。
+
+Here is an example using case in a script that could be used to describe one interesting feature of an animal:
+
+下面是一个例子，可以用来描述动物的一个有趣的特征:
+
+echo -n "Enter the name of an animal: "
+read ANIMAL
+echo -n "The $ANIMAL has "
+case $ANIMAL in
+  horse | dog | cat) echo -n "four";;
+  man | kangaroo ) echo -n "two";;
+  *) echo -n "an unknown number of";;
+esac
+echo " legs."
+If the ‘;;’ operator is used, no subsequent matches are attempted after the first pattern match. Using ‘;&’ in place of ‘;;’ causes execution to continue with the command-list associated with the next clause, if any. Using ‘;;&’ in place of ‘;;’ causes the shell to test the patterns in the next clause, if any, and execute any associated command-list on a successful match, continuing the case statement execution as if the pattern list had not matched.
+
+如果使用了‘ ; ; ’操作符，则在第一次模式匹配之后不会尝试后续匹配。使用‘ ; & ’代替‘ ; ; ; ’会导致继续执行与下一个子句相关联的命令列表(如果有的话)。使用‘ ; ; & ’代替‘ ; ; ; ’会导致 shell 测试下一个子句中的模式(如果有的话) ，并在成功匹配时执行任何相关的命令列表，继续执行 case 语句，就好像模式列表不匹配一样。
+
+The return status is zero if no pattern is matched. Otherwise, the return status is the exit status of the command-list executed.
+
+如果没有匹配模式，则返回状态为零。否则，返回状态就是执行的命令列表的退出状态。
+
+select
+The select construct allows the easy generation of menus. It has almost the same syntax as the for command:
+
+选择结构允许简单地生成菜单。 它的语法几乎与 for 命令相同:
+
+select name [in words …]; do commands; done
+The list of words following in is expanded, generating a list of items. The set of expanded words is printed on the standard error output stream, each preceded by a number. If the ‘in words’ is omitted, the positional parameters are printed, as if ‘in "$@"’ had been specified. The PS3 prompt is then displayed and a line is read from the standard input. If the line consists of a number corresponding to one of the displayed words, then the value of name is set to that word. If the line is empty, the words and prompt are displayed again. If EOF is read, the select command completes. Any other value read causes name to be set to null. The line read is saved in the variable REPLY.
+
+扩展后面的单词列表，生成项目列表。展开的单词集将打印在标准错误输出流上，每个单词前面都有一个数字。如果省略“ in words” ，则会打印位置参数，就好像已指定了“ in“ $@ ”一样。然后显示 PS3提示符，并从标准输入读取一行。如果该行由与显示的单词之一对应的数字组成，则 name 的值设置为该单词。如果该行为空，则再次显示单词和提示符。如果读取了 EOF，则 select 命令完成。任何其他值读取都会导致名称设置为空。读取的行保存在变量 REPLY 中。
+
+The commands are executed after each selection until a break command is executed, at which point the select command completes.
+
+在每次选择之后执行命令，直到执行 break 命令，此时 select 命令完成。
+
+Here is an example that allows the user to pick a filename from the current directory, and displays the name and index of the file selected.
+
+这里有一个例子，允许用户从工作目录文件夹中选择一个文件名，并显示所选文件的名称和索引。
+
+select fname in *;
+do
+	echo you picked $fname \($REPLY\)
+	break;
+done
+((…))
+(( expression ))
+The arithmetic expression is evaluated according to the rules described below (see Shell Arithmetic). If the value of the expression is non-zero, the return status is 0; otherwise the return status is 1. This is exactly equivalent to
+
+算术表达式是根据下面描述的规则计算的(请参阅 Shell 算术)。如果表达式的值为非零，则返回状态为0; 否则返回状态为1。这完全等同于
+
+let "expression"
+See Bash Builtins, for a full description of the let builtin.
+
+有关 let 内建的完整描述，请参见 Bash 内建。
+
+[[…]]
+[[ expression ]]
+Return a status of 0 or 1 depending on the evaluation of the conditional expression expression. Expressions are composed of the primaries described below in Bash Conditional Expressions. Word splitting and filename expansion are not performed on the words between the [[ and ]]; tilde expansion, parameter and variable expansion, arithmetic expansion, command substitution, process substitution, and quote removal are performed. Conditional operators such as ‘-f’ must be unquoted to be recognized as primaries.
+
+根据条件表达式的计算值，返回0或1的状态。表达式由下面 Bash 条件表达式中描述的主要内容组成。在[[和]之间的单词上不执行单词分割和文件名扩展; 执行波浪线扩展、参数和变量扩展、算术扩展、指令替代、进程替换和删除引号。条件操作符如“-f”必须不加引号才能被识别为初选。
+
+When used with [[, the ‘<’ and ‘>’ operators sort lexicographically using the current locale.
+
+当与[[]一起使用时，‘ < ’和‘ > ’运算符使用当前语言环境按字母顺序排序。
+
+When the ‘==’ and ‘!=’ operators are used, the string to the right of the operator is considered a pattern and matched according to the rules described below in Pattern Matching, as if the extglob shell option were enabled. The ‘=’ operator is identical to ‘==’. If the nocasematch shell option (see the description of shopt in The Shopt Builtin) is enabled, the match is performed without regard to the case of alphabetic characters. The return value is 0 if the string matches (‘==’) or does not match (‘!=’) the pattern, and 1 otherwise. Any part of the pattern may be quoted to force the quoted portion to be matched as a string.
+
+当‘ = = ’和‘ ！如果使用了 = ’操作符，则操作符右侧的字符串被视为模式，并根据下面模式匹配中描述的规则进行匹配，就像启用了 extglob shell 选项一样。“ = ”操作符与“ = = ”相同。如果启用了 nocasematch shell 选项(参见 Shopt Builtin 中对 Shopt 的描述) ，匹配将不考虑字母字符的大小写。如果字符串匹配(‘ = = ’)或不匹配(‘ ！= ’) the pattern，and 1 otherwise。可以引用模式的任何部分来强制将引用的部分作为字符串匹配。
+
+An additional binary operator, ‘=~’, is available, with the same precedence as ‘==’ and ‘!=’. When it is used, the string to the right of the operator is considered a POSIX extended regular expression and matched accordingly (as in regex3)). The return value is 0 if the string matches the pattern, and 1 otherwise. If the regular expression is syntactically incorrect, the conditional expression’s return value is 2. If the nocasematch shell option (see the description of shopt in The Shopt Builtin) is enabled, the match is performed without regard to the case of alphabetic characters. Any part of the pattern may be quoted to force the quoted portion to be matched as a string. Bracket expressions in regular expressions must be treated carefully, since normal quoting characters lose their meanings between brackets. If the pattern is stored in a shell variable, quoting the variable expansion forces the entire pattern to be matched as a string. Substrings matched by parenthesized subexpressions within the regular expression are saved in the array variable BASH_REMATCH. The element of BASH_REMATCH with index 0 is the portion of the string matching the entire regular expression. The element of BASH_REMATCH with index n is the portion of the string matching the nth parenthesized subexpression.
+
+另外还有一个二进制运算符“ = ~ ”可用，优先级与“ = = ”和“ ！= = .当使用它时，操作符右侧的字符串被视为 POSIX 扩展正则表达式并相应匹配(如 regex3中所示)。如果字符串与模式匹配，返回值为0，否则为1。如果正则表达式在语法上不正确，则条件表达式的返回值为2。如果启用了 nocasematch shell 选项(参见 Shopt Builtin 中对 Shopt 的描述) ，匹配将不考虑字母字符的大小写。可以引用模式的任何部分来强制将引用的部分作为字符串匹配。必须仔细处理正则表达式中的括号表达式，因为正常的引号字符在括号中失去了它们的含义。如果模式存储在 shell 变量中，引用变量展开会强制将整个模式作为字符串匹配。正则表达式中由括号子表达式匹配的子字符串保存在数组变量 BASH _ rematch 中。带索引0的 BASH _ rematch 元素是匹配整个正则表达式的字符串的一部分。带索引 n 的 BASH _ rematch 元素是与第 n 个括号子表达式匹配的字符串的一部分。
+
+For example, the following will match a line (stored in the shell variable line) if there is a sequence of characters in the value consisting of any number, including zero, of space characters, zero or one instances of ‘a’, then a ‘b’:
+
+例如，如果值中包含任意数字(包括空格字符的零个)、“ a”的零个或一个实例(然后是“ b”) ，则下面的代码将匹配一行(存储在 shell 变量行中) :
+
+[[ $line =~ [[:space:]]*?(a)b ]]
+That means values like ‘aab’ and ‘ aaaaaab’ will match, as will a line containing a ‘b’ anywhere in its value.
+
+这意味着像‘ aab’和‘ aaaaaab’这样的值将匹配，包含‘ b’的行的值也将匹配。
+
+Storing the regular expression in a shell variable is often a useful way to avoid problems with quoting characters that are special to the shell. It is sometimes difficult to specify a regular expression literally without using quotes, or to keep track of the quoting used by regular expressions while paying attention to the shell’s quote removal. Using a shell variable to store the pattern decreases these problems. For example, the following is equivalent to the above:
+
+在 shell 变量中存储正则表达式通常是避免引用 shell 特有的字符问题的有效方法。有时候，如果不使用引号，就很难直接指定正则表达式，或者在注意 shell 的引号删除时跟踪正则表达式使用的引号。使用 shell 变量来存储模式减少了这些问题。例如，下面的内容与上面的内容相同:
+
+pattern='[[:space:]]*?(a)b'
+[[ $line =~ $pattern ]]
+If you want to match a character that’s special to the regular expression grammar, it has to be quoted to remove its special meaning. This means that in the pattern ‘xxx.txt’, the ‘.’ matches any character in the string (its usual regular expression meaning), but in the pattern ‘"xxx.txt"’ it can only match a literal ‘.’. Shell programmers should take special care with backslashes, since backslashes are used both by the shell and regular expressions to remove the special meaning from the following character. The following two sets of commands are not equivalent:
+
+如果要匹配正则表达式语法中特殊的字符，则必须引用该字符以删除其特殊含义。这意味着在 xxx.txt 模式中，‘匹配字符串中的任何字符(它通常的正则表达式含义) ，但是在“ xxx.txt”模式中，它只能匹配文字‘.Shell 程序员应该特别注意反斜杠，因为 Shell 和正则表达式都使用反斜杠来删除后面字符中的特殊含义。下面两组命令不等价:
+
+pattern='\.'
+
+[[ . =~ $pattern ]]
+[[ . =~ \. ]]
+
+[[ . =~ "$pattern" ]]
+[[ . =~ '\.' ]]
+The first two matches will succeed, but the second two will not, because in the second two the backslash will be part of the pattern to be matched. In the first two examples, the backslash removes the special meaning from ‘.’, so the literal ‘.’ matches. If the string in the first examples were anything other than ‘.’, say ‘a’, the pattern would not match, because the quoted ‘.’ in the pattern loses its special meaning of matching any single character.
+
+前两个匹配将成功，但是后两个匹配不成功，因为在后两个匹配中，反斜杠将是要匹配的模式的一部分。在前两个例子中，反斜杠删除了‘ . ’中的特殊含义所以字面上的意思是火柴。如果第一个例子中的字符串不是‘，说“ a” ，模式不匹配，因为引用的“失去了匹配任何单个字符的特殊意义。
+
+Expressions may be combined using the following operators, listed in decreasing order of precedence:
+
+表达式可以使用下面的操作符组合，这些操作符以优先顺序递减的形式列出:
+
+( expression )
+Returns the value of expression. This may be used to override the normal precedence of operators.
+
+返回表达式的值。这可用于覆盖运算符的正常优先级。
+
+! expression
+True if expression is false.
+
+如果 expression 为 false，则为 True。
+
+expression1 && expression2
+True if both expression1 and expression2 are true.
+
+如果表达式和表达式都是真实的，那么就是真实的。
+
+expression1 || expression2
+True if either expression1 or expression2 is true.
+
+如果表达式或表达式都是真实的，那么就是真实的。
+
+The && and || operators do not evaluate expression2 if the value of expression1 is sufficient to determine the return value of the entire conditional expression.
+
+如果表达式1的值足以确定整个条件表达式的返回值，则 & 和 | | 运算符不计算表达式2。
+
+Previous: Conditional Constructs, Up: Compound Commands   [Contents][Index]
+
+上一页: 条件结构，向上: 复合命令[目录][索引]
+
+3.2.4.3 Grouping Commands
+3.2.4.3分组命令
+Bash provides two ways to group a list of commands to be executed as a unit. When commands are grouped, redirections may be applied to the entire command list. For example, the output of all the commands in the list may be redirected to a single stream.
+
+Bash 提供了两种将要作为一个单元执行的命令列表分组的方法。当命令分组时，可以对整个命令列表应用重定向。例如，列表中所有命令的输出可以重定向到单个流。
+
+()
+( list )
+Placing a list of commands between parentheses causes a subshell environment to be created (see Command Execution Environment), and each of the commands in list to be executed in that subshell. Since the list is executed in a subshell, variable assignments do not remain in effect after the subshell completes.
+
+在圆括号之间放置一个命令列表会创建一个子 shell 环境(参见 Command Execution Environment) ，并且列表中的每个命令都会在该子 shell 中执行。由于列表是在子 shell 中执行的，因此在子 shell 完成之后，变量赋值不会保持有效。
+
+{}
+{ list; }
+Placing a list of commands between curly braces causes the list to be executed in the current shell context. No subshell is created. The semicolon (or newline) following list is required.
+
+在大括号之间放置一个命令列表会导致该列表在当前 shell 上下文中执行。不创建任何子 shell。列表后面的分号(或换行符)是必需的。
+
+In addition to the creation of a subshell, there is a subtle difference between these two constructs due to historical reasons. The braces are reserved words, so they must be separated from the list by blanks or other shell metacharacters. The parentheses are operators, and are recognized as separate tokens by the shell even if they are not separated from the list by whitespace.
+
+除了创建子 shell 之外，由于历史原因，这两个构造之间还存在细微的差别。大括号是保留字，因此必须用空格或其他 shell 元字符与列表分隔。括号是运算符，即使它们没有通过空格与列表分开，shell 也会将它们识别为单独的标记。
+
+The exit status of both of these constructs is the exit status of list.
+
+这两个构造的退出状态都是 list 的退出状态。
+
+Next: GNU Parallel, Previous: Compound Commands, Up: Shell Commands   [Contents][Index]
+
+下一步: GNU 并行，上一步: 复合命令，上一步: Shell 命令[目录][索引]
+
+3.2.5 Coprocesses
+A coprocess is a shell command preceded by the coproc reserved word. A coprocess is executed asynchronously in a subshell, as if the command had been terminated with the ‘&’ control operator, with a two-way pipe established between the executing shell and the coprocess.
+
+Coprocess 是前面有 coproc 保留字的 shell 命令。协同进程在子 shell 中异步执行，就好像命令已经用“ & ”控制操作符终止，在执行 shell 和协同进程之间建立了一个双向管道。
+
+The format for a coprocess is:
+
+协同进程的格式是:
+
+coproc [NAME] command [redirections]
+This creates a coprocess named NAME. If NAME is not supplied, the default name is COPROC. NAME must not be supplied if command is a simple command (see Simple Commands); otherwise, it is interpreted as the first word of the simple command.
+
+这将创建一个名为 NAME 的协同进程。如果没有提供 NAME，则默认名称为 COPROC。如果命令是简单命令，则不能提供 NAME (请参阅简单命令) ; 否则，它将被解释为简单命令的第一个单词。
+
+When the coprocess is executed, the shell creates an array variable (see Arrays) named NAME in the context of the executing shell. The standard output of command is connected via a pipe to a file descriptor in the executing shell, and that file descriptor is assigned to NAME[0]. The standard input of command is connected via a pipe to a file descriptor in the executing shell, and that file descriptor is assigned to NAME[1]. This pipe is established before any redirections specified by the command (see Redirections). The file descriptors can be utilized as arguments to shell commands and redirections using standard word expansions. Other than those created to execute command and process substitutions, the file descriptors are not available in subshells.
+
+执行协同进程时，shell 在执行 shell 的上下文中创建一个名为 NAME 的数组变量(请参阅数组)。命令的标准输出通过管道连接到执行 shell 中的文件描述符，该文件描述符被分配给 NAME [0]。命令的标准输入通过管道连接到执行 shell 中的文件描述符，该文件描述符被分配给 NAME [1]。此管道在命令指定的任何重定向之前建立(请参阅重定向)。可以使用文件描述符作为 shell 命令的参数，并使用标准字扩展重定向。除了为执行命令和进程替换而创建的描述符之外，文件描述符在子外壳中不可用。
+
+The process ID of the shell spawned to execute the coprocess is available as the value of the variable NAME_PID. The wait builtin command may be used to wait for the coprocess to terminate.
+
+用于执行协同进程的 shell 进程 ID 可以作为变量 NAME _ pid 的值使用。可以使用 wait builtin 命令等待协进程终止。
+
+Since the coprocess is created as an asynchronous command, the coproc command always returns success. The return status of a coprocess is the exit status of command.
+
+因为 coproc 命令是作为异步命令创建的，所以它总是返回成功。辅助进程的返回状态是命令的退出状态。
+
+Previous: Coprocesses, Up: Shell Commands   [Contents][Index]
+
+上一页: Coprocesses，Up: Shell 命令[ Contents ][ Index ]
+
+3.2.6 GNU Parallel
+There are ways to run commands in parallel that are not built into Bash. GNU Parallel is a tool to do just that.
+
+有一些方法可以并行运行 Bash 中没有的命令。GNU Parallel 就是用来做这件事的工具。
+
+GNU Parallel, as its name suggests, can be used to build and run commands in parallel. You may run the same command with different arguments, whether they are filenames, usernames, hostnames, or lines read from files. GNU Parallel provides shorthand references to many of the most common operations (input lines, various portions of the input line, different ways to specify the input source, and so on). Parallel can replace xargs or feed commands from its input sources to several different instances of Bash.
+
+Gnuparallel，顾名思义，可以用来并行地构建和运行命令。您可以使用不同的参数运行相同的命令，无论它们是文件名、用户名、主机名还是从文件中读取的行。GNU Parallel 提供了对许多最常见操作(输入行、输入行的各个部分、指定输入源的不同方式等)的简短引用。Parallel 可以替换来自其输入源的 xargs 或提要命令到 Bash 的几个不同实例。
+
+For a complete description, refer to the GNU Parallel documentation. A few examples should provide a brief introduction to its use.
+
+要获得完整的描述，请参考 gnuparallel 文档。举几个例子，简单介绍一下它的用途。
+
+For example, it is easy to replace xargs to gzip all html files in the current directory and its subdirectories:
+
+例如，很容易将 xargs 替换为工作目录文件夹及其子目录中的所有 html 文件的 gzip:
+
+find . -type f -name '*.html' -print | parallel gzip
+If you need to protect special characters such as newlines in file names, use find’s -print0 option and parallel’s -0 option.
+
+如果需要保护特殊字符，例如文件名中的换行符，请使用 find’s-print0选项和 parallel’s-0选项。
+
+You can use Parallel to move files from the current directory when the number of files is too large to process with one mv invocation:
+
+当文件数量过大，无法单独处理时，你可以使用 Parallel 将文件从工作目录中移出:
+
+ls | parallel mv {} destdir
+As you can see, the {} is replaced with each line read from standard input. While using ls will work in most instances, it is not sufficient to deal with all filenames. If you need to accommodate special characters in filenames, you can use
+
+正如您所看到的，{}用从标准输入读取的每一行代替。虽然在大多数情况下使用 ls 可以工作，但是仅仅处理所有的文件名是不够的。如果需要在文件名中容纳特殊字符，可以使用
+
+find . -depth 1 \! -name '.*' -print0 | parallel -0 mv {} destdir
+as alluded to above.
+
+就像上面提到的。
+
+This will run as many mv commands as there are files in the current directory. You can emulate a parallel xargs by adding the -X option:
+
+这将运行尽可能多的 mv 命令，因为有文件在工作目录中。可以通过添加-x 选项来模拟并行 xargs:
+
+find . -depth 1 \! -name '.*' -print0 | parallel -0 -X mv {} destdir
+GNU Parallel can replace certain common idioms that operate on lines read from a file (in this case, filenames listed one per line):
+
+GNU Parallel 可以替换某些常见的习惯用法，这些习惯用法在从文件中读取的行上运行(在这种情况下，文件名列出了每行一个) :
+
+	while IFS= read -r x; do
+		do-something1 "$x" "config-$x"
+		do-something2 < "$x"
+	done < file | process-output
+with a more compact syntax reminiscent of lambdas:
+
+使用更加紧凑的语法使人联想到 lambdas:
+
+cat list | parallel "do-something1 {} config-{} ; do-something2 < {}" |
+           process-output
+Parallel provides a built-in mechanism to remove filename extensions, which lends itself to batch file transformations or renaming:
+
+Parallel 提供了一种内置的机制来删除文件扩展名，这有助于批处理文件转换或重命名:
+
+ls *.gz | parallel -j+0 "zcat {} | bzip2 >{.}.bz2 && rm {}"
+This will recompress all files in the current directory with names ending in .gz using bzip2, running one job per CPU (-j+0) in parallel. (We use ls for brevity here; using find as above is more robust in the face of filenames containing unexpected characters.) Parallel can take arguments from the command line; the above can also be written as
+
+这将重新压缩工作目录文件中所有名称以。Gz 使用 bzip2，并行地为每个 CPU 运行一个作业(- j + 0)。(我们在这里使用 ls 是为了简洁; 在文件名中包含意外字符时，使用上面的 find 更加健壮。)Parallel 可以从命令行接受参数; 上面的代码也可以写成
+
+parallel "zcat {} | bzip2 >{.}.bz2 && rm {}" ::: *.gz
+If a command generates output, you may want to preserve the input order in the output. For instance, the following command
+
+如果命令生成输出，您可能希望在输出中保留输入顺序。例如，下面的命令
+
+{
+    echo foss.org.my ;
+    echo debian.org ;
+    echo freenetproject.org ;
+} | parallel traceroute
+will display as output the traceroute invocation that finishes first. Adding the -k option
+
+将显示首先完成的 traceroute 调用的输出
+
+{
+    echo foss.org.my ;
+    echo debian.org ;
+    echo freenetproject.org ;
+} | parallel -k traceroute
+will ensure that the output of traceroute foss.org.my is displayed first.
+
+将确保 traceroute foss. org. my 的输出首先显示。
+
+Finally, Parallel can be used to run a sequence of shell commands in parallel, similar to ‘cat file | bash’. It is not uncommon to take a list of filenames, create a series of shell commands to operate on them, and feed that list of commands to a shell. Parallel can speed this up. Assuming that file contains a list of shell commands, one per line,
+
+最后，Parallel 可以用于并行运行一系列 shell 命令，类似于“ cat file | bash”。获取文件名列表、创建一系列 shell 命令以对其进行操作并将该命令列表提供给 shell 的情况并不少见。平行可以加速这一过程。假设该文件包含 shell 命令列表，每行一个,
+
+parallel -j 10 < file
+will evaluate the commands using the shell (since no explicit command is supplied as an argument), in blocks of ten shell jobs at a time.
+
+将使用 shell (因为没有提供明确的命令作为参数)以每次10个 shell 作业的块计算命令。
+
+Next: Shell Parameters, Previous: Shell Commands, Up: Basic Shell Features   [Contents][Index]
+
+下一步: Shell 参数，上一步: Shell 命令，上一步: 基本 Shell 特性[目录][索引]
+
+3.3 Shell Functions
+3.3 Shell 函数
+Shell functions are a way to group commands for later execution using a single name for the group. They are executed just like a "regular" command. When the name of a shell function is used as a simple command name, the list of commands associated with that function name is executed. Shell functions are executed in the current shell context; no new process is created to interpret them.
+
+Shell 函数是使用组的单个名称对命令进行分组以便以后执行的一种方法。它们的执行就像“常规”命令一样。当 shell 函数的名称用作简单的命令名称时，将执行与该函数名关联的命令列表。Shell 函数在当前 Shell 上下文中执行; 不会创建新的进程来解释它们。
+
+Functions are declared using this syntax:
+
+函数使用以下语法声明:
+
+name () compound-command [ redirections ]
+or
+
+或
+
+function name [()] compound-command [ redirections ]
+This defines a shell function named name. The reserved word function is optional. If the function reserved word is supplied, the parentheses are optional. The body of the function is the compound command compound-command (see Compound Commands). That command is usually a list enclosed between { and }, but may be any compound command listed above, with one exception: If the function reserved word is used, but the parentheses are not supplied, the braces are required. compound-command is executed whenever name is specified as the name of a command. When the shell is in POSIX mode (see Bash POSIX Mode), name may not be the same as one of the special builtins (see Special Builtins). Any redirections (see Redirections) associated with the shell function are performed when the function is executed.
+
+这定义了一个名为 name 的 shell 函数。保留字函数是可选的。如果提供了函数保留字，括号是可选的。函数的主体是复合命令 Compound-command (参见 Compound Commands)。该命令通常是一个包含在{和}之间的列表，但可以是上面列出的任何复合命令，除了一个例外: 如果使用了函数保留字，但没有提供括号，则需要括号。只要将 name 指定为命令的名称，就会执行 compound-command。当 shell 处于 POSIX 模式(参见 Bash POSIX 模式)时，名称可能与某种特殊内置语言不同(参见特殊内置语言)。与 shell 函数关联的任何重定向(请参阅重定向)都在执行该函数时执行。
+
+A function definition may be deleted using the -f option to the unset builtin (see Bourne Shell Builtins).
+
+函数定义可以使用-f 选项删除未设置的内置函数(参见 Bourne Shell 内置函数)。
+
+The exit status of a function definition is zero unless a syntax error occurs or a readonly function with the same name already exists. When executed, the exit status of a function is the exit status of the last command executed in the body.
+
+函数定义的退出状态为零，除非发生语法错误或已存在具有相同名称的只读函数。在执行时，函数的退出状态是在函数体中执行的最后一个命令的退出状态。
+
+Note that for historical reasons, in the most common usage the curly braces that surround the body of the function must be separated from the body by blanks or newlines. This is because the braces are reserved words and are only recognized as such when they are separated from the command list by whitespace or another shell metacharacter. Also, when using the braces, the list must be terminated by a semicolon, a ‘&’, or a newline.
+
+注意，由于历史原因，在最常见的用法中，函数主体周围的花括号必须用空格或换行符与主体分开。这是因为大括号是保留字，只有当它们通过空格或另一个 shell 元字符与命令列表分离时才能被识别为保留字。此外，在使用大括号时，列表必须以分号、“ & ”或换行符结束。
+
+When a function is executed, the arguments to the function become the positional parameters during its execution (see Positional Parameters). The special parameter ‘#’ that expands to the number of positional parameters is updated to reflect the change. Special parameter 0 is unchanged. The first element of the FUNCNAME variable is set to the name of the function while the function is executing.
+
+当函数执行时，函数的参数在其执行期间成为位置参数(请参阅位置参数)。扩展为位置参数数量的特殊参数“ # ”将更新以反映更改。特殊参数0保持不变。FUNCNAME 变量的第一个元素设置为函数执行时的名称。
+
+All other aspects of the shell execution environment are identical between a function and its caller with these exceptions: the DEBUG and RETURN traps are not inherited unless the function has been given the trace attribute using the declare builtin or the -o functrace option has been enabled with the set builtin, (in which case all functions inherit the DEBUG and RETURN traps), and the ERR trap is not inherited unless the -o errtrace shell option has been enabled. See Bourne Shell Builtins, for the description of the trap builtin.
+
+Shell 执行环境的所有其他方面在函数与其调用方之间都是相同的，除非使用 declare builtin 或-o functrace 选项启用了函数的跟踪属性(在这种情况下，所有函数都继承了 DEBUG 和 RETURN 陷阱) ，否则 DEBUG 和 RETURN 陷阱不会继承，除非启用了-o errtrace shell 选项。请参见 Bourne Shell 内置程序，以获得对陷阱内置程序的描述。
+
+The FUNCNEST variable, if set to a numeric value greater than 0, defines a maximum function nesting level. Function invocations that exceed the limit cause the entire command to abort.
+
+FUNCNEST 变量(如果设置为大于0的数值)定义了一个最大的函数嵌套级别。超过限制的函数调用将导致整个命令中止。
+
+If the builtin command return is executed in a function, the function completes and execution resumes with the next command after the function call. Any command associated with the RETURN trap is executed before execution resumes. When a function completes, the values of the positional parameters and the special parameter ‘#’ are restored to the values they had prior to the function’s execution. If a numeric argument is given to return, that is the function’s return status; otherwise the function’s return status is the exit status of the last command executed before the return.
+
+如果在函数中执行内置命令返回，则函数完成并在函数调用之后的下一个命令中继续执行。任何与 RETURN 陷阱关联的命令都会在执行恢复之前执行。当函数完成时，位置参数和特殊参数“ # ”的值将恢复到函数执行之前的值。如果给定一个数值参数来返回，那么这就是函数的返回状态; 否则，函数的返回状态就是返回之前执行的最后一个命令的退出状态。
+
+Variables local to the function may be declared with the local builtin. These variables are visible only to the function and the commands it invokes. This is particularly important when a shell function calls other functions.
+
+函数的局部变量可以用局部内建语言声明。这些变量只对函数及其调用的命令可见。当 shell 函数调用其他函数时，这一点尤为重要。
+
+Local variables "shadow" variables with the same name declared at previous scopes. For instance, a local variable declared in a function hides a global variable of the same name: references and assignments refer to the local variable, leaving the global variable unmodified. When the function returns, the global variable is once again visible.
+
+局部变量“ shadow”变量，在前面的作用域中声明了相同的名称。例如，在函数中声明的局部变量隐藏了同名的全局变量: 引用和赋值引用局部变量，而不修改全局变量。当函数返回时，全局变量再次可见。
+
+The shell uses dynamic scoping to control a variable’s visibility within functions. With dynamic scoping, visible variables and their values are a result of the sequence of function calls that caused execution to reach the current function. The value of a variable that a function sees depends on its value within its caller, if any, whether that caller is the "global" scope or another shell function. This is also the value that a local variable declaration "shadows", and the value that is restored when the function returns.
+
+Shell 使用动态作用域来控制变量在函数中的可见性。使用动态范围，可见变量及其值是导致执行到达当前函数的函数调用序列的结果。函数看到的变量的值取决于其调用方(如果有的话)内的变量值，无论调用方是“全局”作用域还是另一个 shell 函数。这也是局部变量声明“ shadows”的值，以及函数返回时恢复的值。
+
+For example, if a variable var is declared as local in function func1, and func1 calls another function func2, references to var made from within func2 will resolve to the local variable var from func1, shadowing any global variable named var.
+
+例如，如果一个变量 var 在 function func1中被声明为局部的，并且 func1调用另一个函数 func2，那么从 func2中对 var 的引用将从 func1中解析为局部变量 var，从而隐藏任何名为 var 的全局变量。
+
+The following script demonstrates this behavior. When executed, the script displays
+
+下面的脚本演示了这种行为
+
+In func2, var = func1 local
+func1()
+{
+    local var='func1 local'
+    func2
+}
+
+func2()
+{
+    echo "In func2, var = $var"
+}
+
+var=global
+func1
+The unset builtin also acts using the same dynamic scope: if a variable is local to the current scope, unset will unset it; otherwise the unset will refer to the variable found in any calling scope as described above. If a variable at the current local scope is unset, it will remain so until it is reset in that scope or until the function returns. Once the function returns, any instance of the variable at a previous scope will become visible. If the unset acts on a variable at a previous scope, any instance of a variable with that name that had been shadowed will become visible.
+
+未设置内置函数也使用相同的动态范围: 如果一个变量是当前范围的局部变量，unset 将取消该变量的设置; 否则，unset 将引用上面描述的任何调用范围中的变量。如果当前局部作用域中的变量未设置，则该变量将保持未设置状态，直到在该作用域中重置该变量或直到函数返回。一旦函数返回，在前一个作用域中的变量的任何实例都将变得可见。如果未设置的变量在以前的作用域中作用于某个变量，则被隐藏的具有该名称的变量的任何实例都将变为可见。
+
+Function names and definitions may be listed with the -f option to the declare (typeset) builtin command (see Bash Builtins). The -F option to declare or typeset will list the function names only (and optionally the source file and line number, if the extdebug shell option is enabled). Functions may be exported so that subshells automatically have them defined with the -f option to the export builtin (see Bourne Shell Builtins).
+
+函数名和定义可以与 declare (排版)内建命令的-f 选项一起列出(参见 Bash Builtins)。声明或排版的-f 选项只列出函数名(如果启用 extdebug shell 选项，还可以列出源文件和行号)。函数可以被导出，这样子 Shell 就可以自动使用导出内建的-f 选项来定义它们(参见 Bourne Shell 内建语言)。
+
+Functions may be recursive. The FUNCNEST variable may be used to limit the depth of the function call stack and restrict the number of function invocations. By default, no limit is placed on the number of recursive calls.
+
+函数可能是递归的。FUNCNEST 变量可用于限制函数调用堆栈的深度并限制函数调用的次数。默认情况下，递归调用的数量没有限制。
+
+Next: Shell Expansions, Previous: Shell Functions, Up: Basic Shell Features   [Contents][Index]
+
+下一步: Shell 扩展，上一步: Shell 函数，上一步: 基本 Shell 特性[内容][索引]
+
+3.4 Shell Parameters
+3.4 Shell 参数
+• Positional Parameters 位置参数:	  	The shell’s command-line arguments. Shell 的命令行参数
+• Special Parameters 特别参数:	  	Parameters denoted by special characters. 由特殊字符表示的参数
+A parameter is an entity that stores values. It can be a name, a number, or one of the special characters listed below. A variable is a parameter denoted by a name. A variable has a value and zero or more attributes. Attributes are assigned using the declare builtin command (see the description of the declare builtin in Bash Builtins).
+
+参数是存储值的实体。它可以是名称、数字或下面列出的某个特殊字符。变量是由名称表示的参数。变量具有一个值和零个或多个属性。属性是使用 declare builtin 命令分配的(参见 Bash Builtins 中 declare builtin 的描述)。
+
+A parameter is set if it has been assigned a value. The null string is a valid value. Once a variable is set, it may be unset only by using the unset builtin command.
+
+如果参数已被赋值，则设置该参数。空字符串是一个有效的值。一旦设置了变量，只有使用 unset 内建命令才能取消设置。
+
+A variable may be assigned to by a statement of the form
+
+变量可以通过表单的语句赋值
+
+name=[value]
+If value is not given, the variable is assigned the null string. All values undergo tilde expansion, parameter and variable expansion, command substitution, arithmetic expansion, and quote removal (detailed below). If the variable has its integer attribute set, then value is evaluated as an arithmetic expression even if the $((…)) expansion is not used (see Arithmetic Expansion). Word splitting is not performed, with the exception of "$@" as explained below. Filename expansion is not performed. Assignment statements may also appear as arguments to the alias, declare, typeset, export, readonly, and local builtin commands (declaration commands). When in POSIX mode (see Bash POSIX Mode), these builtins may appear in a command after one or more instances of the command builtin and retain these assignment statement properties.
+
+如果没有给出值，则将变量赋为空字符串。所有值都经历波浪展开、参数和变量展开、指令替代展开、算术展开和报价删除(详见下文)。如果变量有其整数属性集，那么即使没有使用 $((...))展开，值也会作为算术表达式计算(参见算术展开)。除了下面解释的“ $@ ”之外，不执行单词拆分。不执行文件名扩展。赋值语句也可以作为参数出现在别名、声明、排版、导出、只读和本地内建命令(声明命令)中。当处于 POSIX 模式(参见 Bash POSIX 模式)时，这些内置语句可能出现在命令中的一个或多个命令内置实例之后，并保留这些赋值语句属性。
+
+In the context where an assignment statement is assigning a value to a shell variable or array index (see Arrays), the ‘+=’ operator can be used to append to or add to the variable’s previous value. This includes arguments to builtin commands such as declare that accept assignment statements (declaration commands). When ‘+=’ is applied to a variable for which the integer attribute has been set, value is evaluated as an arithmetic expression and added to the variable’s current value, which is also evaluated. When ‘+=’ is applied to an array variable using compound assignment (see Arrays), the variable’s value is not unset (as it is when using ‘=’), and new values are appended to the array beginning at one greater than the array’s maximum index (for indexed arrays), or added as additional key-value pairs in an associative array. When applied to a string-valued variable, value is expanded and appended to the variable’s value.
+
+在赋值语句为 shell 变量或数组索引赋值的上下文中(请参见数组) ，可以使用“ + = ”操作符追加或添加变量的前一个值。这包括用于构建命令的参数，例如 declare that accept assignment 语句(declaration command)。当对设置了整数属性的变量应用‘ + = ’时，值作为算术表达式进行计算，并添加到变量的当前值中，该值也进行计算。当使用复合赋值(参见 Arrays)将‘ + = ’应用于数组变量时，变量的值不会取消设置(就像使用‘ = ’时那样) ，新值会附加到数组的起始位置，大于数组的最大索引(对于索引数组) ，或者作为附加键值对添加到关联数组中。当应用于字符串值变量时，值被展开并附加到变量的值中。
+
+A variable can be assigned the nameref attribute using the -n option to the declare or local builtin commands (see Bash Builtins) to create a nameref, or a reference to another variable. This allows variables to be manipulated indirectly. Whenever the nameref variable is referenced, assigned to, unset, or has its attributes modified (other than using or changing the nameref attribute itself), the operation is actually performed on the variable specified by the nameref variable’s value. A nameref is commonly used within shell functions to refer to a variable whose name is passed as an argument to the function. For instance, if a variable name is passed to a shell function as its first argument, running
+
+可以使用-n 选项将变量分配给 declare 或本地内建命令(参见 Bash Builtins) ，以创建一个 nameref 或对另一个变量的引用。这使得变量可以被间接操纵。每当引用、分配给、取消设置或修改其属性(除了使用或更改 nameref 属性本身)时，都会对 nameref 变量的值指定的变量执行操作。在 shell 函数中通常使用 nameref 来引用名称作为参数传递给函数的变量。例如，如果将变量名作为 shell 函数的第一个参数传递给该函数，则运行
+
+declare -n ref=$1
+inside the function creates a nameref variable ref whose value is the variable name passed as the first argument. References and assignments to ref, and changes to its attributes, are treated as references, assignments, and attribute modifications to the variable whose name was passed as $1.
+
+函数内部创建一个 nameref 变量 ref，其值是作为第一个参数传递的变量名。对 ref 的引用和赋值，以及对其属性的更改，被视为对名称为 $1传递的变量的引用、赋值和属性修改。
+
+If the control variable in a for loop has the nameref attribute, the list of words can be a list of shell variables, and a name reference will be established for each word in the list, in turn, when the loop is executed. Array variables cannot be given the nameref attribute. However, nameref variables can reference array variables and subscripted array variables. Namerefs can be unset using the -n option to the unset builtin (see Bourne Shell Builtins). Otherwise, if unset is executed with the name of a nameref variable as an argument, the variable referenced by the nameref variable will be unset.
+
+如果 for 循环中的控制变量属性为 nameref，那么单词列表可以是 shell 变量的列表，当循环执行时，将为列表中的每个单词建立一个名称引用。数组变量不能被赋予 nameref 属性。但是，nameref 变量可以引用数组变量和下标数组变量。可以使用-n 选项取消对未设置内置函数的设置(参见 Bourne Shell 内置函数)。否则，如果以 nameref 变量的名称作为参数执行 unset，则会取消对 nameref 变量引用的变量的设置。
+
+Next: Special Parameters, Up: Shell Parameters   [Contents][Index]
+
+下一步: 特殊参数，向上: Shell 参数[内容][索引]
+
+3.4.1 Positional Parameters
+3.4.1位置参数
+A positional parameter is a parameter denoted by one or more digits, other than the single digit 0. Positional parameters are assigned from the shell’s arguments when it is invoked, and may be reassigned using the set builtin command. Positional parameter N may be referenced as ${N}, or as $N when N consists of a single digit. Positional parameters may not be assigned to with assignment statements. The set and shift builtins are used to set and unset them (see Shell Builtin Commands). The positional parameters are temporarily replaced when a shell function is executed (see Shell Functions).
+
+位置参数是由一个或多个数字表示的参数，而不是单个数字0。位置参数在调用时从 shell 的参数中分配，可以使用 set builtin 命令重新分配位置参数。位置参数 n 可以作为 ${ n }引用，或者当 n 包含单位数时作为 $n 引用。位置参数不能用赋值语句赋值。Set 和 shift 内置函数用于设置和取消设置它们(参见 Shell 内置命令)。在执行 Shell 函数时临时替换位置参数(参见 Shell 函数)。
+
+When a positional parameter consisting of more than a single digit is expanded, it must be enclosed in braces.
+
+当展开由多个单位组成的位置参数时，必须用大括号括起来。
+
+Previous: Positional Parameters, Up: Shell Parameters   [Contents][Index]
+
+上一页: 位置参数，向上: Shell 参数[内容][索引]
+
+3.4.2 Special Parameters
+3.4.2特别参数
+The shell treats several parameters specially. These parameters may only be referenced; assignment to them is not allowed.
+
+Shell 专门处理多个参数。这些参数只能被引用，不允许赋值给它们。
+
+*
+($*) Expands to the positional parameters, starting from one. When the expansion is not within double quotes, each positional parameter expands to a separate word. In contexts where it is performed, those words are subject to further word splitting and pathname expansion. When the expansion occurs within double quotes, it expands to a single word with the value of each parameter separated by the first character of the IFS special variable. That is, "$*" is equivalent to "$1c$2c…", where c is the first character of the value of the IFS variable. If IFS is unset, the parameters are separated by spaces. If IFS is null, the parameters are joined without intervening separators.
+
+($*)展开为位置参数，从1开始。当展开式不在双引号内时，每个位置参数展开为一个单独的单词。在执行的上下文中，这些单词会受到进一步的单词分裂和路径名扩展的影响。当扩展出现在双引号中时，它扩展为一个单词，每个参数的值由 IFS 特殊变量的第一个字符分隔。也就是说，“ $* ”等同于“ $1c $2c... ” ，其中 c 是 IFS 变量值的第一个字符。如果未设置 IFS，则参数用空格分隔。如果 IFS 为空，则参数之间不需要中间的分隔符即可联接。
+
+@
+($@) Expands to the positional parameters, starting from one. In contexts where word splitting is performed, this expands each positional parameter to a separate word; if not within double quotes, these words are subject to word splitting. In contexts where word splitting is not performed, this expands to a single word with each positional parameter separated by a space. When the expansion occurs within double quotes, and word splitting is performed, each parameter expands to a separate word. That is, "$@" is equivalent to "$1" "$2" …. If the double-quoted expansion occurs within a word, the expansion of the first parameter is joined with the beginning part of the original word, and the expansion of the last parameter is joined with the last part of the original word. When there are no positional parameters, "$@" and $@ expand to nothing (i.e., they are removed).
+
+($@)展开为位置参数，从1开始。在执行单词分割的上下文中，这将每个位置参数扩展为一个单独的单词; 如果不在双引号中，这些单词将受到单词分割的影响。在不执行单词拆分的上下文中，这将扩展为单个单词，其中每个位置参数由空格分隔。当展开出现在双引号中，并且执行单词分割时，每个参数展开为一个单独的单词。也就是说，“ $@ ”等于“ $1”“ $2” ..。如果在一个单词内出现双引号展开，则将第一个参数的展开与原单词的开头部分连接起来，将最后一个参数的展开与原单词的最后部分连接起来。当没有位置参数时，“ $@ ”和 $@ 展开为空(即，它们被删除)。
+
+#
+($#) Expands to the number of positional parameters in decimal.
+
+($#)展开为十进制的位置参数个数。
+
+?
+($?) Expands to the exit status of the most recently executed foreground pipeline.
+
+($?)扩展到最近执行的前台管道的退出状态。
+
+-
+($-, a hyphen.) Expands to the current option flags as specified upon invocation, by the set builtin command, or those set by the shell itself (such as the -i option).
+
+($- 连字符)根据调用时、 set builtin 命令或 shell 本身设置的选项，展开为当前选项标志(如 -i 选项)。
+
+$
+($$) Expands to the process ID of the shell. In a () subshell, it expands to the process ID of the invoking shell, not the subshell.
+
+($$)扩展到 shell 的进程 ID。在()子 shell 中，它展开为调用 shell 的进程 ID，而不是子 shell。
+
+!
+($!) Expands to the process ID of the job most recently placed into the background, whether executed as an asynchronous command or using the bg builtin (see Job Control Builtins).
+
+($!)展开到最近放置到后台的作业的进程 ID，无论是作为异步命令执行还是使用内建语言(参见作业控制内建语言)。
+
+0
+($0) Expands to the name of the shell or shell script. This is set at shell initialization. If Bash is invoked with a file of commands (see Shell Scripts), $0 is set to the name of that file. If Bash is started with the -c option (see Invoking Bash), then $0 is set to the first argument after the string to be executed, if one is present. Otherwise, it is set to the filename used to invoke Bash, as given by argument zero.
+
+($0)扩展到 shell 或 shell 脚本的名称。这是在 shell 初始化时设置的。如果用命令文件调用 Bash (请参见 Shell 脚本) ，则将 $0设置为该文件的名称。如果 Bash 是从 -c 选项启动的(请参阅调用 Bash) ，那么 $0将设置为要执行的字符串后的第一个参数(如果有的话)。否则，它将被设置为用于调用 Bash 的文件名，如参数0所示。
+
+_
+($_, an underscore.) At shell startup, set to the absolute pathname used to invoke the shell or shell script being executed as passed in the environment or argument list. Subsequently, expands to the last argument to the previous simple command executed in the foreground, after expansion. Also set to the full pathname used to invoke each command executed and placed in the environment exported to that command. When checking mail, this parameter holds the name of the mail file.
+
+($_，一个下划线.)在 shell 启动时，设置为绝对路径名，用于调用在环境或参数列表中传递的正在执行的 shell 或 shell 脚本。随后，在展开之后，将其展开为前台执行的上一个简单命令的最后一个参数。还将其设置为用于调用已执行并放置在导出到该命令的环境中的每个命令的完整路径名。检查邮件时，此参数保存邮件文件的名称。
+
+Next: Redirections, Previous: Shell Parameters, Up: Basic Shell Features   [Contents][Index]
+
+下一步: 重定向，上一步: Shell 参数，上一步: 基本 Shell 特性[目录][索引]
+
+3.5 Shell Expansions
+3.5 Shell 扩展
+Expansion is performed on the command line after it has been split into tokens. There are seven kinds of expansion performed:
+
+扩展在命令行被分解为标记之后执行。有七种不同的扩展:
+
+brace expansion 支撑伸缩
+tilde expansion 波浪形膨胀
+parameter and variable expansion 参数和变量展开式
+command substitution 指令替代
+arithmetic expansion 算术展开
+word splitting 字分裂
+filename expansion 文件名扩展
+• Brace Expansion 支撑扩张:	  	Expansion of expressions within braces. 表达式在大括号内的展开式
+• Tilde Expansion:	  	Expansion of the ~ character. 扩展 ~ 字符
+• Shell Parameter Expansion 外壳参数展开:	  	How Bash expands variables to their values. Bash 如何将变量扩展到它们的值
+• Command Substitution 指令替代:	  	Using the output of a command as an argument. 使用命令的输出作为参数
+• Arithmetic Expansion 算术扩展:	  	How to use arithmetic in shell expansions. 如何在 shell 扩展中使用算术
+• Process Substitution 过程替代:	  	A way to write and read to and from a command. 对命令进行读写的一种方法
+• Word Splitting 分词:	  	How the results of expansion are split into separate arguments. 如何将展开式的结果分解成独立的论点
+• Filename Expansion 文件名扩展:	  	A shorthand for specifying filenames matching patterns. 指定匹配模式的文件名的简写
+• Quote Removal 删除引用:	  	How and when quote characters are removed from words. 如何以及何时从单词中删除引号字符
+The order of expansions is: brace expansion; tilde expansion, parameter and variable expansion, arithmetic expansion, and command substitution (done in a left-to-right fashion); word splitting; and filename expansion.
+
+展开的顺序是: 括号展开; 波浪线展开，参数和变量展开，算术展开和指令替代展开(以从左到右的方式完成) ; 单词分割; 以及文件名展开。
+
+On systems that can support it, there is an additional expansion available: process substitution. This is performed at the same time as tilde, parameter, variable, and arithmetic expansion and command substitution.
+
+在可以支持它的系统上，还有一个额外的扩展可用: 进程替换。这与波浪、参数、变量、算术展开和指令替代同时执行。
+
+After these expansions are performed, quote characters present in the original word are removed unless they have been quoted themselves (quote removal).
+
+在执行这些扩展之后，原始单词中的引号字符将被删除，除非它们本身已被引用(引号删除)。
+
+Only brace expansion, word splitting, and filename expansion can increase the number of words of the expansion; other expansions expand a single word to a single word. The only exceptions to this are the expansions of "$@" and $* (see Special Parameters), and "${name[@]}" and ${name[*]} (see Arrays).
+
+只有大括号扩展、单词分割和文件名扩展可以增加扩展的单词数量; 其他扩展可以将单个单词扩展为单个单词。唯一的例外是“ $@ ”和 $* (请参阅特殊参数)、“ ${ name [@]}”和 ${ name [ * ]}(请参阅数组)的扩展。
+
+After all expansions, quote removal (see Quote Removal) is performed.
+
+在所有扩展之后，将执行报价删除(参见报价删除)。
+
+Next: Tilde Expansion, Up: Shell Expansions   [Contents][Index]
+
+下一步: Tilde 扩展，向上: Shell 扩展[内容][索引]
+
+3.5.1 Brace Expansion
+3.5.1支撑扩展
+Brace expansion is a mechanism by which arbitrary strings may be generated. This mechanism is similar to filename expansion (see Filename Expansion), but the filenames generated need not exist. Patterns to be brace expanded take the form of an optional preamble, followed by either a series of comma-separated strings or a sequence expression between a pair of braces, followed by an optional postscript. The preamble is prefixed to each string contained within the braces, and the postscript is then appended to each resulting string, expanding left to right.
+
+大括号展开是一种可以生成任意字符串的机制。这种机制类似于文件名扩展(参见文件名扩展) ，但是生成的文件名不需要存在。要展开大括号的模式采用可选的序言的形式，后面跟着一系列逗号分隔的字符串或者一对大括号之间的序列表达式，后面跟着一个可选的后记。前言以大括号中包含的每个字符串为前缀，然后将后记附加到每个结果字符串，从左向右展开。
+
+Brace expansions may be nested. The results of each expanded string are not sorted; left to right order is preserved. For example,
+
+大括号扩展可以嵌套。每个扩展字符串的结果不进行排序; 保留从左到右的顺序。比如说,
+
+bash$ echo a{d,c,b}e
+ade ace abe
+A sequence expression takes the form {x..y[..incr]}, where x and y are either integers or single characters, and incr, an optional increment, is an integer. When integers are supplied, the expression expands to each number between x and y, inclusive. Supplied integers may be prefixed with ‘0’ to force each term to have the same width. When either x or y begins with a zero, the shell attempts to force all generated terms to contain the same number of digits, zero-padding where necessary. When characters are supplied, the expression expands to each character lexicographically between x and y, inclusive, using the default C locale. Note that both x and y must be of the same type. When the increment is supplied, it is used as the difference between each term. The default increment is 1 or -1 as appropriate.
+
+序列表达式采用{ x. 。是的，我知道。.[ incr ]} ，其中 x 和 y 要么是整数，要么是单个字符，incr 是一个可选的增量，是一个整数。当提供了整数时，表达式将展开为 x 和 y 之间的每个数字，包括 x 和 y。提供的整数可以以“0”作为前缀，以强制每个项具有相同的宽度。当 x 或 y 以零开头时，shell 将尝试强制所有生成的术语包含相同数量的数字，必要时填充零。当提供字符时，表达式使用默认的 c 语言环境在 x 和 y 之间(包括 x 和 y)按字母顺序展开为每个字符。请注意，x 和 y 必须是相同类型的。当提供增量时，它用作每个项之间的差值。默认的增量是1或-1。
+
+Brace expansion is performed before any other expansions, and any characters special to other expansions are preserved in the result. It is strictly textual. Bash does not apply any syntactic interpretation to the context of the expansion or the text between the braces.
+
+大括号展开在任何其他展开之前执行，并且结果中保留了其他展开所特有的任何字符。这完全是原文。Bash 不会对扩展的上下文或大括号之间的文本应用任何语法解释。
+
+A correctly-formed brace expansion must contain unquoted opening and closing braces, and at least one unquoted comma or a valid sequence expression. Any incorrectly formed brace expansion is left unchanged.
+
+格式正确的花括号展开式必须包含不带引号的开括号和闭括号，以及至少一个不带引号的逗号或一个有效的序列表达式。任何形式不正确的花括号展开都将保持不变。
+
+A { or ‘,’ may be quoted with a backslash to prevent its being considered part of a brace expression. To avoid conflicts with parameter expansion, the string ‘${’ is not considered eligible for brace expansion, and inhibits brace expansion until the closing ‘}’.
+
+可以用反斜杠引用{或‘ ，’ ，以防止它被视为大括号表达式的一部分。为了避免与参数扩展发生冲突，字符串 ${’不被认为有资格用于大括号扩展，并且在结束‘}’之前禁止大括号扩展。
+
+This construct is typically used as shorthand when the common prefix of the strings to be generated is longer than in the above example:
+
+当要生成的字符串的公共前缀比上面例子中的长时，这个结构通常用作简写:
+
+mkdir /usr/local/src/bash/{old,new,dist,bugs}
+or
+
+或
+
+chown root /usr/{ucb/{ex,edit},lib/{ex?.?*,how_ex}}
+Next: Shell Parameter Expansion, Previous: Brace Expansion, Up: Shell Expansions   [Contents][Index]
+
+下一步: Shell 参数展开，上一步: 大括号展开，向上: Shell 展开[内容][索引]
+
+3.5.2 Tilde Expansion
+3.5.2 Tilde 扩展
+If a word begins with an unquoted tilde character (‘~’), all of the characters up to the first unquoted slash (or all characters, if there is no unquoted slash) are considered a tilde-prefix. If none of the characters in the tilde-prefix are quoted, the characters in the tilde-prefix following the tilde are treated as a possible login name. If this login name is the null string, the tilde is replaced with the value of the HOME shell variable. If HOME is unset, the home directory of the user executing the shell is substituted instead. Otherwise, the tilde-prefix is replaced with the home directory associated with the specified login name.
+
+如果一个单词以非引号字符(‘ ~ ’)开头，那么直到第一个非引号斜杠(或者所有字符，如果没有非引号斜杠)为止的所有字符都被认为是一个字符前缀。如果没有引用波浪号前缀中的任何字符，则波浪号后面的波浪号前缀中的字符将被视为可能的登录名。如果此登录名为空字符串，则将波浪号替换为 HOME shell 变量的值。如果未设置 HOME，则替换执行 shell 的用户的 HOME 目录。否则，波浪号前缀将替换为与指定登录名关联的主目录。
+
+If the tilde-prefix is ‘~+’, the value of the shell variable PWD replaces the tilde-prefix. If the tilde-prefix is ‘~-’, the value of the shell variable OLDPWD, if it is set, is substituted.
+
+如果波浪号前缀是“ ~ + ” ，则 shell 变量 PWD 的值将替换波浪号前缀。如果波浪号前缀是“ ~-” ，则替换 shell 变量 OLDPWD 的值(如果设置了该值)。
+
+If the characters following the tilde in the tilde-prefix consist of a number N, optionally prefixed by a ‘+’ or a ‘-’, the tilde-prefix is replaced with the corresponding element from the directory stack, as it would be displayed by the dirs builtin invoked with the characters following tilde in the tilde-prefix as an argument (see The Directory Stack). If the tilde-prefix, sans the tilde, consists of a number without a leading ‘+’ or ‘-’, ‘+’ is assumed.
+
+如果波浪线前缀中波浪线后面的字符由数字 n 组成，可以选择以‘ + ’或‘-’作为前缀，那么波浪线前缀将被目录堆栈中的相应元素替换，因为它将由所调用的 dirs 内置元素显示，波浪线前缀中波浪线后面的字符将作为参数(参见目录堆栈)。如果波浪形前缀(不包括波浪形前缀)由一个数字组成，前面没有前导的“ + ”或“-” ，则假定“ + ”。
+
+If the login name is invalid, or the tilde expansion fails, the word is left unchanged.
+
+如果登录名无效，或者波浪线展开失败，则该单词保持不变。
+
+Each variable assignment is checked for unquoted tilde-prefixes immediately following a ‘:’ or the first ‘=’. In these cases, tilde expansion is also performed. Consequently, one may use filenames with tildes in assignments to PATH, MAILPATH, and CDPATH, and the shell assigns the expanded value.
+
+每个变量的赋值都会在“ : ”或第一个“ = ”之后检查是否有未加引号的波浪形前缀。在这些情况下，也执行波浪线膨胀。因此，可以在分配给 PATH、 MAILPATH 和 CDPATH 的文件名中使用带有波浪线的文件名，shell 将分配展开的值。
+
+The following table shows how Bash treats unquoted tilde-prefixes:
+
+下表显示了 Bash 如何处理未引用的 tilde-prefixes:
+
+~
+The value of $HOME
+
+家的价值
+
+~/foo
+$HOME/foo
+
+~fred/foo
+The subdirectory foo of the home directory of the user fred
+
+用户 fred 的主目录的子目录 foo
+
+~+/foo
+$PWD/foo
+
+~-/foo
+${OLDPWD-'~-'}/foo
+
+${ OLDPWD-’ ~-’}/foo
+
+~N
+The string that would be displayed by ‘dirs +N’
+
+将由‘ dirs + n’显示的字符串
+
+~+N
+The string that would be displayed by ‘dirs +N’
+
+将由‘ dirs + n’显示的字符串
+
+~-N
+The string that would be displayed by ‘dirs -N’
+
+将由“ dirs-n”显示的字符串
+
+Bash also performs tilde expansion on words satisfying the conditions of variable assignments (see Shell Parameters) when they appear as arguments to simple commands. Bash does not do this, except for the declaration commands listed above, when in POSIX mode.
+
+当单词作为简单命令的参数出现时，Bash 还对满足变量赋值条件(请参见 Shell 参数)的单词执行波浪形展开。除了上面列出的声明命令外，Bash 在 POSIX 模式下不会这样做。
+
+Next: Command Substitution, Previous: Tilde Expansion, Up: Shell Expansions   [Contents][Index]
+
+下一步: 指令替代扩展，上一步: 波浪线扩展，向上: Shell 扩展[内容][索引]
+
+3.5.3 Shell Parameter Expansion
+3.5.3 Shell 参数展开
+The ‘$’ character introduces parameter expansion, command substitution, or arithmetic expansion. The parameter name or symbol to be expanded may be enclosed in braces, which are optional but serve to protect the variable to be expanded from characters immediately following it which could be interpreted as part of the name.
+
+‘ $’字符引入了参数扩展、指令替代扩展或算术扩展。要展开的参数名称或符号可以用大括号括起来，大括号是可选的，但用于保护要展开的变量不受紧跟其后的字符的影响，这些字符可以被解释为名称的一部分。
+
+When braces are used, the matching ending brace is the first ‘}’ not escaped by a backslash or within a quoted string, and not within an embedded arithmetic expansion, command substitution, or parameter expansion.
+
+当使用大括号时，匹配的结束括号是第一个‘}’ ，不是由反斜杠转义的，也不是在带引号的字符串中转义的，也不是在嵌入式算术展开、指令替代展开或参数展开中。
+
+The basic form of parameter expansion is ${parameter}. The value of parameter is substituted. The parameter is a shell parameter as described above (see Shell Parameters) or an array reference (see Arrays). The braces are required when parameter is a positional parameter with more than one digit, or when parameter is followed by a character that is not to be interpreted as part of its name.
+
+参数展开的基本形式是 ${ parameter }。参数值被替换。参数是上面描述的 Shell 参数(参见 Shell 参数)或数组引用(参见数组)。当参数是具有多个数字的位置参数，或者参数后面跟着一个不被解释为其名称的一部分的字符时，需要大括号。
+
+If the first character of parameter is an exclamation point (!), and parameter is not a nameref, it introduces a level of indirection. Bash uses the value formed by expanding the rest of parameter as the new parameter; this is then expanded and that value is used in the rest of the expansion, rather than the expansion of the original parameter. This is known as indirect expansion. The value is subject to tilde expansion, parameter expansion, command substitution, and arithmetic expansion. If parameter is a nameref, this expands to the name of the variable referenced by parameter instead of performing the complete indirect expansion. The exceptions to this are the expansions of ${!prefix*} and ${!name[@]} described below. The exclamation point must immediately follow the left brace in order to introduce indirection.
+
+如果参数的第一个字符是叹号，参数不是一个 nameref，它引入了一个间接级别。Bash 使用通过展开其余参数形成的值作为新参数; 然后对其进行展开，并在展开的其余部分中使用该值，而不是对原始参数进行展开。这就是所谓的间接膨胀。该值受波浪展开、参数展开、指令替代展开和算术展开的影响。如果参数是 nameref，则展开为由参数引用的变量的名称，而不是执行完整的间接展开。这里的例外是 ${ ！和 ${ ！名称[@]}描述如下。为了引入间接访问，叹号必须立即使用左大括号。
+
+In each of the cases below, word is subject to tilde expansion, parameter expansion, command substitution, and arithmetic expansion.
+
+在下面的每个例子中，单词都受到波浪展开、参数展开、指令替代展开和算术展开的影响。
+
+When not performing substring expansion, using the form described below (e.g., ‘:-’), Bash tests for a parameter that is unset or null. Omitting the colon results in a test only for a parameter that is unset. Put another way, if the colon is included, the operator tests for both parameter’s existence and that its value is not null; if the colon is omitted, the operator tests only for existence.
+
+当不执行子字符串展开时，使用下面描述的形式(例如，‘ :-’) ，Bash 测试未设置或空的参数。省略冒号只会导致未设置参数的测试。换句话说，如果包含冒号，操作符将测试这两个参数是否存在，以及它的值是否为空; 如果省略冒号，操作符将仅测试是否存在。
+
+${parameter:-word}
+If parameter is unset or null, the expansion of word is substituted. Otherwise, the value of parameter is substituted.
+
+如果参数未设置或为空，则替换字的展开，否则替换参数的值。
+
+${parameter:=word}
+If parameter is unset or null, the expansion of word is assigned to parameter. The value of parameter is then substituted. Positional parameters and special parameters may not be assigned to in this way.
+
+如果参数未设置或为空，则将字的展开赋给参数。然后替换参数的值。位置参数和特殊参数不能以这种方式分配。
+
+${parameter:?word}
+If parameter is null or unset, the expansion of word (or a message to that effect if word is not present) is written to the standard error and the shell, if it is not interactive, exits. Otherwise, the value of parameter is substituted.
+
+如果参数为 null 或未设置，则将字的展开(如果没有字，则为此效果的消息)写入标准错误，如果不是交互式的，则退出 shell。否则，将替换参数的值。
+
+${parameter:+word}
+If parameter is null or unset, nothing is substituted, otherwise the expansion of word is substituted.
+
+如果参数为 null 或未设置，则不替换任何内容，否则将替换单词的展开式。
+
+${parameter:offset}
+${parameter:offset:length}
+This is referred to as Substring Expansion. It expands to up to length characters of the value of parameter starting at the character specified by offset. If parameter is ‘@’, an indexed array subscripted by ‘@’ or ‘*’, or an associative array name, the results differ as described below. If length is omitted, it expands to the substring of the value of parameter starting at the character specified by offset and extending to the end of the value. length and offset are arithmetic expressions (see Shell Arithmetic).
+
+这被称为子字符串展开。它扩展为从偏移量指定的字符开始的参数值的最多个长度字符。如果参数是@，一个下标为@或 * 的索引数组，或者一个关联数组名称，那么结果会有所不同，如下所述。如果省略了长度，它将扩展为参数值的子字符串，从偏移量指定的字符开始，一直扩展到值的末尾。长度和偏移量是算术表达式(参见 Shell 算术)。
+
+If offset evaluates to a number less than zero, the value is used as an offset in characters from the end of the value of parameter. If length evaluates to a number less than zero, it is interpreted as an offset in characters from the end of the value of parameter rather than a number of characters, and the expansion is the characters between offset and that result. Note that a negative offset must be separated from the colon by at least one space to avoid being confused with the ‘:-’ expansion.
+
+如果偏移量计算结果为小于零的数字，则该值用作参数值末尾的字符偏移量。如果长度计算结果为小于零的数字，则将其解释为参数值结尾的字符偏移量，而不是一个字符数，展开式是偏移量和结果之间的字符。请注意，负偏移量与冒号之间必须至少隔一个空格，以避免与“ :-”展开式混淆。
+
+Here are some examples illustrating substring expansion on parameters and subscripted arrays:
+
+这里有一些例子说明子串在参数和下标数组上的扩展:
+
+$ string=01234567890abcdefgh
+$ echo ${string:7}
+7890abcdefgh
+$ echo ${string:7:0}
+
+$ echo ${string:7:2}
+78
+$ echo ${string:7:-2}
+7890abcdef
+$ echo ${string: -7}
+bcdefgh
+$ echo ${string: -7:0}
+
+$ echo ${string: -7:2}
+bc
+$ echo ${string: -7:-2}
+bcdef
+$ set -- 01234567890abcdefgh
+$ echo ${1:7}
+7890abcdefgh
+$ echo ${1:7:0}
+
+$ echo ${1:7:2}
+78
+$ echo ${1:7:-2}
+7890abcdef
+$ echo ${1: -7}
+bcdefgh
+$ echo ${1: -7:0}
+
+$ echo ${1: -7:2}
+bc
+$ echo ${1: -7:-2}
+bcdef
+$ array[0]=01234567890abcdefgh
+$ echo ${array[0]:7}
+7890abcdefgh
+$ echo ${array[0]:7:0}
+
+$ echo ${array[0]:7:2}
+78
+$ echo ${array[0]:7:-2}
+7890abcdef
+$ echo ${array[0]: -7}
+bcdefgh
+$ echo ${array[0]: -7:0}
+
+$ echo ${array[0]: -7:2}
+bc
+$ echo ${array[0]: -7:-2}
+bcdef
+If parameter is ‘@’, the result is length positional parameters beginning at offset. A negative offset is taken relative to one greater than the greatest positional parameter, so an offset of -1 evaluates to the last positional parameter. It is an expansion error if length evaluates to a number less than zero.
+
+如果参数为“@” ，则结果是从偏移量开始的长度位置参数。相对于比最大位置参数大一个的负偏移量，因此-1的偏移量计算为最后一个位置参数。如果长度计算结果小于零，则为展开错误。
+
+The following examples illustrate substring expansion using positional parameters:
+
+下面的例子展示了使用位置参数的子字符串扩展:
+
+$ set -- 1 2 3 4 5 6 7 8 9 0 a b c d e f g h
+$ echo ${@:7}
+7 8 9 0 a b c d e f g h
+$ echo ${@:7:0}
+
+$ echo ${@:7:2}
+7 8
+$ echo ${@:7:-2}
+bash: -2: substring expression < 0
+$ echo ${@: -7:2}
+b c
+$ echo ${@:0}
+./bash 1 2 3 4 5 6 7 8 9 0 a b c d e f g h
+$ echo ${@:0:2}
+./bash 1
+$ echo ${@: -7:0}
+
+If parameter is an indexed array name subscripted by ‘@’ or ‘*’, the result is the length members of the array beginning with ${parameter[offset]}. A negative offset is taken relative to one greater than the maximum index of the specified array. It is an expansion error if length evaluates to a number less than zero.
+
+如果参数是下标为“@”或“ * ”的索引数组名，则结果是以 ${ parameter [ offset ]}开头的数组的长度成员。相对于指定数组的最大索引大一个的负偏移量。如果长度计算结果小于零，则为展开错误。
+
+These examples show how you can use substring expansion with indexed arrays:
+
+下面的例子展示了如何在索引数组中使用子字符串展开:
+
+$ array=(0 1 2 3 4 5 6 7 8 9 0 a b c d e f g h)
+$ echo ${array[@]:7}
+7 8 9 0 a b c d e f g h
+$ echo ${array[@]:7:2}
+7 8
+$ echo ${array[@]: -7:2}
+b c
+$ echo ${array[@]: -7:-2}
+bash: -2: substring expression < 0
+$ echo ${array[@]:0}
+0 1 2 3 4 5 6 7 8 9 0 a b c d e f g h
+$ echo ${array[@]:0:2}
+0 1
+$ echo ${array[@]: -7:0}
+
+Substring expansion applied to an associative array produces undefined results.
+
+应用于关联数组的子字符串展开会产生未定义的结果。
+
+Substring indexing is zero-based unless the positional parameters are used, in which case the indexing starts at 1 by default. If offset is 0, and the positional parameters are used, $@ is prefixed to the list.
+
+除非使用位置参数，否则子字符串索引是从零开始的，在这种情况下，默认情况下索引从1开始。如果偏移量为0，并且使用了位置参数，则在列表前面添加 $@ 。
+
+${!prefix*}
+${!prefix@}
+Expands to the names of variables whose names begin with prefix, separated by the first character of the IFS special variable. When ‘@’ is used and the expansion appears within double quotes, each variable name expands to a separate word.
+
+扩展为名称以前缀开头的变量的名称，前缀以 IFS 特殊变量的第一个字符分隔。当使用“@”并且展开式出现在双引号中时，每个变量名都会展开为一个单独的单词。
+
+${!name[@]}
+${!name[*]}
+If name is an array variable, expands to the list of array indices (keys) assigned in name. If name is not an array, expands to 0 if name is set and null otherwise. When ‘@’ is used and the expansion appears within double quotes, each key expands to a separate word.
+
+如果 name 是数组变量，则展开为名称中分配的数组索引(键)列表。如果 name 不是数组，则在 name 设置时展开为0，否则展开为 null。当使用“@”并且扩展符出现在双引号中时，每个键扩展为一个单独的单词。
+
+${#parameter}
+The length in characters of the expanded value of parameter is substituted. If parameter is ‘*’ or ‘@’, the value substituted is the number of positional parameters. If parameter is an array name subscripted by ‘*’ or ‘@’, the value substituted is the number of elements in the array. If parameter is an indexed array name subscripted by a negative number, that number is interpreted as relative to one greater than the maximum index of parameter, so negative indices count back from the end of the array, and an index of -1 references the last element.
+
+参数展开值的字符长度被替换。如果参数是“ * ”或“@” ，所替换的值是位置参数的个数。如果参数是下标为‘ * ’或‘@’的数组名，则替换的值为数组中的元素数。如果参数是下标为负数的索引数组名称，则该数字被解释为相对于大于参数最大索引的索引，因此负索引从数组末尾计数，而-1的索引引用最后一个元素。
+
+${parameter#word}
+${parameter##word}
+The word is expanded to produce a pattern and matched according to the rules described below (see Pattern Matching). If the pattern matches the beginning of the expanded value of parameter, then the result of the expansion is the expanded value of parameter with the shortest matching pattern (the ‘#’ case) or the longest matching pattern (the ‘##’ case) deleted. If parameter is ‘@’ or ‘*’, the pattern removal operation is applied to each positional parameter in turn, and the expansion is the resultant list. If parameter is an array variable subscripted with ‘@’ or ‘*’, the pattern removal operation is applied to each member of the array in turn, and the expansion is the resultant list.
+
+这个单词被扩展成一个模式，并根据下面描述的规则进行匹配(见模式匹配)。如果模式匹配参数扩展值的开头，那么扩展的结果是参数的扩展值，删除最短匹配模式(‘ # ’ case)或最长匹配模式(‘ # # ’ case)。如果参数为“@”或“ * ” ，则依次对每个位置参数应用模式移除操作，并将展开为结果列表。如果参数是下标为“@”或“ * ”的数组变量，则依次对数组的每个成员应用模式移除操作，并将展开为结果列表。
+
+${parameter%word}
+${parameter%%word}
+The word is expanded to produce a pattern and matched according to the rules described below (see Pattern Matching). If the pattern matches a trailing portion of the expanded value of parameter, then the result of the expansion is the value of parameter with the shortest matching pattern (the ‘%’ case) or the longest matching pattern (the ‘%%’ case) deleted. If parameter is ‘@’ or ‘*’, the pattern removal operation is applied to each positional parameter in turn, and the expansion is the resultant list. If parameter is an array variable subscripted with ‘@’ or ‘*’, the pattern removal operation is applied to each member of the array in turn, and the expansion is the resultant list.
+
+这个单词被扩展成一个模式，并根据下面描述的规则进行匹配(见模式匹配)。如果模式匹配扩展的参数值的尾随部分，那么扩展的结果是删除了最短匹配模式(“% ”案例)或最长匹配模式(“%% ”案例)的参数值。如果参数为“@”或“ * ” ，则依次对每个位置参数应用模式移除操作，并将展开为结果列表。如果参数是下标为“@”或“ * ”的数组变量，则依次对数组的每个成员应用模式移除操作，并将展开为结果列表。
+
+${parameter/pattern/string}
+The pattern is expanded to produce a pattern just as in filename expansion. Parameter is expanded and the longest match of pattern against its value is replaced with string. The match is performed according to the rules described below (see Pattern Matching). If pattern begins with ‘/’, all matches of pattern are replaced with string. Normally only the first match is replaced. If pattern begins with ‘#’, it must match at the beginning of the expanded value of parameter. If pattern begins with ‘%’, it must match at the end of the expanded value of parameter. If string is null, matches of pattern are deleted and the / following pattern may be omitted. If the nocasematch shell option (see the description of shopt in The Shopt Builtin) is enabled, the match is performed without regard to the case of alphabetic characters. If parameter is ‘@’ or ‘*’, the substitution operation is applied to each positional parameter in turn, and the expansion is the resultant list. If parameter is an array variable subscripted with ‘@’ or ‘*’, the substitution operation is applied to each member of the array in turn, and the expansion is the resultant list.
+
+模式被展开以产生一个模式，就像文件名展开一样。参数展开，并用字符串替换模式与其值的最长匹配。比赛是按照下面描述的规则执行的(见模式匹配)。如果 pattern 以‘/’开头，则所有模式匹配都将替换为 string。通常只有第一场比赛被替换。如果 pattern 以“ # ”开头，那么它必须匹配参数展开值的开头。如果模式以‘% ’开头，那么它必须在参数展开值的末尾匹配。如果字符串为空，则删除模式的匹配并省略/以下模式。如果启用了 nocasematch shell 选项(参见 Shopt Builtin 中对 Shopt 的描述) ，匹配将不考虑字母字符的大小写。如果参数是“@”或“ * ” ，则依次对每个位置参数应用替换操作，并将展开为结果列表。如果参数是下标为“@”或“ * ”的数组变量，则依次对数组的每个成员应用替换操作，并将展开为结果列表。
+
+${parameter^pattern}
+${parameter^^pattern}
+${parameter,pattern}
+${parameter,,pattern}
+This expansion modifies the case of alphabetic characters in parameter. The pattern is expanded to produce a pattern just as in filename expansion. Each character in the expanded value of parameter is tested against pattern, and, if it matches the pattern, its case is converted. The pattern should not attempt to match more than one character. The ‘^’ operator converts lowercase letters matching pattern to uppercase; the ‘,’ operator converts matching uppercase letters to lowercase. The ‘^^’ and ‘,,’ expansions convert each matched character in the expanded value; the ‘^’ and ‘,’ expansions match and convert only the first character in the expanded value. If pattern is omitted, it is treated like a ‘?’, which matches every character. If parameter is ‘@’ or ‘*’, the case modification operation is applied to each positional parameter in turn, and the expansion is the resultant list. If parameter is an array variable subscripted with ‘@’ or ‘*’, the case modification operation is applied to each member of the array in turn, and the expansion is the resultant list.
+
+这种扩展修改了参数中字母字符的大小写。模式被展开以产生一个模式，就像文件名展开一样。参数扩展值中的每个字符都会根据模式进行测试，如果与模式匹配，则转换其大小写。模式不应试图匹配多个字符。“ ^ ”运算符将匹配模式的小写字母转换为大写字母; “ ，”运算符将匹配的大写字母转换为小写字母。“ ^ ^ ”和“ ，，”扩展会转换扩展值中的每个匹配字符; “ ^ ”和“ ，”扩展会匹配并只转换扩展值中的第一个字符。如果省略了模式，它会被当作‘ 匹配每个字符。如果参数为“@”或“ * ” ，则依次对每个位置参数应用大小写修改操作，并将扩展为结果列表。如果参数是下标为“@”或“ * ”的数组变量，则依次对数组的每个成员应用大小写修改操作，并将扩展为结果列表。
+
+${parameter@operator}
+The expansion is either a transformation of the value of parameter or information about parameter itself, depending on the value of operator. Each operator is a single letter:
+
+展开式可以是参数值的转换，也可以是关于参数本身的信息，这取决于运算符的值。每个操作符都是一个单独的字母:
+
+Q
+The expansion is a string that is the value of parameter quoted in a format that can be reused as input.
+
+扩展是一个字符串，它是以可作为输入重用的格式引用的参数值。
+
+E
+The expansion is a string that is the value of parameter with backslash escape sequences expanded as with the $'…' quoting mechanism.
+
+该扩展是一个字符串，它是带有反斜杠转义序列的参数值，扩展方式与 $’ ... ’引用机制一样。
+
+P
+The expansion is a string that is the result of expanding the value of parameter as if it were a prompt string (see Controlling the Prompt).
+
+展开是一个字符串，它是将参数值展开的结果，就好像它是一个提示字符串一样(请参见控制提示)。
+
+A
+The expansion is a string in the form of an assignment statement or declare command that, if evaluated, will recreate parameter with its attributes and value.
+
+展开式是赋值语句或 declare 命令形式的字符串，如果对其进行计算，将使用其属性和值重新创建参数。
+
+a
+The expansion is a string consisting of flag values representing parameter’s attributes.
+
+展开是一个由表示参数属性的标志值组成的字符串。
+
+If parameter is ‘@’ or ‘*’, the operation is applied to each positional parameter in turn, and the expansion is the resultant list. If parameter is an array variable subscripted with ‘@’ or ‘*’, the operation is applied to each member of the array in turn, and the expansion is the resultant list.
+
+如果参数为“@”或“ * ” ，则依次对每个位置参数应用该操作，并将其展开为结果列表。如果参数是下标为“@”或“ * ”的数组变量，则依次对数组的每个成员应用该操作，并将展开为结果列表。
+
+The result of the expansion is subject to word splitting and pathname expansion as described below.
+
+扩展的结果受单词分裂和路径名扩展的影响，如下所述。
+
+Next: Arithmetic Expansion, Previous: Shell Parameter Expansion, Up: Shell Expansions   [Contents][Index]
+
+下一步: 算术扩展，上一步: Shell 参数扩展，向上: Shell 扩展[内容][索引]
+
+3.5.4 Command Substitution
+3.5.4指令替代
+Command substitution allows the output of a command to replace the command itself. Command substitution occurs when a command is enclosed as follows:
+
+指令替代命令允许命令的输出替换命令本身。当一个命令包含如下内容时，就会发生指令替代:
+
+$(command)
+or
+
+或
+
+`command`
+Bash performs the expansion by executing command in a subshell environment and replacing the command substitution with the standard output of the command, with any trailing newlines deleted. Embedded newlines are not deleted, but they may be removed during word splitting. The command substitution $(cat file) can be replaced by the equivalent but faster $(< file).
+
+Bash 执行扩展的方法是在子 shell 环境中执行命令，并用命令的标准输出替换指令替代，并删除所有尾随的新行。嵌入的新行不会被删除，但是它们可能会在单词分裂过程中被删除。指令替代 $(cat file)可以被等效但更快的 $(< file)替换。
+
+When the old-style backquote form of substitution is used, backslash retains its literal meaning except when followed by ‘$’, ‘`’, or ‘\’. The first backquote not preceded by a backslash terminates the command substitution. When using the $(command) form, all characters between the parentheses make up the command; none are treated specially.
+
+当使用旧式的反引号替换形式时，反斜杠保留其字面意义，除非后跟“ $”、“”或“’”。第一个反引号前面没有反斜杠，结束指令替代。当使用 $(命令)形式时，括号之间的所有字符组成命令; 没有一个字符被特别处理。
+
+Command substitutions may be nested. To nest when using the backquoted form, escape the inner backquotes with backslashes.
+
+命令替换可以嵌套。要在使用反引号形式时嵌套，请用反斜杠转义内部反引号。
+
+If the substitution appears within double quotes, word splitting and filename expansion are not performed on the results.
+
+如果替换出现在双引号中，则不会对结果执行单词分割和文件名展开。
+
+Next: Process Substitution, Previous: Command Substitution, Up: Shell Expansions   [Contents][Index]
+
+下一步: 进程替换，上一步: 指令替代扩展，上一步: Shell 扩展[内容][索引]
+
+3.5.5 Arithmetic Expansion
+3.5.5算术扩展
+Arithmetic expansion allows the evaluation of an arithmetic expression and the substitution of the result. The format for arithmetic expansion is:
+
+算术展开允许计算算术表达式并替换结果。算术展开的格式是:
+
+$(( expression ))
+The expression is treated as if it were within double quotes, but a double quote inside the parentheses is not treated specially. All tokens in the expression undergo parameter and variable expansion, command substitution, and quote removal. The result is treated as the arithmetic expression to be evaluated. Arithmetic expansions may be nested.
+
+表达式被视为位于双引号内，但是括号内的双引号不被特别处理。表达式中的所有标记都会进行参数和变量展开、指令替代和引号删除。结果被视为要求值的算术表达式。算术扩展可以嵌套。
+
+The evaluation is performed according to the rules listed below (see Shell Arithmetic). If the expression is invalid, Bash prints a message indicating failure to the standard error and no substitution occurs.
+
+计算是根据下面列出的规则执行的(参见 Shell 算术)。如果表达式无效，Bash 将打印一条消息，指示标准错误失败，并且不进行替换。
+
+Next: Word Splitting, Previous: Arithmetic Expansion, Up: Shell Expansions   [Contents][Index]
+
+下一步: 字分裂，上一步: 算术扩展，向上: Shell 扩展[内容][索引]
+
+3.5.6 Process Substitution
+3.5.6过程替换
+Process substitution allows a process’s input or output to be referred to using a filename. It takes the form of
+
+进程替换允许使用文件名引用进程的输入或输出
+
+<(list)
+or
+
+或
+
+>(list)
+The process list is run asynchronously, and its input or output appears as a filename. This filename is passed as an argument to the current command as the result of the expansion. If the >(list) form is used, writing to the file will provide input for list. If the <(list) form is used, the file passed as an argument should be read to obtain the output of list. Note that no space may appear between the < or > and the left parenthesis, otherwise the construct would be interpreted as a redirection. Process substitution is supported on systems that support named pipes (FIFOs) or the /dev/fd method of naming open files.
+
+进程列表是异步运行的，其输入或输出作为文件名显示。作为展开的结果，该文件名作为参数传递给当前命令。如果使用 > (list)表单，则写入文件将为 list 提供输入。如果使用 < (list)形式，应该读取作为参数传递的文件，以获得 list 的输出。注意，在 < 或 > 和左括号之间不能出现空格，否则构造将被解释为重定向。支持命名管道(FIFOs)或命名打开文件的/dev/fd 方法的系统支持进程替换。
+
+When available, process substitution is performed simultaneously with parameter and variable expansion, command substitution, and arithmetic expansion.
+
+当可用时，进程替换与参数和变量展开、指令替代和算术展开同时执行。
+
+Next: Filename Expansion, Previous: Process Substitution, Up: Shell Expansions   [Contents][Index]
+
+下一步: 文件名扩展，上一步: 进程替换，向上: Shell 扩展[内容][索引]
+
+3.5.7 Word Splitting
+3.5.7字分裂
+The shell scans the results of parameter expansion, command substitution, and arithmetic expansion that did not occur within double quotes for word splitting.
+
+Shell 会扫描参数展开、指令替代和算术展开的结果，这些结果在单词分割的双引号中都没有出现。
+
+The shell treats each character of $IFS as a delimiter, and splits the results of the other expansions into words using these characters as field terminators. If IFS is unset, or its value is exactly <space><tab><newline>, the default, then sequences of <space>, <tab>, and <newline> at the beginning and end of the results of the previous expansions are ignored, and any sequence of IFS characters not at the beginning or end serves to delimit words. If IFS has a value other than the default, then sequences of the whitespace characters space, tab, and newline are ignored at the beginning and end of the word, as long as the whitespace character is in the value of IFS (an IFS whitespace character). Any character in IFS that is not IFS whitespace, along with any adjacent IFS whitespace characters, delimits a field. A sequence of IFS whitespace characters is also treated as a delimiter. If the value of IFS is null, no word splitting occurs.
+
+Shell 将 $IFS 的每个字符视为分隔符，并将其他扩展的结果拆分为单词，使用这些字符作为字段终止符。如果 IFS 是未设置的，或者它的值正好是 < space > < tab > < newline > ，那么缺省值，则忽略前一个扩展结果的开始和结束处的 < space > 、 < tab > 和 < newline > 序列，并且任何不在开始或结束处的 IFS 字符序列都用于分隔单词。如果 IFS 的值不是默认值，那么空白字符空格、制表符和换行符的序列将在单词的开始和结束处被忽略，只要空白字符值在 IFS 空白字符值中。IFS 中任何不是 IFS 空格的字符，连同任何相邻的 IFS 空格字符，分隔字段。一系列 IFS 空白字符也被视为分隔符。如果 IFS 值为空，则不发生字分裂。
+
+Explicit null arguments ("" or '') are retained and passed to commands as empty strings. Unquoted implicit null arguments, resulting from the expansion of parameters that have no values, are removed. If a parameter with no value is expanded within double quotes, a null argument results and is retained and passed to a command as an empty string. When a quoted null argument appears as part of a word whose expansion is non-null, the null argument is removed. That is, the word -d'' becomes -d after word splitting and null argument removal.
+
+保留显式空参数(“”或“”)并将其作为空字符串传递给命令。由于没有值的参数展开而产生的未引用的隐式 null 参数被删除。如果在双引号中展开没有值的参数，则会产生一个 null 参数，并将其作为空字符串保留并传递给命令。当一个带引号的 null 参数作为一个展开式非 null 的单词的一部分出现时，null 参数将被删除。也就是说，单词-d’’在单词分裂和空参数删除后变成-d。
+
+Note that if no expansion occurs, no splitting is performed.
+
+注意，如果没有发生展开，就不会执行分裂。
+
+Next: Quote Removal, Previous: Word Splitting, Up: Shell Expansions   [Contents][Index]
+
+下一步: 删除引号，上一步: 单词分裂，向上: Shell 扩展[内容][索引]
+
+3.5.8 Filename Expansion
+3.5.8文件名扩展
+• Pattern Matching 模式匹配:	  	How the shell matches patterns. Shell 如何匹配模式
+After word splitting, unless the -f option has been set (see The Set Builtin), Bash scans each word for the characters ‘*’, ‘?’, and ‘[’. If one of these characters appears, then the word is regarded as a pattern, and replaced with an alphabetically sorted list of filenames matching the pattern (see Pattern Matching). If no matching filenames are found, and the shell option nullglob is disabled, the word is left unchanged. If the nullglob option is set, and no matches are found, the word is removed. If the failglob shell option is set, and no matches are found, an error message is printed and the command is not executed. If the shell option nocaseglob is enabled, the match is performed without regard to the case of alphabetic characters.
+
+分词后，除非设置了-f 选项(参见 The Set Builtin) ，否则 Bash 将扫描每个单词中的字符“ * ”、“ ? ”，以及「。如果其中一个字符出现，那么这个单词将被视为一个模式，并用一个按字母顺序排序的匹配模式的文件名列表替换(参见模式匹配文档)。如果没有找到匹配的文件名，并且禁用 shell 选项 nullglob，则该单词将保持不变。如果设置了 nullglob 选项，但没有找到匹配项，则该单词将被删除。如果设置了 failglob shell 选项，但没有找到匹配项，则会打印错误消息，并且不执行命令。如果启用了 shell 选项 nocaseglob，则不考虑字母字符的大小写来执行匹配。
+
+When a pattern is used for filename expansion, the character ‘.’ at the start of a filename or immediately following a slash must be matched explicitly, unless the shell option dotglob is set. The filenames ‘.’ and ‘..’ must always be matched explicitly, even if dotglob is set. In other cases, the ‘.’ character is not treated specially.
+
+当模式用于文件名扩展时，字符‘ . ’必须显式匹配文件名开头或紧接在斜杠后的位置，除非设置了 shell 选项 dotcub。文件名为‘和’。必须总是显式地匹配，即使 doglob 已设置。在其他情况下，则是性格没有被特别对待。
+
+When matching a filename, the slash character must always be matched explicitly by a slash in the pattern, but in other matching contexts it can be matched by a special pattern character as described below (see Pattern Matching).
+
+当匹配一个文件名时，斜杠字符必须总是通过模式中的斜杠显式匹配，但是在其他匹配的上下文中，斜杠字符可以通过下面描述的特殊模式字符来匹配(参见模式匹配)。
+
+See the description of shopt in The Shopt Builtin, for a description of the nocaseglob, nullglob, failglob, and dotglob options.
+
+有关 nocaseglob、 nullglob、 failglob 和 dotglob 选项的描述，请参阅 theshopt Builtin 中对 Shopt 的描述。
+
+The GLOBIGNORE shell variable may be used to restrict the set of file names matching a pattern. If GLOBIGNORE is set, each matching file name that also matches one of the patterns in GLOBIGNORE is removed from the list of matches. If the nocaseglob option is set, the matching against the patterns in GLOBIGNORE is performed without regard to case. The filenames . and .. are always ignored when GLOBIGNORE is set and not null. However, setting GLOBIGNORE to a non-null value has the effect of enabling the dotglob shell option, so all other filenames beginning with a ‘.’ will match. To get the old behavior of ignoring filenames beginning with a ‘.’, make ‘.*’ one of the patterns in GLOBIGNORE. The dotglob option is disabled when GLOBIGNORE is unset.
+
+Globalignore shell 变量可用于限制与模式匹配的一组文件名。如果设置了 GLOBIGNORE，则从匹配列表中删除同时匹配 GLOBIGNORE 模式之一的每个匹配文件名。如果设置了 nocaseglob 选项，则无需考虑情况就可以对 GLOBIGNORE 的模式进行匹配。文件名。及。.当 GLOBIGNORE 设置为非空时，总是忽略。但是，将 GLOBIGNORE 设置为非空值会产生启用 dotglob shell 选项的效果，因此所有以‘’开头的其他文件名都是如此将匹配。以获得忽略以‘开头的文件名的旧行为，使’。* GLOBIGNORE 的其中一种模式。当 globalignore 取消设置时，dotcub 选项将被禁用。
+
+Up: Filename Expansion   [Contents][Index]
+
+向上: 文件名扩展[目录][索引]
+
+3.5.8.1 Pattern Matching
+3.5.8.1模式匹配
+Any character that appears in a pattern, other than the special pattern characters described below, matches itself. The NUL character may not occur in a pattern. A backslash escapes the following character; the escaping backslash is discarded when matching. The special pattern characters must be quoted if they are to be matched literally.
+
+出现在模式中的任何字符(下面描述的特殊模式字符除外)都与自身匹配。NUL 字符不能以模式出现。反斜杠对以下字符进行转义; 在匹配时将丢弃转义反斜杠。如果要逐字匹配特殊模式字符，则必须引用它们。
+
+The special pattern characters have the following meanings:
+
+这些特殊字形有以下含义:
+
+*
+Matches any string, including the null string. When the globstar shell option is enabled, and ‘*’ is used in a filename expansion context, two adjacent ‘*’s used as a single pattern will match all files and zero or more directories and subdirectories. If followed by a ‘/’, two adjacent ‘*’s will match only directories and subdirectories.
+
+匹配任何字符串，包括空字符串。当启用 globstar shell 选项，并且在文件名扩展上下文中使用‘ * ’时，两个相邻的‘ * ’作为单个模式将匹配所有文件以及零个或更多目录和子目录。如果后跟一个‘/’ ，两个相邻的‘ * ’将只匹配目录和子目录。
+
+?
+Matches any single character.
+
+匹配任何单个字符。
+
+[…]
+Matches any one of the enclosed characters. A pair of characters separated by a hyphen denotes a range expression; any character that falls between those two characters, inclusive, using the current locale’s collating sequence and character set, is matched. If the first character following the ‘[’ is a ‘!’ or a ‘^’ then any character not enclosed is matched. A ‘-’ may be matched by including it as the first or last character in the set. A ‘]’ may be matched by including it as the first character in the set. The sorting order of characters in range expressions is determined by the current locale and the values of the LC_COLLATE and LC_ALL shell variables, if set.
+
+匹配所括字符中的任何一个。用连字符分隔的一对字符表示范围表达式; 使用当前区域设置的排序序列和字符集的包含在这两个字符之间的任何字符都是匹配的。如果“[”后面的第一个字符是“ ! ”或者一个’ ^ ’那么任何不包含的字符都是匹配的。可以通过将“-”包含为集合中的第一个或最后一个字符来匹配它。可以通过将“]”包含为集合中的第一个字符来匹配它。范围表达式中字符的排序顺序由当前区域设置以及 LC _ collate 和 LC _ all 外壳变量(如果设置)的值决定。
+
+For example, in the default C locale, ‘[a-dx-z]’ is equivalent to ‘[abcdxyz]’. Many locales sort characters in dictionary order, and in these locales ‘[a-dx-z]’ is typically not equivalent to ‘[abcdxyz]’; it might be equivalent to ‘[aBbCcDdxXyYz]’, for example. To obtain the traditional interpretation of ranges in bracket expressions, you can force the use of the C locale by setting the LC_COLLATE or LC_ALL environment variable to the value ‘C’, or enable the globasciiranges shell option.
+
+例如，在缺省的 c 语言环境中，“[ a-dx-z ]”等价于“[ abcdxyz ]”。许多地区按照字典顺序对字符进行排序，在这些地区中，‘[ a-dx-z ]’通常不等同于‘[ abcdxyz ]’ ; 例如，它可能等同于‘[ aBbCcDdxXyYz ]’。要获得括号表达式中范围的传统解释，可以强制使用 c 语言环境，方法是将 LC collate 或 LC all 环境变量设置为值 c，或启用 globasciirranges shell 选项。
+
+Within ‘[’ and ‘]’, character classes can be specified using the syntax [:class:], where class is one of the following classes defined in the POSIX standard:
+
+在‘[’和‘]’中，可以使用[ : class: ]语法指定字符类，其中 class 是 POSIX 标准中定义的下列类之一:
+
+alnum   alpha   ascii   blank   cntrl   digit   graph   lower
+print   punct   space   upper   word    xdigit
+A character class matches any character belonging to that class. The word character class matches letters, digits, and the character ‘_’.
+
+字符类匹配属于该类的任何字符。单词字符类匹配字母、数字和字符‘ _’。
+
+Within ‘[’ and ‘]’, an equivalence class can be specified using the syntax [=c=], which matches all characters with the same collation weight (as defined by the current locale) as the character c.
+
+在‘[’和‘]’中，可以使用[ = c = ]语法指定等价类，该语法将所有具有相同排序规则权重(由当前区域设置定义)的字符与字符 c 匹配。
+
+Within ‘[’ and ‘]’, the syntax [.symbol.] matches the collating symbol symbol.
+
+在“[”和“]”中，语法[ . symbol. ]匹配校对符号。
+
+If the extglob shell option is enabled using the shopt builtin, several extended pattern matching operators are recognized. In the following description, a pattern-list is a list of one or more patterns separated by a ‘|’. Composite patterns may be formed using one or more of the following sub-patterns:
+
+如果使用 shopt 内置程序启用 extglob shell 选项，就会识别出几个扩展的模式匹配操作符。在下面的描述中，模式列表是由“ | ”分隔的一个或多个模式的列表。可以使用下列一个或多个子模式形成复合模式:
+
+?(pattern-list)
+Matches zero or one occurrence of the given patterns.
+
+匹配给定模式的零次或一次出现。
+
+*(pattern-list)
+Matches zero or more occurrences of the given patterns.
+
+匹配给定模式的零次或多次出现。
+
++(pattern-list)
+Matches one or more occurrences of the given patterns.
+
+匹配给定模式的一个或多个出现。
+
+@(pattern-list)
+Matches one of the given patterns.
+
+匹配给定模式之一。
+
+!(pattern-list)
+Matches anything except one of the given patterns.
+
+匹配任何东西，除了一个给定的模式。
+
+Complicated extended pattern matching against long strings is slow, especially when the patterns contain alternations and the strings contain multiple matches. Using separate matches against shorter strings, or using arrays of strings instead of a single long string, may be faster.
+
+复杂的扩展模式匹配对长字符串是缓慢的，特别是当模式包含变化和字符串包含多个匹配时。对较短的字符串使用单独的匹配，或者使用字符串数组而不是单个长字符串，可能会更快。
+
+Previous: Filename Expansion, Up: Shell Expansions   [Contents][Index]
+
+上一页: 文件名扩展，向上: Shell 扩展[内容][索引]
+
+3.5.9 Quote Removal
+3.5.9删除报价
+After the preceding expansions, all unquoted occurrences of the characters ‘\’, ‘'’, and ‘"’ that did not result from one of the above expansions are removed.
+
+在前面的扩展之后，所有非由上面的扩展所产生的字符‘’、‘’和‘’的非引用出现都被删除。
+
+Next: Executing Commands, Previous: Shell Expansions, Up: Basic Shell Features   [Contents][Index]
+
+下一步: 执行命令，上一步: 外壳扩展，向上: 基本外壳特性[内容][索引]
+
+3.6 Redirections
+3.6重定向
+Before a command is executed, its input and output may be redirected using a special notation interpreted by the shell. Redirection allows commands’ file handles to be duplicated, opened, closed, made to refer to different files, and can change the files the command reads from and writes to. Redirection may also be used to modify file handles in the current shell execution environment. The following redirection operators may precede or appear anywhere within a simple command or may follow a command. Redirections are processed in the order they appear, from left to right.
+
+在执行命令之前，可以使用 shell 解释的特殊符号重定向其输入和输出。重定向允许复制、打开、关闭命令的文件句柄，以引用不同的文件，并且可以更改命令读取和写入的文件。重定向还可用于修改当前 shell 执行环境中的文件句柄。下面的重定向操作符可以出现在简单命令中的任何地方，也可以出现在命令之后。重定向按照出现的顺序进行处理，从左到右。
+
+Each redirection that may be preceded by a file descriptor number may instead be preceded by a word of the form {varname}. In this case, for each redirection operator except >&- and <&-, the shell will allocate a file descriptor greater than 10 and assign it to {varname}. If >&- or <&- is preceded by {varname}, the value of varname defines the file descriptor to close. If {varname} is supplied, the redirection persists beyond the scope of the command, allowing the shell programmer to manage the file descriptor himself.
+
+每个重定向前面可以有一个文件描述符号，而前面可以有一个格式为{ varname }的单词。在这种情况下，对于除 > &-和 < &-以外的每个重定向操作符，shell 将分配一个大于10的文件描述符并将其分配给{ varname }。如果 > &-或 < &-前面有{ varname } ，varname 的值将定义要关闭的文件描述符。如果提供了{ varname } ，则重定向将超出命令的范围，从而允许 shell 程序员自己管理文件描述符。
+
+In the following descriptions, if the file descriptor number is omitted, and the first character of the redirection operator is ‘<’, the redirection refers to the standard input (file descriptor 0). If the first character of the redirection operator is ‘>’, the redirection refers to the standard output (file descriptor 1).
+
+在下面的描述中，如果省略了文件描述符号，并且重定向操作符的第一个字符是“ < ” ，则重定向将引用标准输入(文件描述符0)。如果重定向操作符的第一个字符是‘ > ’ ，则重定向引用标准输出(文件描述符1)。
+
+The word following the redirection operator in the following descriptions, unless otherwise noted, is subjected to brace expansion, tilde expansion, parameter expansion, command substitution, arithmetic expansion, quote removal, filename expansion, and word splitting. If it expands to more than one word, Bash reports an error.
+
+除非另有说明，否则下面的重定向操作符后面的单词将受到大括号展开、波浪线展开、参数展开、指令替代展开、算术展开、删除引号、文件名展开和单词分裂的限制。如果它扩展为多个单词，Bash 将报告错误。
+
+Note that the order of redirections is significant. For example, the command
+
+请注意，重定向的顺序非常重要
+
+ls > dirlist 2>&1
+directs both standard output (file descriptor 1) and standard error (file descriptor 2) to the file dirlist, while the command
+
+将标准输出(文件描述符1)和标准错误(文件描述符2)定向到文件 dirlist，而命令
+
+ls 2>&1 > dirlist
+directs only the standard output to file dirlist, because the standard error was made a copy of the standard output before the standard output was redirected to dirlist.
+
+只将标准输出定向到文件 dirlist，因为在将标准输出重定向到 dirlist 之前，标准错误是标准输出的副本。
+
+Bash handles several filenames specially when they are used in redirections, as described in the following table. If the operating system on which Bash is running provides these special files, bash will use them; otherwise it will emulate them internally with the behavior described below.
+
+如下表所述，当在重定向中使用多个文件名时，Bash 会特别处理这些文件名。如果 Bash 运行的操作系统提供这些特殊文件，Bash 将使用它们; 否则它将使用下面描述的行为在内部模拟它们。
+
+/dev/fd/fd
+If fd is a valid integer, file descriptor fd is duplicated.
+
+如果 fd 是一个有效的整数，则将文件描述符 fd 复制。
+
+/dev/stdin
+File descriptor 0 is duplicated.
+
+文件描述符0被复制。
+
+/dev/stdout
+File descriptor 1 is duplicated.
+
+文件描述符1被复制。
+
+/dev/stderr
+File descriptor 2 is duplicated.
+
+文件描述符2被复制。
+
+/dev/tcp/host/port
+If host is a valid hostname or Internet address, and port is an integer port number or service name, Bash attempts to open the corresponding TCP socket.
+
+如果主机是一个有效的主机名或 Internet 地址，而端口是一个整数端口号或服务名，那么 Bash 将尝试打开相应的 TCP 套接字。
+
+/dev/udp/host/port
+If host is a valid hostname or Internet address, and port is an integer port number or service name, Bash attempts to open the corresponding UDP socket.
+
+如果主机是一个有效的主机名或 Internet 地址，而端口是一个整数端口号或服务名，那么 Bash 将尝试打开相应的 UDP 套接字。
+
+A failure to open or create a file causes the redirection to fail.
+
+打开或创建文件失败将导致重定向失败。
+
+Redirections using file descriptors greater than 9 should be used with care, as they may conflict with file descriptors the shell uses internally.
+
+使用大于9的文件描述符进行重定向时应小心使用，因为它们可能与 shell 内部使用的文件描述符冲突。
+
+3.6.1 Redirecting Input
+3.6.1重定向输入
+Redirection of input causes the file whose name results from the expansion of word to be opened for reading on file descriptor n, or the standard input (file descriptor 0) if n is not specified.
+
+输入的重定向导致在文件描述符 n 上打开由单词扩展产生的文件名以进行读取，如果未指定 n，则打开标准输入(文件描述符0)。
+
+The general format for redirecting input is:
+
+重定向输入的一般格式是:
+
+[n]<word
+3.6.2 Redirecting Output
+3.6.2重定向输出
+Redirection of output causes the file whose name results from the expansion of word to be opened for writing on file descriptor n, or the standard output (file descriptor 1) if n is not specified. If the file does not exist it is created; if it does exist it is truncated to zero size.
+
+输出的重定向将导致在文件描述符 n 上打开由单词扩展产生的文件以进行写操作，如果未指定 n，则打开标准输出(文件描述符1)。如果文件不存在，则创建该文件; 如果存在，则将其截断为零大小。
+
+The general format for redirecting output is:
+
+重定向输出的一般格式是:
+
+[n]>[|]word
+If the redirection operator is ‘>’, and the noclobber option to the set builtin has been enabled, the redirection will fail if the file whose name results from the expansion of word exists and is a regular file. If the redirection operator is ‘>|’, or the redirection operator is ‘>’ and the noclobber option is not enabled, the redirection is attempted even if the file named by word exists.
+
+如果重定向操作符是‘ > ’ ，并且 set 内置的 noclobber 选项已经启用，那么如果由单词扩展导致的名称存在的文件是常规文件，则重定向将失败。如果重定向操作符为‘ > | ’ ，或者重定向操作符为‘ > ’ ，并且没有启用 noclobber 选项，即使存在以 word 命名的文件，也会尝试重定向。
+
+3.6.3 Appending Redirected Output
+3.6.3附加重定向输出
+Redirection of output in this fashion causes the file whose name results from the expansion of word to be opened for appending on file descriptor n, or the standard output (file descriptor 1) if n is not specified. If the file does not exist it is created.
+
+以这种方式重定向输出将导致打开其名称来自单词扩展的文件，以便将其附加到文件描述符 n 上，如果未指定 n，则打开标准输出(文件描述符1)。如果文件不存在，则创建该文件。
+
+The general format for appending output is:
+
+附加输出的一般格式是:
+
+[n]>>word
+3.6.4 Redirecting Standard Output and Standard Error
+3.6.4重定向标准输出和标准错误
+This construct allows both the standard output (file descriptor 1) and the standard error output (file descriptor 2) to be redirected to the file whose name is the expansion of word.
+
+这个结构允许将标准输出(文件描述符1)和标准错误输出(文件描述符2)重定向到名称为单词扩展的文件。
+
+There are two formats for redirecting standard output and standard error:
+
+重定向标准输出和标准错误有两种格式:
+
+&>word
+and
+
+及
+
+>&word
+Of the two forms, the first is preferred. This is semantically equivalent to
+
+在这两种形式中，第一种是首选的
+
+>word 2>&1
+When using the second form, word may not expand to a number or ‘-’. If it does, other redirection operators apply (see Duplicating File Descriptors below) for compatibility reasons.
+
+当使用第二种形式时，单词不能扩展为数字或“-”。如果是这样，其他重定向运算符应用(见复制文件描述符下面)的兼容性原因。
+
+3.6.5 Appending Standard Output and Standard Error
+3.6.5附加标准输出和标准错误
+This construct allows both the standard output (file descriptor 1) and the standard error output (file descriptor 2) to be appended to the file whose name is the expansion of word.
+
+这个结构允许将标准输出(文件描述符1)和标准错误输出(文件描述符2)附加到名称为单词扩展的文件中。
+
+The format for appending standard output and standard error is:
+
+附加标准输出和标准错误的格式如下:
+
+&>>word
+This is semantically equivalent to
+
+这在语义上等同于
+
+>>word 2>&1
+(see Duplicating File Descriptors below).
+
+(见复制文件描述符下)。
+
+3.6.6 Here Documents
+This type of redirection instructs the shell to read input from the current source until a line containing only word (with no trailing blanks) is seen. All of the lines read up to that point are then used as the standard input (or file descriptor n if n is specified) for a command.
+
+这种类型的重定向指示 shell 从当前源读取输入，直到看到只包含单词(没有尾随空格)的行。然后，读到该点的所有行都用作命令的标准输入(如果指定了 n，则用作文件描述符 n)。
+
+The format of here-documents is:
+
+这里的文件格式如下:
+
+[n]<<[-]word
+        here-document
+delimiter
+No parameter and variable expansion, command substitution, arithmetic expansion, or filename expansion is performed on word. If any part of word is quoted, the delimiter is the result of quote removal on word, and the lines in the here-document are not expanded. If word is unquoted, all lines of the here-document are subjected to parameter expansion, command substitution, and arithmetic expansion, the character sequence \newline is ignored, and ‘\’ must be used to quote the characters ‘\’, ‘$’, and ‘`’.
+
+对 word 不执行参数和变量展开、指令替代、算术展开或文件名展开。如果引用了单词的任何部分，则分隔符是单词上去掉引号的结果，并且 here-document 中的行不展开。如果单词没有被引用，那么这里文档的所有行都将受到参数展开、指令替代和算术展开的影响，字符序列换行将被忽略，‘’必须用于引用字符‘’、‘ $’和‘’。
+
+If the redirection operator is ‘<<-’, then all leading tab characters are stripped from input lines and the line containing delimiter. This allows here-documents within shell scripts to be indented in a natural fashion.
+
+如果重定向操作符为“ <-” ，则从输入行和包含分隔符的行中删除所有前导制表符。这允许 shell 脚本中的 here-documents 以一种自然的方式缩进。
+
+3.6.7 Here Strings
+A variant of here documents, the format is:
+
+作为这里文档的变体，格式如下:
+
+[n]<<< word
+The word undergoes tilde expansion, parameter and variable expansion, command substitution, arithmetic expansion, and quote removal. Pathname expansion and word splitting are not performed. The result is supplied as a single string, with a newline appended, to the command on its standard input (or file descriptor n if n is specified).
+
+这个单词经历波浪线展开、参数和变量展开、指令替代展开、算术展开和去除引号。不执行路径名扩展和单词分割。结果以单个字符串的形式提供给其标准输入(如果指定了 n，则为文件描述符 n)上的命令，并附加一个新行。
+
+3.6.8 Duplicating File Descriptors
+3.6.8复制文件描述符
+The redirection operator
+
+重定向操作符
+
+[n]<&word
+is used to duplicate input file descriptors. If word expands to one or more digits, the file descriptor denoted by n is made to be a copy of that file descriptor. If the digits in word do not specify a file descriptor open for input, a redirection error occurs. If word evaluates to ‘-’, file descriptor n is closed. If n is not specified, the standard input (file descriptor 0) is used.
+
+用于复制输入文件描述符。如果 word 展开为一个或多个数字，则表示为 n 的文件描述符将成为该文件描述符的副本。如果 word 中的数字没有为输入指定打开的文件描述符，就会发生重定向错误。如果 word 计算结果为‘-’ ，则关闭文件描述符 n。如果未指定 n，则使用标准输入(文件描述符0)。
+
+The operator
+
+接线员
+
+[n]>&word
+is used similarly to duplicate output file descriptors. If n is not specified, the standard output (file descriptor 1) is used. If the digits in word do not specify a file descriptor open for output, a redirection error occurs. If word evaluates to ‘-’, file descriptor n is closed. As a special case, if n is omitted, and word does not expand to one or more digits or ‘-’, the standard output and standard error are redirected as described previously.
+
+类似于复制输出文件描述符。如果未指定 n，则使用标准输出(文件描述符1)。如果 word 中的数字没有为输出指定打开的文件描述符，则会发生重定向错误。如果 word 计算结果为‘-’ ，则关闭文件描述符 n。作为一种特殊情况，如果省略了 n，并且 word 没有扩展到一个或多个数字或“-” ，则标准输出和标准错误将如前所述重定向。
+
+3.6.9 Moving File Descriptors
+3.6.9移动文件描述符
+The redirection operator
+
+重定向操作符
+
+[n]<&digit-
+moves the file descriptor digit to file descriptor n, or the standard input (file descriptor 0) if n is not specified. digit is closed after being duplicated to n.
+
+将文件描述符数字移动到文件描述符 n，如果未指定 n，则移动标准输入(文件描述符0)。数字被复制到 n 后关闭。
+
+Similarly, the redirection operator
+
+类似地，重定向运算符
+
+[n]>&digit-
+moves the file descriptor digit to file descriptor n, or the standard output (file descriptor 1) if n is not specified.
+
+将文件描述符数字移动到文件描述符 n，如果未指定 n，则移动标准输出(文件描述符1)。
+
+3.6.10 Opening File Descriptors for Reading and Writing
+3.6.10打开文件描述符用于读写
+The redirection operator
+
+重定向操作符
+
+[n]<>word
+causes the file whose name is the expansion of word to be opened for both reading and writing on file descriptor n, or on file descriptor 0 if n is not specified. If the file does not exist, it is created.
+
+导致在文件描述符 n 上打开名为单词扩展的文件以进行读写操作，如果未指定 n，则在文件描述符0上打开。如果文件不存在，则创建该文件。
+
+Next: Shell Scripts, Previous: Redirections, Up: Basic Shell Features   [Contents][Index]
+
+下一步: Shell 脚本，上一步: 重定向，上一步: 基本 Shell 特性[目录][索引]
+
+3.7 Executing Commands
+3.7执行命令
+• Simple Command Expansion 简单的命令扩展:	  	How Bash expands simple commands before executing them. 如何在执行简单命令之前展开它们
+• Command Search and Execution 命令搜索和执行:	  	How Bash finds commands and runs them. 如何找到命令并运行它们
+• Command Execution Environment 命令执行环境:	  	The environment in which Bash executes commands that are not shell builtins. Bash 执行非 shell 内置命令的环境
+• Environment 环境:	  	The environment given to a command. 命令所处的环境
+• Exit Status 退出状态:	  	The status returned by commands and how Bash interprets it. 命令返回的状态以及 Bash 如何解释它
+• Signals 信号:	  	What happens when Bash or a command it runs receives a signal. 当 Bash 或它运行的命令接收到信号时会发生什么
+Next: Command Search and Execution, Up: Executing Commands   [Contents][Index]
+
+下一步: 命令搜索和执行，向上: 执行命令[目录][索引]
+
+3.7.1 Simple Command Expansion
+3.7.1简单的命令扩展
+When a simple command is executed, the shell performs the following expansions, assignments, and redirections, from left to right.
+
+当执行一个简单的命令时，shell 从左到右执行以下扩展、赋值和重定向。
+
+The words that the parser has marked as variable assignments (those preceding the command name) and redirections are saved for later processing. 解析器已标记为变量赋值(在命令名之前)和重定向的单词将保存以供以后处理
+The words that are not variable assignments or redirections are expanded (see 非变量赋值或重定向的单词被展开(参见Shell Expansions Shell 扩展). If any words remain after expansion, the first word is taken to be the name of the command and the remaining words are the arguments. ).如果展开之后还有任何单词，则第一个单词被认为是命令的名称，其余的单词是参数
+Redirections are performed as described above (see 重定向按照上面的描述执行(见Redirections 重定向).
+The text after the ‘ 后面的文字=’ in each variable assignment undergoes tilde expansion, parameter expansion, command substitution, arithmetic expansion, and quote removal before being assigned to the variable. 在每个变量赋值中，在赋值给变量之前，经历了旋转展开、参数展开、指令替代展开、算术展开和去引号
+If no command name results, the variable assignments affect the current shell environment. Otherwise, the variables are added to the environment of the executed command and do not affect the current shell environment. If any of the assignments attempts to assign a value to a readonly variable, an error occurs, and the command exits with a non-zero status.
+
+如果没有命令名结果，则变量赋值将影响当前 shell 环境。否则，这些变量将被添加到执行命令的环境中，而不会影响当前的 shell 环境。如果任何赋值尝试将值分配给只读变量，就会发生错误，并且命令退出时状态为非零。
+
+If no command name results, redirections are performed, but do not affect the current shell environment. A redirection error causes the command to exit with a non-zero status.
+
+如果没有命令名结果，则执行重定向，但不影响当前 shell 环境。重定向错误导致该命令以非零状态退出。
+
+If there is a command name left after expansion, execution proceeds as described below. Otherwise, the command exits. If one of the expansions contained a command substitution, the exit status of the command is the exit status of the last command substitution performed. If there were no command substitutions, the command exits with a status of zero.
+
+如果在展开之后还有一个命令名，执行将按照下面描述的方式进行。否则，命令退出。如果其中一个扩展包含一个指令替代，则该命令的退出状态是最近执行的指令替代的退出状态。如果没有命令替换，则该命令以零状态退出。
+
+Next: Command Execution Environment, Previous: Simple Command Expansion, Up: Executing Commands   [Contents][Index]
+
+下一步: 命令执行环境，上一步: 简单命令扩展，向上: 执行命令[目录][索引]
+
+3.7.2 Command Search and Execution
+3.7.2命令搜索和执行
+After a command has been split into words, if it results in a simple command and an optional list of arguments, the following actions are taken.
+
+当一个命令被分割成单词后，如果结果是一个简单的命令和一个可选的参数列表，则执行以下操作。
+
+If the command name contains no slashes, the shell attempts to locate it. If there exists a shell function by that name, that function is invoked as described in 如果命令名不包含斜线，shell 将尝试定位它。如果存在该名称的 shell 函数，则按照Shell Functions 外壳函数.
+If the name does not match a function, the shell searches for it in the list of shell builtins. If a match is found, that builtin is invoked. 如果名称与函数不匹配，shell 将在 shell 内置语言列表中搜索它。如果找到匹配，则调用内建语言
+If the name is neither a shell function nor a builtin, and contains no slashes, Bash searches each element of 如果名称既不是 shell 函数，也不是内置函数，且不包含斜线，则 Bash 将搜索$PATH for a directory containing an executable file by that name. Bash uses a hash table to remember the full pathnames of executable files to avoid multiple 包含该名称的可执行文件的目录。Bash 使用哈希表来记住可执行文件的完整路径名，以避免出现多个PATH searches (see the description of 搜寻(参阅hash in 在Bourne Shell Builtins 伯恩壳内置). A full search of the directories in )。目录的全面搜索$PATH is performed only if the command is not found in the hash table. If the search is unsuccessful, the shell searches for a defined shell function named 只有在哈希表中没有找到该命令时才执行。如果搜索失败，shell 将搜索名为command_not_found_handle. If that function exists, it is invoked in a separate execution environment with the original command and the original command’s arguments as its arguments, and the function’s exit status becomes the exit status of that subshell. If that function is not defined, the shell prints an error message and returns an exit status of 127. .如果该函数存在，它将在一个单独的执行环境中被调用，原始命令和原始命令的参数作为它的参数，并且函数的退出状态将成为该子 shell 的退出状态。如果没有定义该函数，shell 将输出一条错误消息，并返回退出状态127
+If the search is successful, or if the command name contains one or more slashes, the shell executes the named program in a separate execution environment. Argument 0 is set to the name given, and the remaining arguments to the command are set to the arguments supplied, if any. 如果搜索成功，或者命令名包含一个或多个斜杠，shell 将在单独的执行环境中执行命名的程序。参数0设置为给定的名称，命令的其余参数设置为提供的参数(如果有)
+If this execution fails because the file is not in executable format, and the file is not a directory, it is assumed to be a 如果执行失败，因为该文件不是可执行格式，而且该文件不是目录，则假定该文件是shell script 外壳脚本 and the shell executes it as described in 然后 shell 按照Shell Scripts Shell 脚本.
+If the command was not begun asynchronously, the shell waits for the command to complete and collects its exit status. 如果命令没有异步启动，shell 将等待命令完成并收集其退出状态
+Next: Environment, Previous: Command Search and Execution, Up: Executing Commands   [Contents][Index]
+
+下一步: 环境，上一步: 命令搜索和执行，向上: 执行命令[目录][索引]
+
+3.7.3 Command Execution Environment
+3.7.3命令执行环境
+The shell has an execution environment, which consists of the following:
+
+Shell 有一个执行环境，它由以下部分组成:
+
+open files inherited by the shell at invocation, as modified by redirections supplied to the 在调用时打开 shell 继承的文件，作为提供给exec builtin 内建的
+the current working directory as set by 目前的工作目录cd, pushd, or ，或popd, or inherited by the shell at invocation ，或者在调用时由 shell 继承
+the file creation mode mask as set by 文件创建模式蒙版设置为umask or inherited from the shell’s parent 或者从 shell 的父母那里继承来的
+current traps set by 设置的水流陷阱trap
+shell parameters that are set by variable assignment or with 通过变量赋值或使用set or inherited from the shell’s parent in the environment 或者从外壳的父代继承而来
+shell functions defined during execution or inherited from the shell’s parent in the environment 在执行期间定义的 shell 函数或者从环境中的 shell 的父函数继承的 shell 函数
+options enabled at invocation (either by default or with command-line arguments) or by 在调用时启用的选项(默认情况下或使用命令-线性函数)或set
+options enabled by 选项启用shopt (see (见The Shopt Builtin 商店大楼)
+shell aliases defined with 定义的 shell 别名alias (see (见Aliases 别名)
+various process 各种过程ID 身份证s, including those of background jobs (see S，包括那些背景工作(见Lists 名单), the value of )、价值$$, and the value of ，以及$PPID
+When a simple command other than a builtin or shell function is to be executed, it is invoked in a separate execution environment that consists of the following. Unless otherwise noted, the values are inherited from the shell.
+
+当执行除内建函数或外壳函数之外的简单命令时，将在由以下组成的单独执行环境中调用该命令。除非另有说明，否则值是从 shell 继承的。
+
+the shell’s open files, plus any modifications and additions specified by redirections to the command Shell 的打开文件，以及重定向到命令所指定的任何修改和添加
+the current working directory 目前的工作目录
+the file creation mode mask 文件创建模式蒙版
+shell variables and functions marked for export, along with variables exported for the command, passed in the environment (see 标记为 export 的 shell 变量和函数，以及标记为 command 的可变导出，在环境中传递(参见Environment 环境)
+traps caught by the shell are reset to the values inherited from the shell’s parent, and traps ignored by the shell are ignored 被 shell 捕获的陷阱被重置为从 shell 的父类继承的值，被 shell 忽略的陷阱被忽略
+A command invoked in this separate environment cannot affect the shell’s execution environment.
+
+在这个单独的环境中调用的命令不能影响 shell 的执行环境。
+
+Command substitution, commands grouped with parentheses, and asynchronous commands are invoked in a subshell environment that is a duplicate of the shell environment, except that traps caught by the shell are reset to the values that the shell inherited from its parent at invocation. Builtin commands that are invoked as part of a pipeline are also executed in a subshell environment. Changes made to the subshell environment cannot affect the shell’s execution environment.
+
+在一个复制了 shell 环境的子 shell 环境中调用了指令替代、括号组合的命令和异步命令，但是被 shell 捕获的陷阱被重置为 shell 在调用时从其父环境继承的值。作为管道的一部分调用的内置命令也在子 shell 环境中执行。对子 shell 环境所做的更改不会影响 shell 的执行环境。
+
+Subshells spawned to execute command substitutions inherit the value of the -e option from the parent shell. When not in POSIX mode, Bash clears the -e option in such subshells.
+
+产生的用于执行命令替换的子 shell 继承了父 shell 的-e 选项的值。当不处于 POSIX 模式时，Bash 会在这样的子 shell 中清除 -e 选项。
+
+If a command is followed by a ‘&’ and job control is not active, the default standard input for the command is the empty file /dev/null. Otherwise, the invoked command inherits the file descriptors of the calling shell as modified by redirections.
+
+如果命令后跟“ & ” ，并且作业控制不处于活动状态，则该命令的默认标准输入是空文件/dev/null。否则，被调用的命令将继承通过重定向修改的调用 shell 的文件描述符。
+
+Next: Exit Status, Previous: Command Execution Environment, Up: Executing Commands   [Contents][Index]
+
+下一步: 退出状态，上一步: 命令执行环境，上一步: 执行命令[目录][索引]
+
+3.7.4 Environment
+3.7.4环境
+When a program is invoked it is given an array of strings called the environment. This is a list of name-value pairs, of the form name=value.
+
+当一个程序被调用时，它被给予一个称为环境的字符串数组。这是一个名称-值对列表，其格式为 name = value。
+
+Bash provides several ways to manipulate the environment. On invocation, the shell scans its own environment and creates a parameter for each name found, automatically marking it for export to child processes. Executed commands inherit the environment. The export and ‘declare -x’ commands allow parameters and functions to be added to and deleted from the environment. If the value of a parameter in the environment is modified, the new value becomes part of the environment, replacing the old. The environment inherited by any executed command consists of the shell’s initial environment, whose values may be modified in the shell, less any pairs removed by the unset and ‘export -n’ commands, plus any additions via the export and ‘declare -x’ commands.
+
+Bash 提供了几种操作环境的方法。在调用时，shell 会扫描自己的环境，并为找到的每个名称创建一个参数，并自动将其标记为导出到子进程。执行的命令继承环境。Export 和‘ declare-x’命令允许向环境中添加和删除参数和函数。如果修改了环境中某个参数的值，则新值将成为环境的一部分，替换旧的。任何执行的命令所继承的环境包括 shell 的初始环境，其值可以在 shell 中修改，减去 unset 和“ export-n”命令删除的任何对，再加上通过 export 和“ declare-x”命令添加的内容。
+
+The environment for any simple command or function may be augmented temporarily by prefixing it with parameter assignments, as described in Shell Parameters. These assignment statements affect only the environment seen by that command.
+
+任何简单命令或函数的环境都可以通过使用参数分配作为前缀来临时增强，如 Shell 参数中所述。这些赋值语句只影响该命令看到的环境。
+
+If the -k option is set (see The Set Builtin), then all parameter assignments are placed in the environment for a command, not just those that precede the command name.
+
+如果设置了-k 选项(参见 The Set Builtin) ，那么所有的参数分配都将被放置在命令的环境中，而不仅仅是命令名之前的那些参数。
+
+When Bash invokes an external command, the variable ‘$_’ is set to the full pathname of the command and passed to that command in its environment.
+
+当 Bash 调用外部命令时，变量‘ $_’被设置为该命令的完整路径名，并在其环境中传递给该命令。
+
+Next: Signals, Previous: Environment, Up: Executing Commands   [Contents][Index]
+
+下一步: 信号，上一步: 环境，上一步: 执行命令[目录][索引]
+
+3.7.5 Exit Status
+3.7.5退出状态
+The exit status of an executed command is the value returned by the waitpid system call or equivalent function. Exit statuses fall between 0 and 255, though, as explained below, the shell may use values above 125 specially. Exit statuses from shell builtins and compound commands are also limited to this range. Under certain circumstances, the shell will use special values to indicate specific failure modes.
+
+已执行命令的退出状态是 waitpid 系统调用或等效函数返回的值。出口状态在0到255之间，但是，正如下面解释的，shell 可以特别使用125以上的值。从 shell 内置的退出状态和复合命令也限制在这个范围内。在某些情况下，shell 将使用特殊值来指示特定的故障模式。
+
+For the shell’s purposes, a command which exits with a zero exit status has succeeded. A non-zero exit status indicates failure. This seemingly counter-intuitive scheme is used so there is one well-defined way to indicate success and a variety of ways to indicate various failure modes. When a command terminates on a fatal signal whose number is N, Bash uses the value 128+N as the exit status.
+
+对于 shell 的目的，退出状态为零的命令已经成功。非零退出状态表示失败。这个看似违反直觉的方案被使用，因此有一个明确的方法来表示成功，以及多种方法来表示各种失败模式。当命令在一个数字为 n 的致命信号上终止时，Bash 使用值128 + n 作为退出状态。
+
+If a command is not found, the child process created to execute it returns a status of 127. If a command is found but is not executable, the return status is 126.
+
+如果没有找到命令，为执行该命令而创建的子进程将返回状态127。如果一个命令被找到但是不能执行，返回状态是126。
+
+If a command fails because of an error during expansion or redirection, the exit status is greater than zero.
+
+如果命令在展开或重定向过程中因错误而失败，则退出状态大于零。
+
+The exit status is used by the Bash conditional commands (see Conditional Constructs) and some of the list constructs (see Lists).
+
+退出状态由 Bash 条件命令(参见条件构造)和一些列表构造(参见列表)使用。
+
+All of the Bash builtins return an exit status of zero if they succeed and a non-zero status on failure, so they may be used by the conditional and list constructs. All builtins return an exit status of 2 to indicate incorrect usage, generally invalid options or missing arguments.
+
+如果成功，所有的 Bash 内置函数都返回零的退出状态，如果失败，则返回非零的退出状态，因此它们可以被条件结构和列表结构使用。所有内置函数返回的退出状态为2，表示使用不正确，通常是无效的选项或缺少参数。
+
+Previous: Exit Status, Up: Executing Commands   [Contents][Index]
+
+上一页: 退出状态，向上: 执行命令[目录][索引]
+
+3.7.6 Signals
+3.7.6信号
+When Bash is interactive, in the absence of any traps, it ignores SIGTERM (so that ‘kill 0’ does not kill an interactive shell), and SIGINT is caught and handled (so that the wait builtin is interruptible). When Bash receives a SIGINT, it breaks out of any executing loops. In all cases, Bash ignores SIGQUIT. If job control is in effect (see Job Control), Bash ignores SIGTTIN, SIGTTOU, and SIGTSTP.
+
+当 Bash 是交互式的时候，在没有任何陷阱的情况下，它忽略 SIGTERM (这样‘ kill 0’就不会杀死交互式 shell) ，而 SIGINT 被捕获和处理(这样等待内建是可中断的)。当 Bash 接收到一个 SIGINT 时，它会脱离任何正在执行的循环。在所有情况下，Bash 都忽略 SIGQUIT。如果作业控制生效(请参阅作业控制) ，则 Bash 忽略 SIGTTIN、 SIGTTOU 和 SIGTSTP。
+
+Non-builtin commands started by Bash have signal handlers set to the values inherited by the shell from its parent. When job control is not in effect, asynchronous commands ignore SIGINT and SIGQUIT in addition to these inherited handlers. Commands run as a result of command substitution ignore the keyboard-generated job control signals SIGTTIN, SIGTTOU, and SIGTSTP.
+
+由 Bash 启动的非内建命令将信号处理程序设置为 shell 从其父级继承的值。当作业控制不起作用时，除了这些继承的处理程序之外，异步命令还会忽略 SIGINT 和 SIGQUIT。作为指令替代的结果运行的命令忽略键盘生成的作业控制信号 SIGTTIN，SIGTTOU 和 SIGTSTP。
+
+The shell exits by default upon receipt of a SIGHUP. Before exiting, an interactive shell resends the SIGHUP to all jobs, running or stopped. Stopped jobs are sent SIGCONT to ensure that they receive the SIGHUP. To prevent the shell from sending the SIGHUP signal to a particular job, it should be removed from the jobs table with the disown builtin (see Job Control Builtins) or marked to not receive SIGHUP using disown -h.
+
+默认情况下，shell 在收到 SIGHUP 时退出。在退出之前，交互式 shell 将重新发送 SIGHUP 到所有正在运行或已停止的作业。已停止的作业将被发送 SIGCONT 以确保它们接收 SIGHUP。为了防止 shell 向特定作业发送 SIGHUP 信号，应该使用 disown-h 将其从作业表中删除(参见作业控制内建) ，或者标记为不使用 disown-h 接收 SIGHUP。
+
+If the huponexit shell option has been set with shopt (see The Shopt Builtin), Bash sends a SIGHUP to all jobs when an interactive login shell exits.
+
+如果在 Shopt 中设置了 huponexit shell 选项(参见 The Shopt Builtin) ，当交互式登录 shell 退出时，Bash 会向所有作业发送一个 SIGHUP。
+
+If Bash is waiting for a command to complete and receives a signal for which a trap has been set, the trap will not be executed until the command completes. When Bash is waiting for an asynchronous command via the wait builtin, the reception of a signal for which a trap has been set will cause the wait builtin to return immediately with an exit status greater than 128, immediately after which the trap is executed.
+
+如果 Bash 正在等待命令完成，并接收到设置了一个陷阱的信号，则在命令完成之前不会执行该陷阱。当 Bash 通过 wait builtin 等待异步命令时，接收到设置了陷阱的信号会导致 wait builtin 立即返回，退出状态大于128，之后陷阱立即执行。
+
+Previous: Executing Commands, Up: Basic Shell Features   [Contents][Index]
+
+上一页: 执行命令，向上: 基本外壳特性[目录][索引]
+
+3.8 Shell Scripts
+3.8 Shell 脚本
+A shell script is a text file containing shell commands. When such a file is used as the first non-option argument when invoking Bash, and neither the -c nor -s option is supplied (see Invoking Bash), Bash reads and executes commands from the file, then exits. This mode of operation creates a non-interactive shell. The shell first searches for the file in the current directory, and looks in the directories in $PATH if not found there.
+
+Shell 脚本是包含 shell 命令的文本文件。当在调用 Bash 时将这样的文件作为第一个非选项参数使用，但既没有提供 -c nor-s 选项(请参阅调用 Bash)时，Bash 从该文件中读取并执行命令，然后退出。这种操作模式创建一个非交互式 shell。Shell 首先在工作目录文件夹中搜索该文件，如果在 $PATH 目录中没有找到，则在该目录中查找。
+
+When Bash runs a shell script, it sets the special parameter 0 to the name of the file, rather than the name of the shell, and the positional parameters are set to the remaining arguments, if any are given. If no additional arguments are supplied, the positional parameters are unset.
+
+当 Bash 运行 shell 脚本时，它将特殊参数0设置为文件的名称，而不是 shell 的名称，并将位置参数设置为其余的参数(如果有的话)。如果没有提供其他参数，则不设置位置参数。
+
+A shell script may be made executable by using the chmod command to turn on the execute bit. When Bash finds such a file while searching the $PATH for a command, it spawns a subshell to execute it. In other words, executing
+
+通过使用 chmod 命令打开执行位，shell 脚本可以被执行。当 Bash 在搜索命令的 $PATH 时找到这样的文件时，它会生成一个子 shell 来执行它。换句话说，执行
+
+filename arguments
+is equivalent to executing
+
+等同于执行
+
+bash filename arguments
+if filename is an executable shell script. This subshell reinitializes itself, so that the effect is as if a new shell had been invoked to interpret the script, with the exception that the locations of commands remembered by the parent (see the description of hash in Bourne Shell Builtins) are retained by the child.
+
+如果 filename 是可执行 shell 脚本。这个子 Shell 重新初始化自己，因此效果就好像调用了一个新的 Shell 来解释脚本，除了父 Shell 记住的命令位置(参见 Bourne Shell Builtins 散列的描述)被子 Shell 保留。
+
+Most versions of Unix make this a part of the operating system’s command execution mechanism. If the first line of a script begins with the two characters ‘#!’, the remainder of the line specifies an interpreter for the program. Thus, you can specify Bash, awk, Perl, or some other interpreter and write the rest of the script file in that language.
+
+大多数版本的 Unix 都将其作为操作系统命令执行机制的一部分。如果脚本的第一行以两个字符 # 行的其余部分为程序指定了一个解释器。因此，您可以指定 Bash、 awk、 Perl 或其他解释器，并用该语言编写脚本文件的其余部分。
+
+The arguments to the interpreter consist of a single optional argument following the interpreter name on the first line of the script file, followed by the name of the script file, followed by the rest of the arguments. Bash will perform this action on operating systems that do not handle it themselves. Note that some older versions of Unix limit the interpreter name and argument to a maximum of 32 characters.
+
+解释器的参数由一个可选参数组成，该参数位于脚本文件第一行的解释器名称之后，后面跟着脚本文件的名称，再后面跟着其余的参数。Bash 将在不自己处理它的操作系统上执行此操作。注意，一些旧版本的 Unix 将解释器名称和参数限制为最多32个字符。
+
+Bash scripts often begin with #! /bin/bash (assuming that Bash has been installed in /bin), since this ensures that Bash will be used to interpret the script, even if it is executed under another shell.
+
+Bash 脚本通常以 # 开头！/bin/Bash (假设 Bash 已经安装在/bin 中) ，因为这确保了 Bash 将被用于解释脚本，即使它是在另一个 shell 下执行的。
+
+Next: Shell Variables, Previous: Basic Shell Features, Up: Top   [Contents][Index]
+
+下一步: Shell 变量，上一步: 基本 Shell 特性，向上: Top [ Contents ][ Index ]

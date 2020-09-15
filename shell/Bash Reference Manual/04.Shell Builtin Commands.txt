@@ -1,0 +1,1682 @@
+4 Shell Builtin Commands
+4 Shell 内置命令
+• Bourne Shell Builtins 伯恩壳内置:	  	Builtin commands inherited from the Bourne Shell. 从 Bourne Shell 继承的内建命令
+• Bash Builtins:	  	Table of builtins specific to Bash. 特定于 Bash 的内建表
+• Modifying Shell Behavior 修改 Shell 行为:	  	Builtins to modify shell attributes and optional behavior. 内置函数来修改 shell 属性和可选行为
+• Special Builtins 特殊内建物:	  	Builtin commands classified specially by POSIX. 按 POSIX 特别分类的内建命令
+Builtin commands are contained within the shell itself. When the name of a builtin command is used as the first word of a simple command (see Simple Commands), the shell executes the command directly, without invoking another program. Builtin commands are necessary to implement functionality impossible or inconvenient to obtain with separate utilities.
+
+内置命令包含在 shell 本身中。当内建命令的名称用作简单命令的第一个单词时(参见 Simple Commands) ，shell 直接执行该命令，而不调用其他程序。内置命令是必要的，以实现不可能或不方便的功能，以获得独立的实用程序。
+
+This section briefly describes the builtins which Bash inherits from the Bourne Shell, as well as the builtin commands which are unique to or have been extended in Bash.
+
+本节简要介绍 Bash 从 Bourne Shell 继承的内置命令，以及 Bash 中唯一的或已经扩展的内置命令。
+
+Several builtin commands are described in other chapters: builtin commands which provide the Bash interface to the job control facilities (see Job Control Builtins), the directory stack (see Directory Stack Builtins), the command history (see Bash History Builtins), and the programmable completion facilities (see Programmable Completion Builtins).
+
+几个内建命令在其他章节中也有描述: 内建命令，它为作业控制设施提供 Bash 接口(见作业控制内建) ，目录堆栈(见目录堆栈内建) ，命令历史(见 Bash History Builtins) ，以及可编程完成设施(见可编程完成内建)。
+
+Many of the builtins have been extended by POSIX or Bash.
+
+许多内置程序已经被 POSIX 或 Bash 扩展了。
+
+Unless otherwise noted, each builtin command documented as accepting options preceded by ‘-’ accepts ‘--’ to signify the end of the options. The :, true, false, and test/[ builtins do not accept options and do not treat ‘--’ specially. The exit, logout, return, break, continue, let, and shift builtins accept and process arguments beginning with ‘-’ without requiring ‘--’. Other builtins that accept arguments but are not specified as accepting options interpret arguments beginning with ‘-’ as invalid options and require ‘--’ to prevent this interpretation.
+
+除非另有说明，否则每个内置命令都被记录为接受选项，前面加上‘-’接受‘-’ ，以表示选项的结束。True、 false 和 test/[ builtins 不接受选项，也不特别对待“ -- ”。退出、注销、返回、中断、继续、 let 和 shift 内置函数接受并处理以‘-’开头的参数，而不需要‘-’。其他接受参数但未被指定为接受选项的内建语言将以-开头的参数解释为无效的选项，并要求“ -- ”来避免这种解释。
+
+Next: Bash Builtins, Up: Shell Builtin Commands   [Contents][Index]
+
+下一步: Bash 内建，向上: Shell 内建命令[目录][索引]
+
+4.1 Bourne Shell Builtins
+4.1 Bourne Shell 内置程序
+The following shell builtin commands are inherited from the Bourne Shell. These commands are implemented as specified by the POSIX standard.
+
+下面的 Shell 内置命令继承自 Bourne Shell。这些命令是按照 POSIX 标准指定的方式实现的。
+
+: (a colon)
+: [arguments]
+Do nothing beyond expanding arguments and performing redirections. The return status is zero.
+
+除了展开参数和执行重定向之外，什么都不要做。返回状态为零。
+
+. (a period)
+. filename [arguments]
+Read and execute commands from the filename argument in the current shell context. If filename does not contain a slash, the PATH variable is used to find filename. When Bash is not in POSIX mode, the current directory is searched if filename is not found in $PATH. If any arguments are supplied, they become the positional parameters when filename is executed. Otherwise the positional parameters are unchanged. If the -T option is enabled, source inherits any trap on DEBUG; if it is not, any DEBUG trap string is saved and restored around the call to source, and source unsets the DEBUG trap while it executes. If -T is not set, and the sourced file changes the DEBUG trap, the new value is retained when source completes. The return status is the exit status of the last command executed, or zero if no commands are executed. If filename is not found, or cannot be read, the return status is non-zero. This builtin is equivalent to source.
+
+从当前 shell 上下文中的 filename 参数读取和执行命令。如果 filename 不包含斜杠，则使用 PATH 变量查找 filename。当 Bash 不处于 POSIX 模式时，如果在 $PATH 中没有找到文件名，则搜索工作目录。如果提供了任何参数，它们将在文件名执行时成为位置参数。否则位置参数将保持不变。如果启用了-t 选项，则 source 将继承 DEBUG 上的任何陷阱; 如果没有，则在调用 source 时保存和恢复所有 DEBUG 陷阱字符串，并在执行时取消 DEBUG 陷阱的 source。如果没有设置-t，并且源文件更改了 DEBUG 陷阱，则在源代码完成时将保留新值。返回状态是最后执行的命令的退出状态，如果没有执行命令，返回状态为零。如果文件名没有找到，或者无法读取，则返回状态为非零。这个内建等价于源代码。
+
+break
+break [n]
+Exit from a for, while, until, or select loop. If n is supplied, the nth enclosing loop is exited. n must be greater than or equal to 1. The return status is zero unless n is not greater than or equal to 1.
+
+从 for、 while、 until 或 select 循环退出。如果提供 n，则退出第 n 个封闭循环。N 必须大于等于1。返回状态为零，除非 n 不大于或等于1。
+
+cd
+cd [-L|[-P [-e]] [-@] [directory]
+Change the current working directory to directory. If directory is not supplied, the value of the HOME shell variable is used. Any additional arguments following directory are ignored. If the shell variable CDPATH exists, it is used as a search path: each directory name in CDPATH is searched for directory, with alternative directory names in CDPATH separated by a colon (‘:’). If directory begins with a slash, CDPATH is not used.
+
+将当前工作目录目录更改为目录。如果没有提供目录，则使用 HOME shell 变量的值。目录下的任何其他参数都将被忽略。如果存在 shell 变量 CDPATH，则将其用作搜索路径: 在 CDPATH 中搜索每个目录名称以及 CDPATH 中用冒号分隔的备选目录名称(‘ : ’)。如果目录以斜杠开头，则不使用 CDPATH。
+
+The -P option means to not follow symbolic links: symbolic links are resolved while cd is traversing directory and before processing an instance of ‘..’ in directory.
+
+P 选项意味着不跟随符号链接: 当 cd 遍历目录并在处理‘的实例之前解析符号链接。目录中。
+
+By default, or when the -L option is supplied, symbolic links in directory are resolved after cd processes an instance of ‘..’ in directory.
+
+默认情况下，或者在提供 -l 选项时，cd 处理‘的实例后，将解析目录中的符号链接。目录中。
+
+If ‘..’ appears in directory, it is processed by removing the immediately preceding pathname component, back to a slash or the beginning of directory.
+
+如果。出现在目录中时，通过删除紧接在路径名之前的组件、回到斜杠或目录的开头来处理它。
+
+If the -e option is supplied with -P and the current working directory cannot be successfully determined after a successful directory change, cd will return an unsuccessful status.
+
+如果-e 选项与-p 一起提供，并且在成功地更改目录之后无法成功地确定当前工作目录，则 cd 将返回一个不成功的状态。
+
+On systems that support it, the -@ option presents the extended attributes associated with a file as a directory.
+
+在支持它的系统上，-@选项将与文件关联的扩展属性显示为目录。
+
+If directory is ‘-’, it is converted to $OLDPWD before the directory change is attempted.
+
+如果目录为‘-’ ，则在尝试更改目录之前将其转换为 $OLDPWD。
+
+If a non-empty directory name from CDPATH is used, or if ‘-’ is the first argument, and the directory change is successful, the absolute pathname of the new working directory is written to the standard output.
+
+如果使用 CDPATH 中的非空目录名，或者如果‘-’是第一个参数，并且目录更改成功，则新工作目录的绝对路径名将写入标准输出。
+
+The return status is zero if the directory is successfully changed, non-zero otherwise.
+
+如果目录成功更改，返回状态为零，否则为非零。
+
+continue
+continue [n]
+Resume the next iteration of an enclosing for, while, until, or select loop. If n is supplied, the execution of the nth enclosing loop is resumed. n must be greater than or equal to 1. The return status is zero unless n is not greater than or equal to 1.
+
+继续下一次封闭 for、 while、 until 或 select 循环的迭代。如果提供了 n，将继续执行第 n 个封闭循环。N 必须大于等于1。返回状态为零，除非 n 不大于或等于1。
+
+eval
+eval [arguments]
+The arguments are concatenated together into a single command, which is then read and executed, and its exit status returned as the exit status of eval. If there are no arguments or only empty arguments, the return status is zero.
+
+这些参数连接在一起成为一个命令，然后读取并执行该命令，它的退出状态作为 eval 的退出状态返回。如果没有参数或只有空参数，则返回状态为零。
+
+exec
+exec [-cl] [-a name] [command [arguments]]
+If command is supplied, it replaces the shell without creating a new process. If the -l option is supplied, the shell places a dash at the beginning of the zeroth argument passed to command. This is what the login program does. The -c option causes command to be executed with an empty environment. If -a is supplied, the shell passes name as the zeroth argument to command. If command cannot be executed for some reason, a non-interactive shell exits, unless the execfail shell option is enabled. In that case, it returns failure. An interactive shell returns failure if the file cannot be executed. A subshell exits unconditionally if exec fails. If no command is specified, redirections may be used to affect the current shell environment. If there are no redirection errors, the return status is zero; otherwise the return status is non-zero.
+
+如果提供了命令，它将替换 shell，而不会创建新进程。如果提供 -l 选项，shell 将在传递给命令的 zeroth 参数的开头放置一个破折号。这就是登录程序所做的。C 选项使命令在空环境中执行。如果提供-a，shell 将 name 作为 zeroth 参数传递给 command。如果由于某种原因无法执行命令，则会退出非交互式 shell，除非启用 execfail shell 选项。在这种情况下，它返回失败。如果无法执行文件，交互式 shell 将返回故障。如果 exec 失败，则子 shell 无条件退出。如果未指定命令，则可以使用重定向来影响当前 shell 环境。如果没有重定向错误，则返回状态为零; 否则返回状态为非零。
+
+exit
+exit [n]
+Exit the shell, returning a status of n to the shell’s parent. If n is omitted, the exit status is that of the last command executed. Any trap on EXIT is executed before the shell terminates.
+
+退出 shell，将状态 n 返回到 shell 的父级。如果省略 n，则退出状态为最后执行的命令的状态。EXIT 上的任何陷阱都会在 shell 终止之前执行。
+
+export
+export [-fn] [-p] [name[=value]]
+Mark each name to be passed to child processes in the environment. If the -f option is supplied, the names refer to shell functions; otherwise the names refer to shell variables. The -n option means to no longer mark each name for export. If no names are supplied, or if the -p option is given, a list of names of all exported variables is displayed. The -p option displays output in a form that may be reused as input. If a variable name is followed by =value, the value of the variable is set to value.
+
+将每个名称标记为传递给环境中的子进程。如果提供了-f 选项，则名称引用 shell 函数; 否则名称引用 shell 变量。N 选项意味着不再为导出标记每个名称。如果没有提供名称，或者给出了 -p 选项，则显示所有导出变量的名称列表。P 选项以可作为输入重用的形式显示输出。如果变量名后面跟着 = value，则变量的值设置为 value。
+
+The return status is zero unless an invalid option is supplied, one of the names is not a valid shell variable name, or -f is supplied with a name that is not a shell function.
+
+除非提供无效选项，否则返回状态为零，其中一个名称不是有效的 shell 变量名，或者-f 提供的名称不是 shell 函数。
+
+getopts
+getopts optstring name [args]
+getopts is used by shell scripts to parse positional parameters. optstring contains the option characters to be recognized; if a character is followed by a colon, the option is expected to have an argument, which should be separated from it by whitespace. The colon (‘:’) and question mark (‘?’) may not be used as option characters. Each time it is invoked, getopts places the next option in the shell variable name, initializing name if it does not exist, and the index of the next argument to be processed into the variable OPTIND. OPTIND is initialized to 1 each time the shell or a shell script is invoked. When an option requires an argument, getopts places that argument into the variable OPTARG. The shell does not reset OPTIND automatically; it must be manually reset between multiple calls to getopts within the same shell invocation if a new set of parameters is to be used.
+
+Shell 脚本使用 getopt 解析位置参数。Optstring 包含要识别的选项字符; 如果一个字符后面跟着一个冒号，那么该选项应该有一个参数，参数之间应该用空格分隔。冒号(‘ : ’)和问号(‘ ? ’)不能用作选项字符。每次调用它时，getopt 将下一个选项放在 shell 变量名中，如果不存在则初始化名称，并将下一个参数的索引处理到变量 OPTIND 中。每次调用 shell 或 shell 脚本时，OPTIND 被初始化为1。当一个选项需要一个参数时，getopt 将该参数放入变量 OPTARG 中。Shell 不会自动重置 OPTIND; 如果要使用一组新的参数，则必须在同一 shell 调用中对 getopt 的多个调用之间手动重置该 shell。
+
+When the end of options is encountered, getopts exits with a return value greater than zero. OPTIND is set to the index of the first non-option argument, and name is set to ‘?’.
+
+遇到选项结束时，getopt 退出，返回值大于零。OPTIND 被设置为第一个非选项参数的索引，名称被设置为“ ? ”.
+
+getopts normally parses the positional parameters, but if more arguments are given in args, getopts parses those instead.
+
+Getopt 通常解析位置参数，但是如果在 args 中给出更多的参数，那么 getopt 会解析这些参数。
+
+getopts can report errors in two ways. If the first character of optstring is a colon, silent error reporting is used. In normal operation, diagnostic messages are printed when invalid options or missing option arguments are encountered. If the variable OPTERR is set to 0, no error messages will be displayed, even if the first character of optstring is not a colon.
+
+Getopt 可以用两种方式报告错误。如果 optstring 的第一个字符是冒号，则使用无声错误报告。在正常操作中，遇到无效选项或缺少选项参数时将打印诊断消息。如果变量 OPTERR 设置为0，则不会显示任何错误消息，即使 optstring 的第一个字符不是冒号。
+
+If an invalid option is seen, getopts places ‘?’ into name and, if not silent, prints an error message and unsets OPTARG. If getopts is silent, the option character found is placed in OPTARG and no diagnostic message is printed.
+
+如果看到一个无效的选项，getopt 将放置‘ ? ’输入名称，如果不是静默的，则打印一个错误消息并取消 OPTARG。如果 getopt 是静默的，则在 OPTARG 中找到的选项字符将被放置，并且不打印诊断消息。
+
+If a required argument is not found, and getopts is not silent, a question mark (‘?’) is placed in name, OPTARG is unset, and a diagnostic message is printed. If getopts is silent, then a colon (‘:’) is placed in name and OPTARG is set to the option character found.
+
+如果没有找到必需的参数，而且 getopt 不是静默的，则会出现一个问号(‘ ? ’)在名称中放置，则取消设置 OPTARG，并打印诊断消息。如果 getopt 是静默的，则在 name 中放置冒号(‘ : ’) ，并将 OPTARG 设置为所找到的选项字符。
+
+hash
+hash [-r] [-p filename] [-dt] [name]
+Each time hash is invoked, it remembers the full pathnames of the commands specified as name arguments, so they need not be searched for on subsequent invocations. The commands are found by searching through the directories listed in $PATH. Any previously-remembered pathname is discarded. The -p option inhibits the path search, and filename is used as the location of name. The -r option causes the shell to forget all remembered locations. The -d option causes the shell to forget the remembered location of each name. If the -t option is supplied, the full pathname to which each name corresponds is printed. If multiple name arguments are supplied with -t, the name is printed before the hashed full pathname. The -l option causes output to be displayed in a format that may be reused as input. If no arguments are given, or if only -l is supplied, information about remembered commands is printed. The return status is zero unless a name is not found or an invalid option is supplied.
+
+每次调用散列时，它都会记住作为名称参数指定的命令的完整路径名，因此不需要在后续调用中搜索它们。通过搜索 $PATH 中列出的目录可以找到这些命令。任何以前记住的路径名都将被丢弃。P 选项禁止路径搜索，而 filename 用作 name 的位置。R 选项使 shell 忘记所有记住的位置。D 选项使 shell 忘记每个名称的记忆位置。如果提供了 -t 选项，则打印每个名称对应的完整路径名。如果在-t 中提供了多个名称参数，则在散列的完整路径名之前打印名称。L 选项使输出以可作为输入重用的格式显示。如果没有给出参数，或者只提供 -l，则打印有关记住的命令的信息。除非找不到名称或提供了无效选项，否则返回状态为零。
+
+pwd
+pwd [-LP]
+Print the absolute pathname of the current working directory. If the -P option is supplied, the pathname printed will not contain symbolic links. If the -L option is supplied, the pathname printed may contain symbolic links. The return status is zero unless an error is encountered while determining the name of the current directory or an invalid option is supplied.
+
+打印当前工作目录的绝对路径名。如果提供 -p 选项，则打印的路径名将不包含符号链接。如果提供 -l 选项，则打印的路径名可能包含符号链接。返回状态为零，除非在确定工作目录名称时遇到错误或者提供了无效选项。
+
+readonly
+readonly [-aAf] [-p] [name[=value]] …
+Mark each name as readonly. The values of these names may not be changed by subsequent assignment. If the -f option is supplied, each name refers to a shell function. The -a option means each name refers to an indexed array variable; the -A option means each name refers to an associative array variable. If both options are supplied, -A takes precedence. If no name arguments are given, or if the -p option is supplied, a list of all readonly names is printed. The other options may be used to restrict the output to a subset of the set of readonly names. The -p option causes output to be displayed in a format that may be reused as input. If a variable name is followed by =value, the value of the variable is set to value. The return status is zero unless an invalid option is supplied, one of the name arguments is not a valid shell variable or function name, or the -f option is supplied with a name that is not a shell function.
+
+将每个名称标记为只读。这些名称的值不能随后的赋值而改变。如果提供-f 选项，则每个名称都引用一个 shell 函数。A 选项表示每个名称引用一个索引数组变量;-a 选项表示每个名称引用一个关联数组变量。如果两个选项都提供，则-a 优先。如果没有给出名称参数，或者提供了 -p 选项，则会打印所有只读名称的列表。其他选项可用于将输出限制为只读名称集的一个子集。P 选项使输出以可作为输入重用的格式显示。如果变量名后面跟着 = value，则变量的值设置为 value。返回状态为零，除非提供了无效的选项，其中一个名称参数不是有效的 shell 变量或函数名，或者-f 选项提供了一个非 shell 函数的名称。
+
+return
+return [n]
+Cause a shell function to stop executing and return the value n to its caller. If n is not supplied, the return value is the exit status of the last command executed in the function. If return is executed by a trap handler, the last command used to determine the status is the last command executed before the trap handler. If return is executed during a DEBUG trap, the last command used to determine the status is the last command executed by the trap handler before return was invoked. return may also be used to terminate execution of a script being executed with the . (source) builtin, returning either n or the exit status of the last command executed within the script as the exit status of the script. If n is supplied, the return value is its least significant 8 bits. Any command associated with the RETURN trap is executed before execution resumes after the function or script. The return status is non-zero if return is supplied a non-numeric argument or is used outside a function and not during the execution of a script by . or source.
+
+使 shell 函数停止执行并将值 n 返回给它的调用方。如果没有提供 n，则返回值是该函数中最后执行的命令的退出状态。如果返回由一个陷阱处理程序执行，用于确定状态的最后一个命令是陷阱处理程序之前执行的最后一个命令。如果在 DEBUG 陷阱期间执行 return，则用于确定状态的最后一个命令是在调用 return 之前由 trap 处理程序执行的最后一个命令。返回值也可用于终止用。(source) builtin，返回 n 或在脚本中执行的最后一个命令的退出状态作为脚本的退出状态。如果提供 n，则返回值为其最低有效位8位。任何与 RETURN 陷阱关联的命令都会在函数或脚本之后恢复执行之前执行。如果返回提供了一个非数值参数，或者在函数之外使用，而不是在由。或者来源。
+
+shift
+shift [n]
+Shift the positional parameters to the left by n. The positional parameters from n+1 … $# are renamed to $1 … $#-n. Parameters represented by the numbers $# to $#-n+1 are unset. n must be a non-negative number less than or equal to $#. If n is zero or greater than $#, the positional parameters are not changed. If n is not supplied, it is assumed to be 1. The return status is zero unless n is greater than $# or less than zero, non-zero otherwise.
+
+将位置参数向左移动 n。来自 n + 1... $# 的位置参数被重命名为 $1... $#-n 由数字 $# 表示的参数被取消设置。N 必须是小于或等于 $# 的非负数。如果 n 为0或大于 $# ，则位置参数不会更改。如果没有提供 n，则假设为1。返回状态为零，除非 n 大于 $# 或小于零，否则为非零。
+
+test
+[
+test expr
+Evaluate a conditional expression expr and return a status of 0 (true) or 1 (false). Each operator and operand must be a separate argument. Expressions are composed of the primaries described below in Bash Conditional Expressions. test does not accept any options, nor does it accept and ignore an argument of -- as signifying the end of options.
+
+计算条件表达式 expr 并返回状态0(true)或1(false)。每个运算符和操作数必须是一个单独的参数。表达式由下面 Bash 条件表达式中描述的主要内容组成。测试不接受任何选项，也不接受或忽略一个意味着选项终结的论点。
+
+When the [ form is used, the last argument to the command must be a ].
+
+使用[ form 时，命令的最后一个参数必须是]。
+
+Expressions may be combined using the following operators, listed in decreasing order of precedence. The evaluation depends on the number of arguments; see below. Operator precedence is used when there are five or more arguments.
+
+表达式可以使用以下运算符组合，这些运算符列在递减的优先顺序中。计算取决于参数的数量; 请参见下面的内容。运算符优先级用于有五个或更多参数的情况。
+
+! expr
+True if expr is false.
+
+如果 expr 为 false，则为 True。
+
+( expr )
+Returns the value of expr. This may be used to override the normal precedence of operators.
+
+返回 expr 的值。该值可用于重写运算符的正常优先级。
+
+expr1 -a expr2
+True if both expr1 and expr2 are true.
+
+如果 expr1和 expr2都为真，则为真。
+
+expr1 -o expr2
+True if either expr1 or expr2 is true.
+
+如果 expr1或 expr2为真，则为真。
+
+The test and [ builtins evaluate conditional expressions using a set of rules based on the number of arguments.
+
+Test 和[ builtins 使用一组基于参数数量的规则来评估条件表达式。
+
+0 arguments
+The expression is false.
+
+这个表达是假的。
+
+1 argument 1个参数
+The expression is true if, and only if, the argument is not null.
+
+当且仅当参数不为 null 时，表达式为 true。
+
+2 arguments 2个参数
+If the first argument is ‘!’, the expression is true if and only if the second argument is null. If the first argument is one of the unary conditional operators (see Bash Conditional Expressions), the expression is true if the unary test is true. If the first argument is not a valid unary operator, the expression is false.
+
+如果第一个参数是，表达式为真，当且仅当第二个参数为 null。如果第一个参数是一元条件运算符之一(请参阅 Bash 条件表达式) ，那么如果一元测试为真，则表达式为真。如果第一个参数不是有效的一元运算符，则表达式为 false。
+
+3 arguments 3个参数
+The following conditions are applied in the order listed.
+
+下列条件按照列出的顺序应用。
+
+If the second argument is one of the binary conditional operators (see 如果第二个参数是二进制条件运算符之一(参见Bash Conditional Expressions 重击条件表达式), the result of the expression is the result of the binary test using the first and third arguments as operands. The ‘ ) ，表达式的结果是使用第一个和第三个参数作为操作数的二进制测试的结果-a - a’ and ‘ ’和’-o - 哦’ operators are considered binary operators when there are three arguments. 当有三个参数时，运算符被认为是二进制操作符
+If the first argument is ‘ 如果第一个参数是‘!’, the value is the negation of the two-argument test using the second and third arguments. ’ ，该值是使用第二个和第三个参数的双参数测试的否定值
+If the first argument is exactly ‘ 如果第一个参数正好是‘(’ and the third argument is exactly ‘ 第三个论点就是)’, the result is the one-argument test of the second argument. 结果是第二个参数的一个参数测试
+Otherwise, the expression is false. 否则，表达式为 false
+4 arguments 4个参数
+If the first argument is ‘!’, the result is the negation of the three-argument expression composed of the remaining arguments. Otherwise, the expression is parsed and evaluated according to precedence using the rules listed above.
+
+如果第一个参数是，其结果是否定由其余参数组成的三参数表达式。否则，将使用上面列出的规则根据优先级解析和计算表达式。
+
+5 or more arguments 5个或更多的参数
+The expression is parsed and evaluated according to precedence using the rules listed above.
+
+使用上面列出的规则，根据优先级解析和计算表达式。
+
+When used with test or ‘[’, the ‘<’ and ‘>’ operators sort lexicographically using ASCII ordering.
+
+当与 test 或‘[’一起使用时，‘ < ’和‘ > ’运算符使用 ASCII 排序按字母顺序排序。
+
+times
+times
+Print out the user and system times used by the shell and its children. The return status is zero.
+
+打印出 shell 及其子级使用的用户和系统时间。返回状态为零。
+
+trap
+trap [-lp] [arg] [sigspec …]
+The commands in arg are to be read and executed when the shell receives signal sigspec. If arg is absent (and there is a single sigspec) or equal to ‘-’, each specified signal’s disposition is reset to the value it had when the shell was started. If arg is the null string, then the signal specified by each sigspec is ignored by the shell and commands it invokes. If arg is not present and -p has been supplied, the shell displays the trap commands associated with each sigspec. If no arguments are supplied, or only -p is given, trap prints the list of commands associated with each signal number in a form that may be reused as shell input. The -l option causes the shell to print a list of signal names and their corresponding numbers. Each sigspec is either a signal name or a signal number. Signal names are case insensitive and the SIG prefix is optional.
+
+Arg 中的命令将在 shell 接收到信号 sigspec 时读取和执行。如果没有 arg (并且只有一个 sigspec)或者等于‘-’ ，则每个指定信号的配置将重置为启动 shell 时的值。如果 arg 是空字符串，那么 shell 将忽略每个 sigspec 指定的信号并调用命令。如果没有 arg 并且已经提供了-p，shell 将显示与每个 sigspec 相关的 trap 命令。如果没有提供参数，或者只提供 -p，trap 将打印与每个信号号关联的命令列表，这些命令可以作为 shell 输入重用。L 选项使 shell 打印一个信号名及其对应号码的列表。每个信号规范要么是一个信号名，要么是一个信号号。信号名称不区分大小写，SIG 前缀是可选的。
+
+If a sigspec is 0 or EXIT, arg is executed when the shell exits. If a sigspec is DEBUG, the command arg is executed before every simple command, for command, case command, select command, every arithmetic for command, and before the first command executes in a shell function. Refer to the description of the extdebug option to the shopt builtin (see The Shopt Builtin) for details of its effect on the DEBUG trap. If a sigspec is RETURN, the command arg is executed each time a shell function or a script executed with the . or source builtins finishes executing.
+
+如果 sigspec 为0或 EXIT，则在 shell 退出时执行 arg。如果一个 sigspec 是 DEBUG，那么在每个简单命令之前执行 arg 命令，例如 command、 case command、 select command、 command 的每个算术，以及在 shell 函数中执行第一个命令之前。参考 Shopt Builtin 对 extdebug 选项的描述(参见 The Shopt Builtin)了解它对 DEBUG 陷阱的影响。如果 sigspec 是 RETURN，则每次执行 shell 函数或使用。或源代码内建完成执行。
+
+If a sigspec is ERR, the command arg is executed whenever a pipeline (which may consist of a single simple command), a list, or a compound command returns a non-zero exit status, subject to the following conditions. The ERR trap is not executed if the failed command is part of the command list immediately following an until or while keyword, part of the test following the if or elif reserved words, part of a command executed in a && or || list except the command following the final && or ||, any command in a pipeline but the last, or if the command’s return status is being inverted using !. These are the same conditions obeyed by the errexit (-e) option.
+
+如果 sigspec 是 ERR，则只要管道(可能由单个简单命令组成)、列表或复合命令返回非零退出状态，就会执行 arg 命令，但要满足以下条件。如果失败的命令是命令列表的一部分，紧跟在关键字 until 或 while 之后，则不会执行 ERR 陷阱; 如果关键字或 elif 保留字之后是测试的一部分，在 & 或 | | 列表中执行的命令的一部分，但是在 final & 或 | 列表之后的命令除外，在管道中除了最后一个命令之外的任何命令，或者如果命令的返回状态正在被使用！.这些条件与 errexit (- e)选项相同。
+
+Signals ignored upon entry to the shell cannot be trapped or reset. Trapped signals that are not being ignored are reset to their original values in a subshell or subshell environment when one is created.
+
+进入 shell 时忽略的信号不能被捕获或重置。在创建子 shell 或子 shell 环境时，未被忽略的捕获信号将重置为其原始值。
+
+The return status is zero unless a sigspec does not specify a valid signal.
+
+除非 sigspec 没有指定有效信号，否则返回状态为零。
+
+umask
+umask [-p] [-S] [mode]
+Set the shell process’s file creation mask to mode. If mode begins with a digit, it is interpreted as an octal number; if not, it is interpreted as a symbolic mode mask similar to that accepted by the chmod command. If mode is omitted, the current value of the mask is printed. If the -S option is supplied without a mode argument, the mask is printed in a symbolic format. If the -p option is supplied, and mode is omitted, the output is in a form that may be reused as input. The return status is zero if the mode is successfully changed or if no mode argument is supplied, and non-zero otherwise.
+
+将 shell 进程的文件创建蒙版设置为模式。如果 mode 以一个数字开头，它被解释为一个八进制数字; 如果不是，它被解释为一个符号模式掩码，类似于 chmod 命令所接受的模式掩码。如果省略模式，则打印掩码的当前值。如果提供的 -s 选项没有模式参数，则掩码将以符号格式打印。如果提供了 -p 选项，而省略了 mode，则输出将采用可作为输入重用的格式。如果成功更改了模式或者没有提供模式参数，则返回状态为零，否则为非零。
+
+Note that when the mode is interpreted as an octal number, each number of the umask is subtracted from 7. Thus, a umask of 022 results in permissions of 755.
+
+请注意，当模式被解释为八进制数时，umask 的每个数都从7减去。因此，022的 umask 结果是755的权限。
+
+unset
+unset [-fnv] [name]
+Remove each variable or function name. If the -v option is given, each name refers to a shell variable and that variable is removed. If the -f option is given, the names refer to shell functions, and the function definition is removed. If the -n option is supplied, and name is a variable with the nameref attribute, name will be unset rather than the variable it references. -n has no effect if the -f option is supplied. If no options are supplied, each name refers to a variable; if there is no variable by that name, any function with that name is unset. Readonly variables and functions may not be unset. The return status is zero unless a name is readonly.
+
+删除每个变量或函数名。如果给定-v 选项，则每个名称都引用一个 shell 变量，并删除该变量。如果给出-f 选项，则名称引用 shell 函数，并删除函数定义。如果提供了-n 选项，并且 name 是带有 nameref 属性的变量，那么将取消设置 name，而不是它引用的变量。如果提供了-f 选项，则 n 没有效果。如果没有提供选项，则每个名称引用一个变量; 如果没有该名称的变量，则未设置任何具有该名称的函数。只读变量和函数不能取消设置。除非名称是只读的，否则返回状态为零。
+
+Next: Modifying Shell Behavior, Previous: Bourne Shell Builtins, Up: Shell Builtin Commands   [Contents][Index]
+
+接下来: 修改 Shell 行为，上一篇: Bourne Shell 内置命令，上一篇: Shell 内置命令[内容][索引]
+
+4.2 Bash Builtin Commands
+4.2 Bash Builtin 命令
+This section describes builtin commands which are unique to or have been extended in Bash. Some of these commands are specified in the POSIX standard.
+
+本节描述 Bash 中唯一的或已经扩展的内置命令。其中一些命令是在 POSIX 标准中指定的。
+
+alias
+alias [-p] [name[=value] …]
+Without arguments or with the -p option, alias prints the list of aliases on the standard output in a form that allows them to be reused as input. If arguments are supplied, an alias is defined for each name whose value is given. If no value is given, the name and value of the alias is printed. Aliases are described in Aliases.
+
+如果没有参数或使用-p 选项，alias 将在标准输出上以一种形式打印别名列表，从而允许将它们作为输入重用。如果提供参数，则为给定值的每个名称定义别名。如果没有给出值，则打印别名的名称和值。别名在别名中有描述。
+
+bind
+bind [-m keymap] [-lpsvPSVX]
+bind [-m keymap] [-q function] [-u function] [-r keyseq]
+bind [-m keymap] -f filename
+bind [-m keymap] -x keyseq:shell-command
+bind [-m keymap] keyseq:function-name
+bind [-m keymap] keyseq:readline-command
+Display current Readline (see Command Line Editing) key and function bindings, bind a key sequence to a Readline function or macro, or set a Readline variable. Each non-option argument is a command as it would appear in a Readline initialization file (see Readline Init File), but each binding or command must be passed as a separate argument; e.g., ‘"\C-x\C-r":re-read-init-file’.
+
+显示当前的 Readline (请参阅命令行编辑)键和函数绑定，将键序列绑定到 Readline 函数或宏，或设置 Readline 变量。每个非选项参数都是一个命令，因为它会出现在 Readline 初始化文件中(参见 Readline Init File) ，但是每个绑定或命令都必须作为一个单独的参数传递; 例如，“ C-x C-r” : re-read-Init-File”。
+
+Options, if supplied, have the following meanings:
+
+如果提供了选项，其含义如下:
+
+-m keymap
+Use keymap as the keymap to be affected by the subsequent bindings. Acceptable keymap names are emacs, emacs-standard, emacs-meta, emacs-ctlx, vi, vi-move, vi-command, and vi-insert. vi is equivalent to vi-command (vi-move is also a synonym); emacs is equivalent to emacs-standard.
+
+使用 keymap 作为受后续绑定影响的关键映射。可接受的键图名称有 emacs、 emacs-standard、 emacs-meta、 emacs-ctx、 vi、 vi-move、 vi-command 和 vi-insert。Vi 等同于 vi-command (vi-move 也是同义词) ; emacs 等同于 emacs-standard。
+
+-l
+List the names of all Readline functions.
+
+列出所有 Readline 函数的名称。
+
+-p
+Display Readline function names and bindings in such a way that they can be used as input or in a Readline initialization file.
+
+以这样的方式显示 Readline 函数的名称和绑定，它们可以用作输入，也可以用作 Readline 初始化文件。
+
+-P
+List current Readline function names and bindings.
+
+列出当前 Readline 函数的名称和绑定。
+
+-v
+Display Readline variable names and values in such a way that they can be used as input or in a Readline initialization file.
+
+以这样的方式显示 Readline 变量的名称和值，它们可以用作输入或在 Readline 初始化文件中。
+
+-V
+List current Readline variable names and values.
+
+列出当前 Readline 变量的名称和值。
+
+-s
+Display Readline key sequences bound to macros and the strings they output in such a way that they can be used as input or in a Readline initialization file.
+
+显示绑定到宏的 Readline 键序列及其输出的字符串，使其可用作输入或在 Readline 初始化文件中。
+
+-S
+Display Readline key sequences bound to macros and the strings they output.
+
+显示绑定到宏的 Readline 键序列及其输出的字符串。
+
+-f filename
+Read key bindings from filename.
+
+从文件名中读取键绑定。
+
+-q function
+Query about which keys invoke the named function.
+
+关于哪些键调用命名函数的查询。
+
+-u function
+Unbind all keys bound to the named function.
+
+取消绑定到命名函数的所有键的绑定。
+
+-r keyseq
+Remove any current binding for keyseq.
+
+删除 keyseq 的任何当前绑定。
+
+-x keyseq:shell-command
+Cause shell-command to be executed whenever keyseq is entered. When shell-command is executed, the shell sets the READLINE_LINE variable to the contents of the Readline line buffer and the READLINE_POINT variable to the current location of the insertion point. If the executed command changes the value of READLINE_LINE or READLINE_POINT, those new values will be reflected in the editing state.
+
+使 shell 命令在输入 keyseq 时执行。执行 shell 命令时，shell 将 READLINE _ line 变量设置为 READLINE 行缓冲区的内容，将 READLINE _ point 变量设置为插入点的当前位置。如果执行的命令更改了 READLINE _ line 或 READLINE _ point 的值，那么这些新值将反映在编辑状态中。
+
+-X
+List all key sequences bound to shell commands and the associated commands in a format that can be reused as input.
+
+以可作为输入重用的格式列出绑定到 shell 命令和相关命令的所有键序列。
+
+The return status is zero unless an invalid option is supplied or an error occurs.
+
+除非提供了无效选项或发生错误，否则返回状态为零。
+
+builtin
+builtin [shell-builtin [args]]
+Run a shell builtin, passing it args, and return its exit status. This is useful when defining a shell function with the same name as a shell builtin, retaining the functionality of the builtin within the function. The return status is non-zero if shell-builtin is not a shell builtin command.
+
+运行一个内置 shell，传递给它 args，并返回它的退出状态。这在定义与 shell 内建函数同名的 shell 函数时非常有用，可以在函数中保留内建函数的功能。如果 shell 内建不是一个壳层内建指令，返回状态为非零。
+
+caller
+caller [expr]
+Returns the context of any active subroutine call (a shell function or a script executed with the . or source builtins).
+
+类执行的任何活动子例程调用(shell 函数或脚本)的上下文。或来源内建物)。
+
+Without expr, caller displays the line number and source filename of the current subroutine call. If a non-negative integer is supplied as expr, caller displays the line number, subroutine name, and source file corresponding to that position in the current execution call stack. This extra information may be used, for example, to print a stack trace. The current frame is frame 0.
+
+如果不使用 expr，调用方将显示当前子例程调用的行号和源文件名。如果作为 expr 提供非负整数，调用方将显示当前执行调用堆栈中与该位置对应的行号、子例程名称和源文件。例如，可以使用这些额外的信息来打印堆栈跟踪。当前帧为0帧。
+
+The return value is 0 unless the shell is not executing a subroutine call or expr does not correspond to a valid position in the call stack.
+
+返回值为0，除非 shell 没有执行子例程调用或 expr 与调用堆栈中的有效位置不对应。
+
+command
+command [-pVv] command [arguments …]
+Runs command with arguments ignoring any shell function named command. Only shell builtin commands or commands found by searching the PATH are executed. If there is a shell function named ls, running ‘command ls’ within the function will execute the external command ls instead of calling the function recursively. The -p option means to use a default value for PATH that is guaranteed to find all of the standard utilities. The return status in this case is 127 if command cannot be found or an error occurred, and the exit status of command otherwise.
+
+运行带有参数的命令，忽略任何名为 command 的 shell 函数。只执行通过搜索 PATH 找到的 shell 内建命令或命令。如果有一个名为 ls 的 shell 函数，在该函数中运行‘ command ls’将执行外部命令 ls，而不是递归调用该函数。P 选项意味着为 PATH 使用一个默认值，该值保证能找到所有标准实用程序。在这种情况下，如果找不到命令或发生错误，返回状态为127，否则命令退出状态。
+
+If either the -V or -v option is supplied, a description of command is printed. The -v option causes a single word indicating the command or file name used to invoke command to be displayed; the -V option produces a more verbose description. In this case, the return status is zero if command is found, and non-zero if not.
+
+如果提供 -v 或 -v 选项，则打印命令说明。V 选项将显示一个单词，指示用于调用命令的命令或文件名;-v 选项将生成更详细的描述。在这种情况下，如果找到了 command，返回状态为零，否则为非零。
+
+declare
+declare [-aAfFgilnrtux] [-p] [name[=value] …]
+Declare variables and give them attributes. If no names are given, then display the values of variables instead.
+
+声明变量并赋予它们属性。如果没有给出名称，则显示变量的值。
+
+The -p option will display the attributes and values of each name. When -p is used with name arguments, additional options, other than -f and -F, are ignored.
+
+P 选项将显示每个名称的属性和值。当-p 与名称参数一起使用时，会忽略除-f 和-f 之外的其他选项。
+
+When -p is supplied without name arguments, declare will display the attributes and values of all variables having the attributes specified by the additional options. If no other options are supplied with -p, declare will display the attributes and values of all shell variables. The -f option will restrict the display to shell functions.
+
+当提供-p 时没有 name 参数，declare 将显示所有具有附加选项指定的属性的变量的属性和值。如果-p 没有提供其他选项，declare 将显示所有 shell 变量的属性和值。F 选项将限制显示为 shell 函数。
+
+The -F option inhibits the display of function definitions; only the function name and attributes are printed. If the extdebug shell option is enabled using shopt (see The Shopt Builtin), the source file name and line number where each name is defined are displayed as well. -F implies -f.
+
+F 选项禁止显示函数定义; 只打印函数名和属性。如果使用 Shopt 启用 extdebug shell 选项(参见 The Shopt Builtin) ，那么还会显示定义每个名称的源文件名和行号。- f 表示-f。
+
+The -g option forces variables to be created or modified at the global scope, even when declare is executed in a shell function. It is ignored in all other cases.
+
+G 选项强制在全局范围内创建或修改变量，即使在 shell 函数中执行 declare 时也是如此。在所有其他情况下，它都会被忽略。
+
+The following options can be used to restrict output to variables with the specified attributes or to give variables attributes:
+
+下列选项可用于限制具有指定属性的变量的输出或给予变量属性:
+
+-a
+Each name is an indexed array variable (see Arrays).
+
+每个名称都是一个索引数组变量(参见数组)。
+
+-A
+Each name is an associative array variable (see Arrays).
+
+每个名称都是一个关联数组变量(见数组)。
+
+-f
+Use function names only.
+
+只使用函数名。
+
+-i
+The variable is to be treated as an integer; arithmetic evaluation (see Shell Arithmetic) is performed when the variable is assigned a value.
+
+该变量将被视为一个整数; 当为该变量分配一个值时，将执行算术计算(请参阅 Shell 算术)。
+
+-l
+When the variable is assigned a value, all upper-case characters are converted to lower-case. The upper-case attribute is disabled.
+
+当给变量赋值时，所有大写字符都转换为小写字符。大写属性被禁用。
+
+-n
+Give each name the nameref attribute, making it a name reference to another variable. That other variable is defined by the value of name. All references, assignments, and attribute modifications to name, except for those using or changing the -n attribute itself, are performed on the variable referenced by name’s value. The nameref attribute cannot be applied to array variables.
+
+为每个名称赋予 nameref 属性，使其成为对另一个变量的名称引用。另一个变量由 name 的值定义。所有对 name 的引用、赋值和属性修改，除了那些使用或更改-n 属性本身的修改，都在 name 的值引用的变量上执行。不能将 nameref 属性应用于数组变量。
+
+-r
+Make names readonly. These names cannot then be assigned values by subsequent assignment statements or unset.
+
+使名称只读。这些名称不能随后由后续的赋值语句赋值或取消设置。
+
+-t
+Give each name the trace attribute. Traced functions inherit the DEBUG and RETURN traps from the calling shell. The trace attribute has no special meaning for variables.
+
+为每个名称赋予 trace 属性。跟踪函数从调用 shell 继承 DEBUG 和 RETURN 陷阱。Trace 属性对于变量没有特殊意义。
+
+-u
+When the variable is assigned a value, all lower-case characters are converted to upper-case. The lower-case attribute is disabled.
+
+当给变量赋值时，所有小写字符都转换为大写字母。小写属性被禁用。
+
+-x
+Mark each name for export to subsequent commands via the environment.
+
+将每个名称标记为通过环境导出到后续命令的名称。
+
+Using ‘+’ instead of ‘-’ turns off the attribute instead, with the exceptions that ‘+a’ and ‘+A’ may not be used to destroy array variables and ‘+r’ will not remove the readonly attribute. When used in a function, declare makes each name local, as with the local command, unless the -g option is used. If a variable name is followed by =value, the value of the variable is set to value.
+
+使用‘ + ’而不是‘-’会关闭属性，但是‘ + a’和‘ + a’可能不会用来破坏数组变量，而‘ + r’不会删除 readonly 属性。当在函数中使用时，declare 使每个名称成为本地名称，如同使用本地命令一样，除非使用 -g 选项。如果变量名后面跟着 = value，则变量的值设置为 value。
+
+When using -a or -A and the compound assignment syntax to create array variables, additional attributes do not take effect until subsequent assignments.
+
+当使用-a 或-a 和复合赋值语法创建数组变量时，其他属性直到后续赋值才生效。
+
+The return status is zero unless an invalid option is encountered, an attempt is made to define a function using ‘-f foo=bar’, an attempt is made to assign a value to a readonly variable, an attempt is made to assign a value to an array variable without using the compound assignment syntax (see Arrays), one of the names is not a valid shell variable name, an attempt is made to turn off readonly status for a readonly variable, an attempt is made to turn off array status for an array variable, or an attempt is made to display a non-existent function with -f.
+
+返回状态为零，除非遇到无效的选项; 尝试使用‘-f foo = bar’定义函数; 尝试为只读变量赋值; 尝试在不使用复合赋值语法的情况下为数组变量赋值; 其中一个名称不是有效的 shell 变量名; 尝试关闭只读变量的只读状态; 尝试关闭数组变量的数组状态; 尝试使用-f 显示一个不存在的函数。
+
+echo
+echo [-neE] [arg …]
+Output the args, separated by spaces, terminated with a newline. The return status is 0 unless a write error occurs. If -n is specified, the trailing newline is suppressed. If the -e option is given, interpretation of the following backslash-escaped characters is enabled. The -E option disables the interpretation of these escape characters, even on systems where they are interpreted by default. The xpg_echo shell option may be used to dynamically determine whether or not echo expands these escape characters by default. echo does not interpret -- to mean the end of options.
+
+输出以空格分隔并以换行结束的 args。除非发生写入错误，否则返回状态为0。如果指定了-n，则取消尾随换行符。如果给出 -e 选项，则启用对下列反斜杠转义字符的解释。E 选项禁用这些转义字符的解释，即使在默认情况下解释这些转义字符的系统上也是如此。可以使用 xpg _ echo shell 选项动态确定 echo 是否在默认情况下展开这些转义字符。Echo 并不意味着选择的终结。
+
+echo interprets the following escape sequences:
+
+Echo 解释以下转义序列:
+
+\a
+alert (bell)
+
+警报(铃)
+
+\b
+backspace
+
+退格
+
+\c
+suppress further output
+
+抑制进一步的输出
+
+\e
+\E
+escape
+
+逃跑
+
+\f
+form feed
+
+模板进给
+
+\n
+new line
+
+新线路
+
+\r
+carriage return
+
+回车
+
+\t
+horizontal tab
+
+水平制动片
+
+\v
+vertical tab
+
+垂直调整片
+
+\\
+backslash
+
+反斜杠
+
+\0nnn
+the eight-bit character whose value is the octal value nnn (zero to three octal digits)
+
+值为八进制值 nnn (零到三个八进制数字)的八位字符
+
+\xHH
+the eight-bit character whose value is the hexadecimal value HH (one or two hex digits)
+
+八位字符，其值为十六进制值 HH (一个或两个十六进制数字)
+
+\uHHHH
+the Unicode (ISO/IEC 10646) character whose value is the hexadecimal value HHHH (one to four hex digits)
+
+Unicode (ISO/IEC 10646)字符，其值为十六进制值 HHHH (一个至四个十六进制数字)
+
+\UHHHHHHHH
+the Unicode (ISO/IEC 10646) character whose value is the hexadecimal value HHHHHHHH (one to eight hex digits)
+
+Unicode (ISO/IEC 10646)字符，其值为十六进制值 HHHHHHHH (一个到八个十六进制数字)
+
+enable
+enable [-a] [-dnps] [-f filename] [name …]
+Enable and disable builtin shell commands. Disabling a builtin allows a disk command which has the same name as a shell builtin to be executed without specifying a full pathname, even though the shell normally searches for builtins before disk commands. If -n is used, the names become disabled. Otherwise names are enabled. For example, to use the test binary found via $PATH instead of the shell builtin version, type ‘enable -n test’.
+
+启用和禁用内建 shell 命令。禁用内置命令允许在不指定完整路径名的情况下执行与外壳内置命令同名的磁盘命令，即使外壳通常在磁盘命令之前搜索内置命令。如果使用-n，则名称将被禁用。否则将启用名称。例如，要使用通过 $PATH 找到的测试二进制代替 shell 内置版本，输入‘ enable-n test’。
+
+If the -p option is supplied, or no name arguments appear, a list of shell builtins is printed. With no other arguments, the list consists of all enabled shell builtins. The -a option means to list each builtin with an indication of whether or not it is enabled.
+
+如果提供了 -p 选项，或者没有出现 name 参数，则会打印一个 shell 内置语句列表。在没有其他参数的情况下，该列表由所有已启用的 shell 内置函数组成。A 选项意味着列出每个内建，并指示是否启用它。
+
+The -f option means to load the new builtin command name from shared object filename, on systems that support dynamic loading. The -d option will delete a builtin loaded with -f.
+
+F 选项意味着在支持动态加载的系统上从共享对象文件名加载新的内建命令名。D 选项将删除加载了 -f 的内建文件。
+
+If there are no options, a list of the shell builtins is displayed. The -s option restricts enable to the POSIX special builtins. If -s is used with -f, the new builtin becomes a special builtin (see Special Builtins).
+
+如果没有选项，则显示 shell 内置程序的列表。S 选项限制只允许使用 POSIX 特殊内置语句。如果-s 与-f 一起使用，新的内建物就成为一种特殊的内建物(见特殊内建物)。
+
+The return status is zero unless a name is not a shell builtin or there is an error loading a new builtin from a shared object.
+
+返回状态为零，除非名称不是 shell 内建，或者从共享对象加载新内建出错。
+
+help
+help [-dms] [pattern]
+Display helpful information about builtin commands. If pattern is specified, help gives detailed help on all commands matching pattern, otherwise a list of the builtins is printed.
+
+显示有关内置命令的有用信息。如果指定了模式，帮助将提供关于所有匹配模式的命令的详细帮助，否则将打印内建列表。
+
+Options, if supplied, have the following meanings:
+
+如果提供了选项，其含义如下:
+
+-d
+Display a short description of each pattern
+
+显示每个模式的简短描述
+
+-m
+Display the description of each pattern in a manpage-like format
+
+以 manpage-like 格式显示每个模式的描述
+
+-s
+Display only a short usage synopsis for each pattern
+
+只显示每种模式的简短用法大纲
+
+The return status is zero unless no command matches pattern.
+
+除非没有命令匹配模式，否则返回状态为零。
+
+let
+let expression [expression …]
+The let builtin allows arithmetic to be performed on shell variables. Each expression is evaluated according to the rules given below in Shell Arithmetic. If the last expression evaluates to 0, let returns 1; otherwise 0 is returned.
+
+Let 内建允许对 shell 变量执行算术运算。每个表达式都根据 Shell 算术中给出的规则进行计算。如果最后一个表达式的计算结果为0，则返回1; 否则返回0。
+
+local
+local [option] name[=value] …
+For each argument, a local variable named name is created, and assigned value. The option can be any of the options accepted by declare. local can only be used within a function; it makes the variable name have a visible scope restricted to that function and its children. If name is ‘-’, the set of shell options is made local to the function in which local is invoked: shell options changed using the set builtin inside the function are restored to their original values when the function returns. The return status is zero unless local is used outside a function, an invalid name is supplied, or name is a readonly variable.
+
+对于每个参数，创建一个名为 name 的局部变量，并赋值。该选项可以是 declare 接受的任何选项。Local 只能在函数中使用; 它使变量名具有一个可见的作用域，该作用域仅限于该函数及其子函数。如果名称是‘-’ ，那么 shell 选项集就是调用 local 的函数的本地选项: 当函数返回时，使用函数内置的 set 修改的 shell 选项将恢复到它们的原始值。返回状态为零，除非在函数外使用 local、提供无效名称或 name 是只读变量。
+
+logout
+logout [n]
+Exit a login shell, returning a status of n to the shell’s parent.
+
+退出登录 shell，将状态 n 返回到 shell 的父 shell。
+
+mapfile
+mapfile [-d delim] [-n count] [-O origin] [-s count]
+    [-t] [-u fd] [-C callback] [-c quantum] [array]
+Read lines from the standard input into the indexed array variable array, or from file descriptor fd if the -u option is supplied. The variable MAPFILE is the default array. Options, if supplied, have the following meanings:
+
+从标准输入读取行到索引数组变量数组，如果提供了 -u 选项，则从文件描述符 fd 读取行。变量 MAPFILE 是默认数组。如果提供了选项，其含义如下:
+
+-d
+The first character of delim is used to terminate each input line, rather than newline. If delim is the empty string, mapfile will terminate a line when it reads a NUL character.
+
+Delim 的第一个字符用于终止每个输入行，而不是换行符。如果 delim 是空字符串，映射文件将在读取 NUL 字符时终止一行。
+
+-n
+Copy at most count lines. If count is 0, all lines are copied.
+
+复制最多的计数行。如果计数为0，则复制所有行。
+
+-O
+Begin assigning to array at index origin. The default index is 0.
+
+开始在索引原点对数组赋值。默认索引为0。
+
+-s
+Discard the first count lines read.
+
+丢弃所读取的第一行计数。
+
+-t
+Remove a trailing delim (default newline) from each line read.
+
+从每行读取中删除一个尾随字符(默认换行符)。
+
+-u
+Read lines from file descriptor fd instead of the standard input.
+
+从文件描述符 fd 读取行，而不是标准输入。
+
+-C
+Evaluate callback each time quantum lines are read. The -c option specifies quantum.
+
+每次读取量程行时评估回调。 -c 选项指定量程。
+
+-c
+Specify the number of lines read between each call to callback.
+
+指定每个回调调用之间读取的行数。
+
+If -C is specified without -c, the default quantum is 5000. When callback is evaluated, it is supplied the index of the next array element to be assigned and the line to be assigned to that element as additional arguments. callback is evaluated after the line is read but before the array element is assigned.
+
+如果指定了不带 -c 的-c，则默认量程为5000。在对 callback 进行计算时，将为下一个要分配的数组元素提供索引，并将分配给该元素的行作为附加参数。在读取行之后，但在分配数组元素之前，对 callback 进行计算。
+
+If not supplied with an explicit origin, mapfile will clear array before assigning to it.
+
+如果没有提供显式原点，映射文件将在分配给它之前清除数组。
+
+mapfile returns successfully unless an invalid option or option argument is supplied, array is invalid or unassignable, or array is not an indexed array.
+
+除非提供了无效的选项或选项参数、数组无效或不可分配、或数组不是索引数组，否则 mapfile 将成功返回。
+
+printf
+printf [-v var] format [arguments]
+Write the formatted arguments to the standard output under the control of the format. The -v option causes the output to be assigned to the variable var rather than being printed to the standard output.
+
+在格式控制下将格式化参数写入标准输出。V 选项使输出分配给变量 var，而不是打印到标准输出。
+
+The format is a character string which contains three types of objects: plain characters, which are simply copied to standard output, character escape sequences, which are converted and copied to the standard output, and format specifications, each of which causes printing of the next successive argument. In addition to the standard printf(1) formats, printf interprets the following extensions:
+
+格式是一个字符串，包含三种类型的对象: 普通字符，简单地复制到标准输出; 字符转义序列，转换和复制到标准输出; 格式规范，每一种都导致打印下一个连续参数。除了标准的 printf (1)格式之外，printf 还解释了以下扩展:
+
+%b
+Causes printf to expand backslash escape sequences in the corresponding argument in the same way as echo -e (see Bash Builtins).
+
+使 printf 以与 echo-e 相同的方式在相应的参数中展开反斜杠转义序列(参见 Bash Builtins)。
+
+%q
+Causes printf to output the corresponding argument in a format that can be reused as shell input.
+
+使 printf 以可作为 shell 输入重用的格式输出相应的参数。
+
+%(datefmt)T
+Causes printf to output the date-time string resulting from using datefmt as a format string for strftime(3). The corresponding argument is an integer representing the number of seconds since the epoch. Two special argument values may be used: -1 represents the current time, and -2 represents the time the shell was invoked. If no argument is specified, conversion behaves as if -1 had been given. This is an exception to the usual printf behavior.
+
+使 printf 输出使用 datefmt 作为 strftime (3)的格式字符串而产生的日期时间字符串。对应的参数是一个整数，表示自纪元以来的秒数。可以使用两个特殊的参数值:-1表示当前时间,-2表示调用 shell 的时间。如果没有指定参数，转换的行为就像给出了 -1一样。这是通常 printf 行为的一个例外。
+
+Arguments to non-string format specifiers are treated as C language constants, except that a leading plus or minus sign is allowed, and if the leading character is a single or double quote, the value is the ASCII value of the following character.
+
+非字符串格式说明符的参数被视为 c 语言常量，但允许前导加号或减号，如果前导字符是单引号或双引号，则该值为下列字符的 ASCII 值。
+
+The format is reused as necessary to consume all of the arguments. If the format requires more arguments than are supplied, the extra format specifications behave as if a zero value or null string, as appropriate, had been supplied. The return value is zero on success, non-zero on failure.
+
+必要时重用该格式以使用所有参数。如果格式需要的参数比提供的参数多，那么额外的格式规范就表现得好像提供了一个零值或空字符串一样。成功返回值为零，失败返回值为非零。
+
+read
+read [-ers] [-a aname] [-d delim] [-i text] [-n nchars]
+    [-N nchars] [-p prompt] [-t timeout] [-u fd] [name …]
+One line is read from the standard input, or from the file descriptor fd supplied as an argument to the -u option, split into words as described above in Word Splitting, and the first word is assigned to the first name, the second word to the second name, and so on. If there are more words than names, the remaining words and their intervening delimiters are assigned to the last name. If there are fewer words read from the input stream than names, the remaining names are assigned empty values. The characters in the value of the IFS variable are used to split the line into words using the same rules the shell uses for expansion (described above in Word Splitting). The backslash character ‘\’ may be used to remove any special meaning for the next character read and for line continuation. If no names are supplied, the line read is assigned to the variable REPLY. The exit status is zero, unless end-of-file is encountered, read times out (in which case the status is greater than 128), a variable assignment error (such as assigning to a readonly variable) occurs, or an invalid file descriptor is supplied as the argument to -u.
+
+从标准输入中读取一行，或者从作为 -u 选项参数提供的文件描述符 fd 中读取一行，分割成如上所述的单词，第一个单词分配给第一个名称，第二个单词分配给第二个名称，依此类推。如果单词多于名称，则将其余单词及其中间的分隔符分配给最后一个名称。如果从输入流中读取的字数少于名称，则为其余名称分配空值。IFS 变量值中的字符用于使用 shell 用于展开的相同规则(在 Word splicing 中进行了描述)将行拆分为单词。反斜杠字符‘’可用于删除下一个字符读取和行继续的任何特殊含义。如果没有提供名称，则将读取的行分配给变量 REPLY。退出状态为零，除非遇到文件结束，否则会出现读出超时(在这种情况下状态大于128)、变量赋值错误(例如赋值给只读变量) ，或者提供无效的文件描述符作为 -u 的参数。
+
+Options, if supplied, have the following meanings:
+
+如果提供了选项，其含义如下:
+
+-a aname
+The words are assigned to sequential indices of the array variable aname, starting at 0. All elements are removed from aname before the assignment. Other name arguments are ignored.
+
+这些单词被分配给数组变量 aname 的顺序索引，从0开始。在赋值之前，所有元素都从名称中移除。其他名称参数被忽略。
+
+-d delim
+The first character of delim is used to terminate the input line, rather than newline. If delim is the empty string, read will terminate a line when it reads a NUL character.
+
+Delim 的第一个字符用于终止输入行，而不是换行符。如果 delim 是空字符串，read 将在读取 NUL 字符时终止一行。
+
+-e
+Readline (see Command Line Editing) is used to obtain the line. Readline uses the current (or default, if line editing was not previously active) editing settings, but uses Readline’s default filename completion.
+
+读取行(参见命令行编辑)用于获取该行。Readline 使用当前(或默认，如果行编辑以前没有激活)的编辑设置，但是使用 Readline 的默认文件名补全。
+
+-i text
+If Readline is being used to read the line, text is placed into the editing buffer before editing begins.
+
+如果使用 Readline 读取该行，则在开始编辑之前将文本放入编辑缓冲区。
+
+-n nchars
+read returns after reading nchars characters rather than waiting for a complete line of input, but honors a delimiter if fewer than nchars characters are read before the delimiter.
+
+Read 在读取 nchars 字符之后返回，而不是等待一个完整的输入行，但是如果在分隔符之前读取的字符少于 nchars，那么将使用分隔符。
+
+-N nchars
+read returns after reading exactly nchars characters rather than waiting for a complete line of input, unless EOF is encountered or read times out. Delimiter characters encountered in the input are not treated specially and do not cause read to return until nchars characters are read. The result is not split on the characters in IFS; the intent is that the variable is assigned exactly the characters read (with the exception of backslash; see the -r option below).
+
+除非遇到 EOF 或超时读取，否则在读取 nchars 字符之后读取返回，而不是等待输入的完整行。在输入中遇到的分隔符字符不会被特别处理，并且在读取 nchar 字符之前不会导致读取返回。结果不会对 IFS 中的字符进行拆分; 其目的是为变量分配的字符正好是读取的字符(反斜杠除外; 请参阅下面的-r 选项)。
+
+-p prompt
+Display prompt, without a trailing newline, before attempting to read any input. The prompt is displayed only if input is coming from a terminal.
+
+在尝试读取任何输入之前，显示提示，不带尾随换行符。只有当输入来自终端时才会显示提示。
+
+-r
+If this option is given, backslash does not act as an escape character. The backslash is considered to be part of the line. In particular, a backslash-newline pair may not then be used as a line continuation.
+
+如果给定此选项，则反斜杠不作为转义字符。反斜杠被认为是该行的一部分。特别是，反斜杠-换行对不能用作行的延续。
+
+-s
+Silent mode. If input is coming from a terminal, characters are not echoed.
+
+静默模式。如果输入来自终端，字符不会回显。
+
+-t timeout
+Cause read to time out and return failure if a complete line of input (or a specified number of characters) is not read within timeout seconds. timeout may be a decimal number with a fractional portion following the decimal point. This option is only effective if read is reading input from a terminal, pipe, or other special file; it has no effect when reading from regular files. If read times out, read saves any partial input read into the specified variable name. If timeout is 0, read returns immediately, without trying to read and data. The exit status is 0 if input is available on the specified file descriptor, non-zero otherwise. The exit status is greater than 128 if the timeout is exceeded.
+
+如果在超时秒内没有读取完整的输入行(或指定数量的字符) ，将导致读取超时并返回失败。超时可以是一个十进制数，小数点后面有一个小数部分。此选项仅在从终端、管道或其他特殊文件读取输入时有效; 在从常规文件读取时无效。如果超时读取，read 将保存读入指定变量名的任何部分输入。如果超时为0，读取将立即返回，而不需要尝试读取数据。如果指定的文件描述符上的输入可用，则退出状态为0，否则为非零。如果超过了超时，退出状态大于128。
+
+-u fd
+Read input from file descriptor fd.
+
+从文件描述符 fd 读取输入。
+
+readarray
+readarray [-d delim] [-n count] [-O origin] [-s count]
+    [-t] [-u fd] [-C callback] [-c quantum] [array]
+Read lines from the standard input into the indexed array variable array, or from file descriptor fd if the -u option is supplied.
+
+从标准输入读取行到索引数组变量数组，如果提供了 -u 选项，则从文件描述符 fd 读取行。
+
+A synonym for mapfile.
+
+映射文件的同义词。
+
+source
+source filename
+A synonym for . (see Bourne Shell Builtins).
+
+是. 的同义词(参见 Bourne Shell 内建语言)。
+
+type
+type [-afptP] [name …]
+For each name, indicate how it would be interpreted if used as a command name.
+
+对于每个名称，指出如果将其用作命令名称，将如何解释它。
+
+If the -t option is used, type prints a single word which is one of ‘alias’, ‘function’, ‘builtin’, ‘file’ or ‘keyword’, if name is an alias, shell function, shell builtin, disk file, or shell reserved word, respectively. If the name is not found, then nothing is printed, and type returns a failure status.
+
+如果使用-t 选项，键入打印一个单词，它是‘ alias’、‘ function’、‘ builtin’、‘ file’或‘ keyword’之一，如果名称分别是别名、 shell 函数、 shell 内建、磁盘文件或 shell 保留字。如果没有找到名称，则不打印任何内容，并且键入返回一个失败状态。
+
+If the -p option is used, type either returns the name of the disk file that would be executed, or nothing if -t would not return ‘file’.
+
+如果使用-p 选项，键入返回将要执行的磁盘文件的名称，或者如果-t 不返回‘ file’ ，则什么也不返回。
+
+The -P option forces a path search for each name, even if -t would not return ‘file’.
+
+P 选项强制对每个名称进行路径搜索，即使 -t 不会返回“ file”。
+
+If a command is hashed, -p and -P print the hashed value, which is not necessarily the file that appears first in $PATH.
+
+如果一个命令被散列化,-p 和-p 将打印散列化的值，该值不一定是 $PATH 中首先出现的文件。
+
+If the -a option is used, type returns all of the places that contain an executable named file. This includes aliases and functions, if and only if the -p option is not also used.
+
+如果使用 -a 选项，则键入返回包含可执行命名文件的所有位置。这包括别名和函数，当且仅当-p 选项未被使用时。
+
+If the -f option is used, type does not attempt to find shell functions, as with the command builtin.
+
+如果使用-f 选项，type 不会尝试查找 shell 函数，就像内置命令那样。
+
+The return status is zero if all of the names are found, non-zero if any are not found.
+
+如果找到所有名称，返回状态为零; 如果没有找到，返回状态为非零。
+
+typeset
+typeset [-afFgrxilnrtux] [-p] [name[=value] …]
+The typeset command is supplied for compatibility with the Korn shell. It is a synonym for the declare builtin command.
+
+提供 typeset 命令是为了兼容 Korn shell，它是 declare builtin 命令的同义词。
+
+ulimit
+ulimit [-HSabcdefiklmnpqrstuvxPT] [limit]
+ulimit provides control over the resources available to processes started by the shell, on systems that allow such control. If an option is given, it is interpreted as follows:
+
+Ulimit 提供对 shell 启动的进程可用的资源的控制，在允许这种控制的系统上。如果给出一个选项，则解释如下:
+
+-S
+Change and report the soft limit associated with a resource.
+
+更改并报告与资源相关的软限制。
+
+-H
+Change and report the hard limit associated with a resource.
+
+更改并报告与资源相关的硬限制。
+
+-a
+All current limits are reported.
+
+所有现行限额均予以报告。
+
+-b
+The maximum socket buffer size.
+
+套接字缓冲区的最大大小。
+
+-c
+The maximum size of core files created.
+
+创建的核心文件的最大大小。
+
+-d
+The maximum size of a process’s data segment.
+
+进程的数据段的最大大小。
+
+-e
+The maximum scheduling priority ("nice").
+
+最大调度优先级(“ nice”)。
+
+-f
+The maximum size of files written by the shell and its children.
+
+由 shell 及其子级写入的文件的最大大小。
+
+-i
+The maximum number of pending signals.
+
+挂起信号的最大数量。
+
+-k
+The maximum number of kqueues that may be allocated.
+
+可以分配的最大 kqueues 数。
+
+-l
+The maximum size that may be locked into memory.
+
+可以锁定到内存中的最大大小。
+
+-m
+The maximum resident set size (many systems do not honor this limit).
+
+最大常驻设置大小(许多系统不遵守此限制)。
+
+-n
+The maximum number of open file descriptors (most systems do not allow this value to be set).
+
+打开的文件描述符的最大数量(大多数系统不允许设置此值)。
+
+-p
+The pipe buffer size.
+
+管道缓冲器的尺寸。
+
+-q
+The maximum number of bytes in POSIX message queues.
+
+POSIX 消息队列中的最大字节数。
+
+-r
+The maximum real-time scheduling priority.
+
+最大实时调度优先级。
+
+-s
+The maximum stack size.
+
+最大堆栈大小。
+
+-t
+The maximum amount of cpu time in seconds.
+
+以秒为单位的 cpu 时间的最大数量。
+
+-u
+The maximum number of processes available to a single user.
+
+单个用户可用的最大进程数。
+
+-v
+The maximum amount of virtual memory available to the shell, and, on some systems, to its children.
+
+Shell 可用的虚拟内存的最大数量，并且在某些系统上，它的子系统可用的虚拟内存的最大数量。
+
+-x
+The maximum number of file locks.
+
+文件锁的最大数量。
+
+-P
+The maximum number of pseudoterminals.
+
+伪终结符的最大数量。
+
+-T
+The maximum number of threads.
+
+线程的最大数量。
+
+If limit is given, and the -a option is not used, limit is the new value of the specified resource. The special limit values hard, soft, and unlimited stand for the current hard limit, the current soft limit, and no limit, respectively. A hard limit cannot be increased by a non-root user once it is set; a soft limit may be increased up to the value of the hard limit. Otherwise, the current value of the soft limit for the specified resource is printed, unless the -H option is supplied. When setting new limits, if neither -H nor -S is supplied, both the hard and soft limits are set. If no option is given, then -f is assumed. Values are in 1024-byte increments, except for -t, which is in seconds; -p, which is in units of 512-byte blocks; -P, -T, -b, -k, -n and -u, which are unscaled values; and, when in POSIX Mode (see Bash POSIX Mode), -c and -f, which are in 512-byte increments.
+
+如果给定了 limit，并且没有使用-a 选项，则 limit 是指定资源的新值。硬极限、软极限和无限极限分别表示当前的硬极限、当前的软极限和无极限。一旦设置了硬限制，非根用户就不能增加它; 软限制可以增加到硬限制的值。否则，将打印指定资源的软限制的当前值，除非提供了 -h 选项。在设置新的限制时，如果既没有提供 -h 也没有提供 -s，则设置硬限制和软限制。如果没有给出选项，则假设-f。值是以1024字节增量表示的，除了-t (以秒为单位) ;-p (以512字节块为单位) ;-p、-t、-b、-k、-n 和-u (无缩放值) ; 以及，在 POSIX 模式(参见 Bash POSIX 模式)下,-c 和-f (以512字节为单位)。
+
+The return status is zero unless an invalid option or argument is supplied, or an error occurs while setting a new limit.
+
+除非提供了无效的选项或参数，或者在设置新限制时发生错误，否则返回状态为零。
+
+unalias
+unalias [-a] [name … ]
+Remove each name from the list of aliases. If -a is supplied, all aliases are removed. Aliases are described in Aliases.
+
+从别名列表中删除每个名称。如果提供-a，则删除所有别名。别名在别名中有描述。
+
+Next: Special Builtins, Previous: Bash Builtins, Up: Shell Builtin Commands   [Contents][Index]
+
+下一步: 特殊内置命令，上一步: Bash 内置命令，上一步: Shell 内置命令[目录][索引]
+
+4.3 Modifying Shell Behavior
+4.3修改 Shell 行为
+• The Set Builtin 布景内置:	  	Change the values of shell attributes and positional parameters. 更改 shell 属性和位置参数的值
+• The Shopt Builtin 商店大楼:	  	Modify shell optional behavior. 修改 shell 可选行为
+Next: The Shopt Builtin, Up: Modifying Shell Behavior   [Contents][Index]
+
+接下来: Shopt Builtin，Up: modification Shell Behavior [ Contents ][ Index ]
+
+4.3.1 The Set Builtin
+This builtin is so complicated that it deserves its own section. set allows you to change the values of shell options and set the positional parameters, or to display the names and values of shell variables.
+
+这座建筑如此复杂，它应该有自己的部分。Set 允许您更改 shell 选项的值并设置位置参数，或者显示 shell 变量的名称和值。
+
+set
+set [--abefhkmnptuvxBCEHPT] [-o option-name] [argument …]
+set [+abefhkmnptuvxBCEHPT] [+o option-name] [argument …]
+If no options or arguments are supplied, set displays the names and values of all shell variables and functions, sorted according to the current locale, in a format that may be reused as input for setting or resetting the currently-set variables. Read-only variables cannot be reset. In POSIX mode, only shell variables are listed.
+
+如果没有提供选项或参数，set 将显示所有 shell 变量和函数的名称和值，并根据当前区域设置进行排序，其格式可用作设置或重置当前设置变量的输入。不能重置只读变量。在 POSIX 模式下，只列出 shell 变量。
+
+When options are supplied, they set or unset shell attributes. Options, if specified, have the following meanings:
+
+当提供选项时，它们设置或取消 shell 属性。如果指定了选项，则具有以下含义:
+
+-a
+Each variable or function that is created or modified is given the export attribute and marked for export to the environment of subsequent commands.
+
+创建或修改的每个变量或函数都被赋予 export 属性并标记为导出到后续命令的环境。
+
+-b
+Cause the status of terminated background jobs to be reported immediately, rather than before printing the next primary prompt.
+
+导致立即报告终止的后台作业的状态，而不是在打印下一个主提示符之前。
+
+-e
+Exit immediately if a pipeline (see Pipelines), which may consist of a single simple command (see Simple Commands), a list (see Lists), or a compound command (see Compound Commands) returns a non-zero status. The shell does not exit if the command that fails is part of the command list immediately following a while or until keyword, part of the test in an if statement, part of any command executed in a && or || list except the command following the final && or ||, any command in a pipeline but the last, or if the command’s return status is being inverted with !. If a compound command other than a subshell returns a non-zero status because a command failed while -e was being ignored, the shell does not exit. A trap on ERR, if set, is executed before the shell exits.
+
+如果管道(请参阅管道)(可能由单个简单命令(请参阅简单命令)、列表(请参阅列表)或复合命令(请参阅复合命令)返回非零状态，请立即退出。如果失败的命令是命令列表的一部分，紧接着是 while 或者 until 关键字，if 语句中测试的一部分，& 或者 | | 列表中执行的任何命令的一部分，除了 final & 或者 | | 之后的命令，管道中除了最后一个命令之外的任何命令，或者命令的返回状态被反转了，那么 shell 不会退出！.如果子 shell 以外的复合命令返回非零状态，因为在 -e 被忽略时命令失败，则 shell 不退出。如果设置了 ERR，则在 shell 退出之前执行一个关于 ERR 的陷阱。
+
+This option applies to the shell environment and each subshell environment separately (see Command Execution Environment), and may cause subshells to exit before executing all the commands in the subshell.
+
+此选项分别应用于 shell 环境和每个子 shell 环境(请参阅 Command Execution Environment) ，并可能导致子 shell 在执行子 shell 中的所有命令之前退出。
+
+If a compound command or shell function executes in a context where -e is being ignored, none of the commands executed within the compound command or function body will be affected by the -e setting, even if -e is set and a command returns a failure status. If a compound command or shell function sets -e while executing in a context where -e is ignored, that setting will not have any effect until the compound command or the command containing the function call completes.
+
+如果复合命令或 shell 函数在 -e 被忽略的上下文中执行，那么复合命令或函数体中执行的任何命令都不会受到 -e 设置的影响，即使设置了 -e 并且命令返回故障状态。如果一个复合命令或 shell 函数在执行时在一个忽略 -e 的上下文中设置 -e，那么在复合命令或包含函数调用的命令完成之前，该设置不会产生任何效果。
+
+-f
+Disable filename expansion (globbing).
+
+禁用文件名扩展(globbing)。
+
+-h
+Locate and remember (hash) commands as they are looked up for execution. This option is enabled by default.
+
+查找并记住要执行的(散列)命令。默认情况下启用此选项。
+
+-k
+All arguments in the form of assignment statements are placed in the environment for a command, not just those that precede the command name.
+
+赋值语句形式的所有参数都放在命令的环境中，而不仅仅是命令名之前的参数。
+
+-m
+Job control is enabled (see Job Control). All processes run in a separate process group. When a background job completes, the shell prints a line containing its exit status.
+
+启用了作业控制(请参阅作业控制)。所有进程都在单独的进程组中运行。当后台作业完成时，shell 将打印一行包含其退出状态的代码。
+
+-n
+Read commands but do not execute them. This may be used to check a script for syntax errors. This option is ignored by interactive shells.
+
+阅读命令，但不执行它们。这可用于检查脚本是否存在语法错误。交互式 shell 忽略此选项。
+
+-o option-name
+Set the option corresponding to option-name:
+
+设置对应于 option-name 的选项:
+
+allexport
+Same as -a.
+
+和 a 一样。
+
+braceexpand
+Same as -B.
+
+和-b 一样。
+
+emacs
+Use an emacs-style line editing interface (see Command Line Editing). This also affects the editing interface used for read -e.
+
+使用 emacs 风格的行编辑界面(请参阅命令行编辑)。这也会影响用于读取 e 的编辑界面。
+
+errexit
+Same as -e.
+
+和 e 一样。
+
+errtrace
+Same as -E.
+
+和-e 一样。
+
+functrace
+Same as -T.
+
+和 t 一样。
+
+hashall
+Same as -h.
+
+和-h 一样。
+
+histexpand
+Same as -H.
+
+和-h 一样。
+
+history
+Enable command history, as described in Bash History Facilities. This option is on by default in interactive shells.
+
+启用命令历史记录，如 Bash 历史工具中所述。在交互式外壳程序中，此选项默认是打开的。
+
+ignoreeof
+An interactive shell will not exit upon reading EOF.
+
+交互式 shell 在读取 EOF 时不会退出。
+
+keyword
+Same as -k.
+
+和-k 一样。
+
+monitor
+Same as -m.
+
+和-m 一样。
+
+noclobber
+Same as -C.
+
+和 -c 一样。
+
+noexec
+Same as -n.
+
+和-n 一样。
+
+noglob
+Same as -f.
+
+和-f 一样。
+
+nolog
+Currently ignored.
+
+目前被忽视的。
+
+notify
+Same as -b.
+
+和 b 一样。
+
+nounset
+Same as -u.
+
+和-u 一样。
+
+onecmd
+Same as -t.
+
+和 t 一样。
+
+physical
+Same as -P.
+
+和-p 一样。
+
+pipefail
+If set, the return value of a pipeline is the value of the last (rightmost) command to exit with a non-zero status, or zero if all commands in the pipeline exit successfully. This option is disabled by default.
+
+如果设置了这个值，那么管道的返回值就是以非零状态退出的最后一个(最右边的)命令的值，如果管道中的所有命令都成功退出，返回值就是零。默认情况下禁用此选项。
+
+posix
+Change the behavior of Bash where the default operation differs from the POSIX standard to match the standard (see Bash POSIX Mode). This is intended to make Bash behave as a strict superset of that standard.
+
+在缺省操作与 POSIX 标准不同的地方更改 Bash 的行为，使其与标准相匹配(参见 Bash POSIX 模式)。这样做的目的是使 Bash 作为该标准的一个严格的超集运行。
+
+privileged
+Same as -p.
+
+和-p 一样。
+
+verbose
+Same as -v.
+
+和-v 一样。
+
+vi
+Use a vi-style line editing interface. This also affects the editing interface used for read -e.
+
+使用 vi 样式的行编辑界面。这也会影响用于读取 e 的编辑界面。
+
+xtrace
+Same as -x.
+
+和-x 一样。
+
+-p
+Turn on privileged mode. In this mode, the $BASH_ENV and $ENV files are not processed, shell functions are not inherited from the environment, and the SHELLOPTS, BASHOPTS, CDPATH and GLOBIGNORE variables, if they appear in the environment, are ignored. If the shell is started with the effective user (group) id not equal to the real user (group) id, and the -p option is not supplied, these actions are taken and the effective user id is set to the real user id. If the -p option is supplied at startup, the effective user id is not reset. Turning this option off causes the effective user and group ids to be set to the real user and group ids.
+
+打开特权模式。在这种模式下，$BASH _ ENV 和 $ENV 文件不会被处理，shell 函数不会从环境中继承，而 SHELLOPTS、 BASHOPTS、 CDPATH 和 GLOBIGNORE 变量，如果它们出现在环境中，则被忽略。如果启动 shell 时有效用户(组) id 不等于实际用户(组) id，并且没有提供-p 选项，则采取这些操作，并将有效用户 id 设置为实际用户 id。如果在启动时提供-p 选项，则不重置有效用户 id。关闭此选项将导致将有效的用户和组 id 设置为真正的用户和组 id。
+
+-t
+Exit after reading and executing one command.
+
+读取并执行一个命令后退出。
+
+-u
+Treat unset variables and parameters other than the special parameters ‘@’ or ‘*’ as an error when performing parameter expansion. An error message will be written to the standard error, and a non-interactive shell will exit.
+
+在执行参数展开时，将特殊参数“@”或“ * ”以外的未设置变量和参数视为一个错误。将错误消息写入标准错误，并退出非交互式 shell。
+
+-v
+Print shell input lines as they are read.
+
+在读取 shell 输入行时打印它们。
+
+-x
+Print a trace of simple commands, for commands, case commands, select commands, and arithmetic for commands and their arguments or associated word lists after they are expanded and before they are executed. The value of the PS4 variable is expanded and the resultant value is printed before the command and its expanded arguments.
+
+为命令、大小写命令、选择命令和算术命令及其参数或关联的单词列表打印简单命令的跟踪，这些命令在展开之后和执行之前。展开 PS4变量的值，并在命令及其展开的参数之前输出结果值。
+
+-B
+The shell will perform brace expansion (see Brace Expansion). This option is on by default.
+
+Shell 将执行大括号扩展(请参阅大括号扩展)。默认情况下启用此选项。
+
+-C
+Prevent output redirection using ‘>’, ‘>&’, and ‘<>’ from overwriting existing files.
+
+使用“ > ”、“ > & ”和“ < > ”覆盖现有文件，防止输出重定向。
+
+-E
+If set, any trap on ERR is inherited by shell functions, command substitutions, and commands executed in a subshell environment. The ERR trap is normally not inherited in such cases.
+
+如果设置了 ERR 上的任何陷阱，则由 shell 函数、命令替换和在子 shell 环境中执行的命令继承。在这种情况下，ERR 陷阱通常不会继承。
+
+-H
+Enable ‘!’ style history substitution (see History Interaction). This option is on by default for interactive shells.
+
+启用“ ! ”样式的历史记录替换(参见历史记录交互)。对于交互式 shell，此选项默认是打开的。
+
+-P
+If set, do not resolve symbolic links when performing commands such as cd which change the current directory. The physical directory is used instead. By default, Bash follows the logical chain of directories when performing commands which change the current directory.
+
+如果设置，在执行命令时不要解析符号链接，比如更改工作目录的 cd。取而代之的是物理目录。默认情况下，Bash 在执行更改工作目录/目录的命令时遵循逻辑目录链。
+
+For example, if /usr/sys is a symbolic link to /usr/local/sys then:
+
+例如，如果/usr/sys 是指向/usr/local/sys 的符号链接，那么:
+
+$ cd /usr/sys; echo $PWD
+/usr/sys
+$ cd ..; pwd
+/usr
+If set -P is on, then:
+
+如果 set-p 开启，那么:
+
+$ cd /usr/sys; echo $PWD
+/usr/local/sys
+$ cd ..; pwd
+/usr/local
+-T
+If set, any trap on DEBUG and RETURN are inherited by shell functions, command substitutions, and commands executed in a subshell environment. The DEBUG and RETURN traps are normally not inherited in such cases.
+
+如果设置，DEBUG 和 RETURN 上的任何陷阱都将由 shell 函数、命令替换和在子 shell 环境中执行的命令继承。在这种情况下，DEBUG 和 RETURN 陷阱通常不会继承。
+
+--
+If no arguments follow this option, then the positional parameters are unset. Otherwise, the positional parameters are set to the arguments, even if some of them begin with a ‘-’.
+
+如果此选项后面没有参数，则不设置位置参数。否则，位置参数将被设置为参数，即使其中一些参数以‘-’开头。
+
+-
+Signal the end of options, cause all remaining arguments to be assigned to the positional parameters. The -x and -v options are turned off. If there are no arguments, the positional parameters remain unchanged.
+
+发出选项结束的信号，将所有剩余的参数分配给位置参数。关闭-x 和-v 选项。如果没有参数，则位置参数保持不变。
+
+Using ‘+’ rather than ‘-’ causes these options to be turned off. The options can also be used upon invocation of the shell. The current set of options may be found in $-.
+
+使用“ + ”而不是“-”会导致关闭这些选项。这些选项也可以在 shell 调用时使用。当前的一组选项可以在 $- 中找到。
+
+The remaining N arguments are positional parameters and are assigned, in order, to $1, $2, … $N. The special parameter # is set to N.
+
+剩下的 n 个参数是位置参数，按顺序分配给 $1，$2，... $n。特殊参数 # 被设置为 n。
+
+The return status is always zero unless an invalid option is supplied.
+
+除非提供无效选项，否则返回状态始终为零。
+
+Previous: The Set Builtin, Up: Modifying Shell Behavior   [Contents][Index]
+
+上一页: The Set Builtin，Up: modification Shell Behavior [ Contents ][ Index ]
+
+4.3.2 The Shopt Builtin
+This builtin allows you to change additional shell optional behavior.
+
+这个内置程序允许您更改附加的 shell 可选行为。
+
+shopt
+shopt [-pqsu] [-o] [optname …]
+Toggle the values of settings controlling optional shell behavior. The settings can be either those listed below, or, if the -o option is used, those available with the -o option to the set builtin command (see The Set Builtin). With no options, or with the -p option, a list of all settable options is displayed, with an indication of whether or not each is set; if optnames are supplied, the output is restricted to those options. The -p option causes output to be displayed in a form that may be reused as input. Other options have the following meanings:
+
+切换控制可选 shell 行为的设置值。设置可以是下面列出的那些，或者，如果使用了-o 选项，那些可以使用 Set Builtin 命令的-o 选项(参见 The Set Builtin)。如果没有选项，或者使用-p 选项，将显示所有可设置选项的列表，并指示是否设置每个选项; 如果提供了 optnames，则输出仅限于这些选项。P 选项使输出以可作为输入重用的形式显示。其他选项有以下含义:
+
+-s
+Enable (set) each optname.
+
+启用(设置)每个操作名称。
+
+-u
+Disable (unset) each optname.
+
+禁用(未设置)每个选项名。
+
+-q
+Suppresses normal output; the return status indicates whether the optname is set or unset. If multiple optname arguments are given with -q, the return status is zero if all optnames are enabled; non-zero otherwise.
+
+取消正常输出; 返回状态指示是否设置了 optname。如果使用 -q 给出多个 optname 参数，则如果启用了所有 optname，则返回状态为零; 否则为非零。
+
+-o
+Restricts the values of optname to be those defined for the -o option to the set builtin (see The Set Builtin).
+
+将 optname 的值限制为为-o 选项定义的值，以设置内建值(请参阅设置内建值)。
+
+If either -s or -u is used with no optname arguments, shopt shows only those options which are set or unset, respectively.
+
+如果使用-s 或-u 时没有使用 optname 参数，则 shopt 只显示分别设置或未设置的选项。
+
+Unless otherwise noted, the shopt options are disabled (off) by default.
+
+除非另有说明，否则 shopt 选项默认是禁用(关闭)的。
+
+The return status when listing options is zero if all optnames are enabled, non-zero otherwise. When setting or unsetting options, the return status is zero unless an optname is not a valid shell option.
+
+如果启用了所有 optnames，则列表选项时的返回状态为零，否则为非零。设置或取消设置选项时，返回状态为零，除非 optname 不是有效的 shell 选项。
+
+The list of shopt options is:
+
+购物选项列表如下:
+
+assoc_expand_once
+If set, the shell suppresses multiple evaluation of associative array subscripts during arithmetic expression evaluation, while executing builtins that can perform variable assignments, and while executing builtins that perform array dereferencing.
+
+如果设置，shell 会在算术表达式求值期间抑制关联数组下标的多次求值，同时执行可以执行变量赋值的内建函数，以及执行执行数组解引用的内建函数。
+
+autocd
+If set, a command name that is the name of a directory is executed as if it were the argument to the cd command. This option is only used by interactive shells.
+
+如果设置，则执行一个目录名称的命令名，就好像它是 cd 命令的参数一样。此选项仅供交互式 shell 使用。
+
+cdable_vars
+If this is set, an argument to the cd builtin command that is not a directory is assumed to be the name of a variable whose value is the directory to change to.
+
+如果设置了这个值，则假定 cd builtin 命令的非目录参数是一个变量的名称，该变量的值就是要更改为的目录。
+
+cdspell
+If set, minor errors in the spelling of a directory component in a cd command will be corrected. The errors checked for are transposed characters, a missing character, and a character too many. If a correction is found, the corrected path is printed, and the command proceeds. This option is only used by interactive shells.
+
+如果设置，则将纠正 cd 命令中目录组件拼写中的小错误。检查的错误是换位字符、缺少的字符和过多的字符。如果找到更正，则打印更正的路径，并继续执行命令。此选项仅供交互式 shell 使用。
+
+checkhash
+If this is set, Bash checks that a command found in the hash table exists before trying to execute it. If a hashed command no longer exists, a normal path search is performed.
+
+如果设置了此选项，则 Bash 在尝试执行哈希表中的命令之前，将检查该命令是否存在。如果散列命令不再存在，则执行正常路径搜索。
+
+checkjobs
+If set, Bash lists the status of any stopped and running jobs before exiting an interactive shell. If any jobs are running, this causes the exit to be deferred until a second exit is attempted without an intervening command (see Job Control). The shell always postpones exiting if any jobs are stopped.
+
+如果设置，则在退出交互式 shell 之前，Bash 列出所有已停止和正在运行的作业的状态。如果有任何作业正在运行，这将导致出口被延迟，直到尝试第二个出口，而不使用中间的命令(请参见作业控制)。如果工作停止，炮弹总是拖延退出的时间。
+
+checkwinsize
+If set, Bash checks the window size after each external (non-builtin) command and, if necessary, updates the values of LINES and COLUMNS. This option is enabled by default.
+
+如果设置，Bash 将在每个外部(非内建)命令之后检查窗口大小，并在必要时更新 LINES 和 COLUMNS 的值。默认情况下启用此选项。
+
+cmdhist
+If set, Bash attempts to save all lines of a multiple-line command in the same history entry. This allows easy re-editing of multi-line commands. This option is enabled by default, but only has an effect if command history is enabled (see Bash History Facilities).
+
+如果设置，Bash 将尝试在同一历史记录条目中保存多行命令的所有行。这样就可以轻松地重新编辑多行命令。默认情况下启用此选项，但只有在启用命令历史记录时才有效(请参见 Bash 历史记录工具)。
+
+compat31
+If set, Bash changes its behavior to that of version 3.1 with respect to quoted arguments to the conditional command’s ‘=~’ operator and with respect to locale-specific string comparison when using the [[ conditional command’s ‘<’ and ‘>’ operators. Bash versions prior to bash-4.1 use ASCII collation and strcmp(3); bash-4.1 and later use the current locale’s collation sequence and strcoll(3).
+
+如果设置，当使用[[条件命令的‘ < ’和‘ > ’运算符时，Bash 将其行为更改为3.1版本中关于条件命令’ = ~ ’运算符的引用参数和关于特定于语言环境的字符串比较的行为。Bash-4.1之前的 Bash 版本使用 ASCII 排序规则和 strcmp (3) ; Bash-4.1以及后来使用当前语言环境的排序规则序列和 strcoll (3)。
+
+compat32
+If set, Bash changes its behavior to that of version 3.2 with respect to locale-specific string comparison when using the [[ conditional command’s ‘<’ and ‘>’ operators (see previous item) and the effect of interrupting a command list. Bash versions 3.2 and earlier continue with the next command in the list after one terminates due to an interrupt.
+
+如果设置，当使用[[条件命令的‘ < ’和‘ > ’操作符(参见前面的条目)以及中断命令列表的效果时，Bash 会根据特定于语言环境的字符串比较，将其行为更改为3.2版本的行为。Bash 版本3.2和更早版本在一个命令由于中断而终止后继续执行列表中的下一个命令。
+
+compat40
+If set, Bash changes its behavior to that of version 4.0 with respect to locale-specific string comparison when using the [[ conditional command’s ‘<’ and ‘>’ operators (see description of compat31) and the effect of interrupting a command list. Bash versions 4.0 and later interrupt the list as if the shell received the interrupt; previous versions continue with the next command in the list.
+
+如果设置，当使用[[条件命令的‘ < ’和‘ > ’操作符(参见 compat31的描述)以及中断命令列表的效果时，Bash 根据特定于语言环境的字符串比较，将其行为更改为版本4.0的行为。Bash 版本4.0和以后的版本会像 shell 接收到中断一样中断列表; 以前的版本会继续使用列表中的下一个命令。
+
+compat41
+If set, Bash, when in POSIX mode, treats a single quote in a double-quoted parameter expansion as a special character. The single quotes must match (an even number) and the characters between the single quotes are considered quoted. This is the behavior of POSIX mode through version 4.1. The default Bash behavior remains as in previous versions.
+
+如果设置，则在 POSIX 模式下，Bash 将双引号参数扩展中的单引号视为特殊字符。单引号必须匹配(偶数) ，单引号之间的字符被认为是引号。这是从 POSIX 模式到版本4.1的行为。默认的 Bash 行为与以前的版本一样。
+
+compat42
+If set, Bash does not process the replacement string in the pattern substitution word expansion using quote removal.
+
+如果设置，Bash 不会使用移除引号来处理模式替换字扩展中的替换字符串。
+
+compat43
+If set, Bash does not print a warning message if an attempt is made to use a quoted compound array assignment as an argument to declare, makes word expansion errors non-fatal errors that cause the current command to fail (the default behavior is to make them fatal errors that cause the shell to exit), and does not reset the loop state when a shell function is executed (this allows break or continue in a shell function to affect loops in the caller’s context).
+
+如果设置为，如果试图使用带引号的复合数组分配作为参数声明，则 Bash 不会打印警告消息; 如果使用带引号的复合数组分配作为参数声明，则会使单词扩展错误成为非致命错误，导致当前命令失败(默认行为是使它们成为致命错误，导致 shell 退出) ; 如果执行 shell 函数，则不会重置循环状态(这允许 shell 函数中的 break 或 continue 影响调用者上下文中的循环)。
+
+compat44
+If set, Bash saves the positional parameters to BASH_ARGV and BASH_ARGC before they are used, regardless of whether or not extended debugging mode is enabled.
+
+如果设置，则不管是否启用扩展调试模式，BASH 在使用位置参数之前将其保存到 BASH _ argv 和 BASH _ argc。
+
+complete_fullquote
+If set, Bash quotes all shell metacharacters in filenames and directory names when performing completion. If not set, Bash removes metacharacters such as the dollar sign from the set of characters that will be quoted in completed filenames when these metacharacters appear in shell variable references in words to be completed. This means that dollar signs in variable names that expand to directories will not be quoted; however, any dollar signs appearing in filenames will not be quoted, either. This is active only when bash is using backslashes to quote completed filenames. This variable is set by default, which is the default Bash behavior in versions through 4.2.
+
+如果设置，在执行完成时，Bash 将在文件名和目录名中引用所有 shell 元字符。如果没有设置，那么当这些元字符出现在 shell 变量引用中的单词中时，Bash 会从已完成的文件名中引用的字符集中删除元字符，例如美元符号。这意味着变量名中的美元符号不会被引用，但是，文件名中出现的任何美元符号也不会被引用。只有当 bash 使用反斜杠引用已完成的文件名时，此操作才会激活。这个变量是默认设置的，这是4.2版本中的默认 Bash 行为。
+
+direxpand
+If set, Bash replaces directory names with the results of word expansion when performing filename completion. This changes the contents of the readline editing buffer. If not set, Bash attempts to preserve what the user typed.
+
+如果设置，则在执行文件名完成时，Bash 将用单词扩展的结果替换目录名。这将更改 readline 编辑缓冲区的内容。如果没有设置，Bash 将尝试保留用户输入的内容。
+
+dirspell
+If set, Bash attempts spelling correction on directory names during word completion if the directory name initially supplied does not exist.
+
+如果设置，如果最初提供的目录名不存在，则在单词完成期间，Bash 将尝试对目录名进行拼写校正。
+
+dotglob
+If set, Bash includes filenames beginning with a ‘.’ in the results of filename expansion. The filenames ‘.’ and ‘..’ must always be matched explicitly, even if dotglob is set.
+
+如果设置，Bash 包含以‘ . ’开头的文件名在文件名扩展的结果中。文件名为‘和’。必须总是显式地匹配，即使 doglob 已设置。
+
+execfail
+If this is set, a non-interactive shell will not exit if it cannot execute the file specified as an argument to the exec builtin command. An interactive shell does not exit if exec fails.
+
+如果设置了这个参数，那么如果非交互式 shell 不能执行作为 exec builtin 命令参数指定的文件，它就不会退出。如果 exec 失败，交互式 shell 不会退出。
+
+expand_aliases
+If set, aliases are expanded as described below under Aliases, Aliases. This option is enabled by default for interactive shells.
+
+如果设置，别名将按照下面别名下面的描述展开。对于交互式 shell，此选项默认启用。
+
+extdebug
+If set at shell invocation, or in a shell startup file, arrange to execute the debugger profile before the shell starts, identical to the --debugger option. If set after invocation, behavior intended for use by debuggers is enabled:
+
+如果在 shell 调用或 shell 启动文件中设置，则在 shell 启动之前安排执行调试器配置文件，这与 -- debugger 选项相同。如果在调用之后设置，则启用调试器使用的行为:
+
+The 这个-F - f option to the 选择权declare builtin (see 内建物(见Bash Builtins) displays the source file name and line number corresponding to each function name supplied as an argument. )显示作为参数提供的每个函数名对应的源文件名和行号
+If the command run by the 方法运行的命令DEBUG trap returns a non-zero value, the next command is skipped and not executed. Trap 返回一个非零值，然后跳过和不执行下一个命令
+If the command run by the 方法运行的命令DEBUG trap returns a value of 2, and the shell is executing in a subroutine (a shell function or a shell script executed by the Trap 返回一个值2，并且该函数在子例程中执行(shell 函数或者由. or 或source builtins), the shell simulates a call to 内建) ，shell simulatesa 调用return.
+BASH_ARGC and 及BASH_ARGV are updated as described in their descriptions (see 更新了他们的描述(见Bash Variables Bash 变量).
+Function tracing is enabled: command substitution, shell functions, and subshells invoked with 启用了函数跟踪: 指令替代、 shell 函数和子 shell( command ) inherit the 继承DEBUG and 及RETURN traps. 陷阱
+Error tracing is enabled: command substitution, shell functions, and subshells invoked with 启用了错误跟踪: 指令替代、 shell 函数和子 shell( command ) inherit the 继承ERR trap. 陷阱
+extglob
+If set, the extended pattern matching features described above (see Pattern Matching) are enabled.
+
+如果设置，上面描述的扩展的模式匹配/模式匹配特性将被启用。
+
+extquote
+If set, $'string' and $"string" quoting is performed within ${parameter} expansions enclosed in double quotes. This option is enabled by default.
+
+如果设置，$‘ string’和 $“ string”引号将在双引号括起来的 ${ parameter }扩展中执行。默认情况下启用此选项。
+
+failglob
+If set, patterns which fail to match filenames during filename expansion result in an expansion error.
+
+如果设置，在文件名展开过程中无法匹配文件名的模式将导致展开错误。
+
+force_fignore
+If set, the suffixes specified by the FIGNORE shell variable cause words to be ignored when performing word completion even if the ignored words are the only possible completions. See Bash Variables, for a description of FIGNORE. This option is enabled by default.
+
+如果设置，FIGNORE shell 变量指定的后缀将导致在执行单词完成时忽略单词，即使忽略的单词是唯一可能的完成词。有关 FIGNORE 的描述，请参见 Bash Variables。默认情况下启用此选项。
+
+globasciiranges
+If set, range expressions used in pattern matching bracket expressions (see Pattern Matching) behave as if in the traditional C locale when performing comparisons. That is, the current locale’s collating sequence is not taken into account, so ‘b’ will not collate between ‘A’ and ‘B’, and upper-case and lower-case ASCII characters will collate together.
+
+如果设置了，那么在执行比较时，模式匹配中括号表达式中使用的范围表达式(参见模式匹配语言环境)的行为就像在传统的 c 语言环境中一样。也就是说，没有考虑当前区域设置的排序顺序，因此“ b”不会在“ a”和“ b”之间排序，而大小写的 ASCII 字符将一起排序。
+
+globstar
+If set, the pattern ‘**’ used in a filename expansion context will match all files and zero or more directories and subdirectories. If the pattern is followed by a ‘/’, only directories and subdirectories match.
+
+如果设置，文件名扩展上下文中使用的模式“ * * ”将匹配所有文件以及零个或多个目录和子目录。如果模式后面跟着一个‘/’ ，那么只有目录和子目录匹配。
+
+gnu_errfmt
+If set, shell error messages are written in the standard GNU error message format.
+
+如果设置，shell 错误消息将以标准的 GNU 错误消息格式编写。
+
+histappend
+If set, the history list is appended to the file named by the value of the HISTFILE variable when the shell exits, rather than overwriting the file.
+
+如果设置，当 shell 退出时，历史列表将附加到由 HISTFILE 变量的值命名的文件中，而不是覆盖文件。
+
+histreedit
+If set, and Readline is being used, a user is given the opportunity to re-edit a failed history substitution.
+
+如果设置了，并且使用了 Readline，则用户将有机会重新编辑失败的历史替换。
+
+histverify
+If set, and Readline is being used, the results of history substitution are not immediately passed to the shell parser. Instead, the resulting line is loaded into the Readline editing buffer, allowing further modification.
+
+如果设置了，并且正在使用 Readline，则不会立即将历史替换的结果传递给 shell 解析器。相反，生成的行被加载到 Readline 编辑缓冲区中，从而允许进一步的修改。
+
+hostcomplete
+If set, and Readline is being used, Bash will attempt to perform hostname completion when a word containing a ‘@’ is being completed (see Commands For Completion). This option is enabled by default.
+
+如果设置，并且使用 Readline，当包含“@”的单词完成时，Bash 将尝试执行主机名完成(请参阅完成命令)。默认情况下启用此选项。
+
+huponexit
+If set, Bash will send SIGHUP to all jobs when an interactive login shell exits (see Signals).
+
+如果设置，当交互式登录 shell 退出时，Bash 将向所有作业发送 SIGHUP (参见 Signals)。
+
+inherit_errexit
+If set, command substitution inherits the value of the errexit option, instead of unsetting it in the subshell environment. This option is enabled when POSIX mode is enabled.
+
+如果设置了这个选项，指令替代将继承 errexit 选项的值，而不是在子 shell 环境中取消设置。启用 POSIX 模式时启用此选项。
+
+interactive_comments
+Allow a word beginning with ‘#’ to cause that word and all remaining characters on that line to be ignored in an interactive shell. This option is enabled by default.
+
+在交互式 shell 中，允许以“ # ”开头的单词导致忽略该单词以及该行上的所有其余字符。默认情况下启用此选项。
+
+lastpipe
+If set, and job control is not active, the shell runs the last command of a pipeline not executed in the background in the current shell environment.
+
+如果设置，并且作业控制不活动，shell 将运行当前 shell 环境中未在后台执行的管道的最后一个命令。
+
+lithist
+If enabled, and the cmdhist option is enabled, multi-line commands are saved to the history with embedded newlines rather than using semicolon separators where possible.
+
+如果启用了 cmdhist 选项，多行命令将保存到带有嵌入换行符的历史记录中，而不是在可能的情况下使用分号分隔符。
+
+localvar_inherit
+If set, local variables inherit the value and attributes of a variable of the same name that exists at a previous scope before any new value is assigned. The nameref attribute is not inherited.
+
+如果设置，局部变量将继承在赋予任何新值之前存在于以前作用域中的同名变量的值和属性。Nameref 属性不是继承的。
+
+localvar_unset
+If set, calling unset on local variables in previous function scopes marks them so subsequent lookups find them unset until that function returns. This is identical to the behavior of unsetting local variables at the current function scope.
+
+如果设置了，则调用前面函数范围中的局部变量取消设置将标记它们，以便后续查找在该函数返回之前发现它们取消设置。这与在当前函数作用域中取消设置局部变量的行为相同。
+
+login_shell
+The shell sets this option if it is started as a login shell (see Invoking Bash). The value may not be changed.
+
+如果 shell 是作为登录 shell 启动的，那么 shell 将设置此选项(请参阅调用 Bash)。不能更改该值。
+
+mailwarn
+If set, and a file that Bash is checking for mail has been accessed since the last time it was checked, the message "The mail in mailfile has been read" is displayed.
+
+如果设置，并且自上次检查 Bash 检查邮件以来已经访问了该文件，则显示消息“ mailfile 中的邮件已被读取”。
+
+no_empty_cmd_completion
+If set, and Readline is being used, Bash will not attempt to search the PATH for possible completions when completion is attempted on an empty line.
+
+如果设置了，并且正在使用 Readline，当在空行上尝试完成时，Bash 不会尝试搜索 PATH 以查找可能的完成。
+
+nocaseglob
+If set, Bash matches filenames in a case-insensitive fashion when performing filename expansion.
+
+如果设置，则 Bash 在执行文件扩展时以不区分大小写的方式匹配文件名。
+
+nocasematch
+If set, Bash matches patterns in a case-insensitive fashion when performing matching while executing case or [[ conditional commands, when performing pattern substitution word expansions, or when filtering possible completions as part of programmable completion.
+
+如果设置，当执行 case 或[[条件命令，执行模式替换字扩展，或者作为可编程完成的一部分过滤可能的补充时，Bash 以不区分大小写的方式匹配模式。
+
+nullglob
+If set, Bash allows filename patterns which match no files to expand to a null string, rather than themselves.
+
+如果设置，Bash 允许不匹配文件的文件名模式展开为空字符串，而不是文件本身。
+
+progcomp
+If set, the programmable completion facilities (see Programmable Completion) are enabled. This option is enabled by default.
+
+如果设置，则启用可编程完成设施(请参阅可编程完成)。此选项默认为启用。
+
+progcomp_alias
+If set, and programmable completion is enabled, Bash treats a command name that doesn’t have any completions as a possible alias and attempts alias expansion. If it has an alias, Bash attempts programmable completion using the command word resulting from the expanded alias.
+
+如果设置了，并且启用了可编程完成，则 Bash 将没有任何完成的命令名视为可能的别名，并尝试进行别名展开。如果具有别名，则 Bash 会尝试使用扩展别名产生的命令字进行可编程完成。
+
+promptvars
+If set, prompt strings undergo parameter expansion, command substitution, arithmetic expansion, and quote removal after being expanded as described below (see Controlling the Prompt). This option is enabled by default.
+
+如果设置，提示字符串将进行参数展开、指令替代、算术展开和展开后的引号删除，如下所述(请参阅控制提示)。默认情况下启用此选项。
+
+restricted_shell
+The shell sets this option if it is started in restricted mode (see The Restricted Shell). The value may not be changed. This is not reset when the startup files are executed, allowing the startup files to discover whether or not a shell is restricted.
+
+如果 Shell 是在受限制模式下启动的，则 Shell 将设置此选项(请参阅受限制的 Shell)。不能更改该值。在执行启动文件时，这不会重置，从而允许启动文件发现 shell 是否受到限制。
+
+shift_verbose
+If this is set, the shift builtin prints an error message when the shift count exceeds the number of positional parameters.
+
+如果设置了这个值，当移位计数超过位置参数的数量时，移位内置函数将打印一条错误消息。
+
+sourcepath
+If set, the source builtin uses the value of PATH to find the directory containing the file supplied as an argument. This option is enabled by default.
+
+如果设置，则源内建函数使用 PATH 值查找包含作为参数提供的文件的目录。默认情况下启用此选项。
+
+xpg_echo
+If set, the echo builtin expands backslash-escape sequences by default.
+
+如果设置了 echo 内置函数，则默认情况下 echo 会展开反斜杠转义序列。
+
+The return status when listing options is zero if all optnames are enabled, non-zero otherwise. When setting or unsetting options, the return status is zero unless an optname is not a valid shell option.
+
+如果启用了所有 optnames，则列表选项时的返回状态为零，否则为非零。设置或取消设置选项时，返回状态为零，除非 optname 不是有效的 shell 选项。
+
+Previous: Modifying Shell Behavior, Up: Shell Builtin Commands   [Contents][Index]
+
+上一页: 修改 Shell 行为，向上: Shell 内建命令[内容][索引]
+
+4.4 Special Builtins
+4.4特殊内建物
+For historical reasons, the POSIX standard has classified several builtin commands as special. When Bash is executing in POSIX mode, the special builtins differ from other builtin commands in three respects:
+
+由于历史原因，POSIX 标准将几个内置命令分类为特殊命令。当 Bash 在 POSIX 模式下执行时，特殊的内置命令在三个方面不同于其他内置命令:
+
+Special builtins are found before shell functions during command lookup. 在命令查找过程中，在 shell 函数之前会发现一些特殊的内置语句
+If a special builtin returns an error status, a non-interactive shell exits. 如果一个特殊的内置函数返回一个错误状态，那么一个非交互式 shell 将退出
+Assignment statements preceding the command stay in effect in the shell environment after the command completes. 命令前面的赋值语句在命令完成后在 shell 环境中仍然有效
+When Bash is not executing in POSIX mode, these builtins behave no differently than the rest of the Bash builtin commands. The Bash POSIX mode is described in Bash POSIX Mode.
+
+当 Bash 不以 POSIX 模式执行时，这些内置命令的行为与 Bash 内置命令的其余部分没有什么不同。Bashposix 模式在 bashposix 模式中进行了描述。
+
+These are the POSIX special builtins:
+
+这些是 POSIX 特殊的内置程序:
+
+break : . continue eval exec exit export readonly return set
+shift trap unset
+Next: Bash Features, Previous: Shell Builtin Commands, Up: Top   [Contents][Index]
+
+下一步: Bash 特性，上一步: Shell 内建命令，向上: Top [ Contents ][ Index ]

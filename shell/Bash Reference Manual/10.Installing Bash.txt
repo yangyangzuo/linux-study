@@ -1,0 +1,465 @@
+
+10 Installing Bash
+10安装 Bash
+This chapter provides basic instructions for installing Bash on the various supported platforms. The distribution supports the GNU operating systems, nearly every version of Unix, and several non-Unix systems such as BeOS and Interix. Other independent ports exist for MS-DOS, OS/2, and Windows platforms.
+
+本章提供了在各种支持的平台上安装 Bash 的基本说明。该发行版支持 GNU 操作系统、几乎所有的 Unix 版本，以及一些非 Unix 系统，如 BeOS 和 Interix。其他独立端口存在于 MS-DOS、 OS/2和 Windows 平台上。
+
+• Basic Installation 基本安装:	  	Installation instructions. 安装说明
+• Compilers and Options 编译器和选项:	  	How to set special options for various systems. 如何为各种系统设置特殊选项
+• Compiling For Multiple Architectures 为多种体系结构编译:	  	How to compile Bash for more than one kind of system from the same source tree. 如何从同一源树编译多种系统的 Bash
+• Installation Names 安装名称:	  	How to set the various paths used by the installation. 如何设置安装所使用的各种路径
+• Specifying the System Type 指定系统类型:	  	How to configure Bash for a particular system. 如何为特定系统配置 Bash
+• Sharing Defaults 共享默认值:	  	How to share default configuration values among GNU programs. 如何在 GNU 程序之间共享默认配置值
+• Operation Controls 操作控制:	  	Options recognized by the configuration program. 配置程序识别的选项
+• Optional Features 可选功能:	  	How to enable and disable optional features when building Bash. 如何在生成 Bash 时启用和禁用可选特性
+Next: Compilers and Options, Up: Installing Bash   [Contents][Index]
+
+下一步: 编译器和选项，向上: 安装 Bash [内容][索引]
+
+10.1 Basic Installation
+10.1基本安装
+These are installation instructions for Bash.
+
+这些是 Bash 的安装说明。
+
+The simplest way to compile Bash is:
+
+编译 Bash 最简单的方法是:
+
+cd to the directory containing the source code and type ‘ 到包含源代码的目录并输入‘./configure 。/configure’ to configure Bash for your system. If you’re using 为您的系统配置 Bashcsh on an old version of System V, you might need to type ‘ 在旧版本的 System v 上，你可能需要输入‘sh ./configure Sh./configure’ instead to prevent 而不是去阻止csh from trying to execute 试图执行configure itself. 本身
+Running configure takes some time. While running, it prints messages telling which features it is checking for.
+
+运行 configure 需要一些时间。在运行时，它会打印消息，告诉用户它正在检查哪些特性。
+
+Type ‘ 输入‘make 制造’ to compile Bash and build the 编译 Bash 并构建bashbug bug reporting script. 移植脚本
+Optionally, type ‘ 可选地，键入‘make tests 做测试’ to run the Bash test suite. 运行 Bash 测试套件
+Type ‘ 输入‘make install 安装’ to install 安装bash and 及bashbug. This will also install the manual pages and Info file. 。这也将安装手册页和信息文件
+The configure shell script attempts to guess correct values for various system-dependent variables used during compilation. It uses those values to create a Makefile in each directory of the package (the top directory, the builtins, doc, and support directories, each directory under lib, and several others). It also creates a config.h file containing system-dependent definitions. Finally, it creates a shell script named config.status that you can run in the future to recreate the current configuration, a file config.cache that saves the results of its tests to speed up reconfiguring, and a file config.log containing compiler output (useful mainly for debugging configure). If at some point config.cache contains results you don’t want to keep, you may remove or edit it.
+
+Configure shell 脚本试图猜测编译期间使用的各种系统相关变量的正确值。它使用这些值在包的每个目录(顶部目录、内建目录、 doc 和支持目录、 lib 下的每个目录以及其他几个目录)中创建一个 Makefile。它还创建了一个包含系统相关定义的 config.h 文件。最后，它创建了一个名为 config.status 的 shell 脚本，您可以在将来运行该脚本来重新创建当前配置，一个保存测试结果以加速重新配置的 config.cache 文件，以及一个包含编译器输出的 config.log 文件(主要用于调试 configure)。如果在某个点 config.cache 包含了你不想保留的结果，你可以删除或者编辑它。
+
+To find out more about the options and arguments that the configure script understands, type
+
+要了解更多关于配置脚本理解的选项和参数，请输入
+
+bash-4.2$ ./configure --help
+at the Bash prompt in your Bash source directory.
+
+在 Bash 源目录中的 Bash 提示符处。
+
+If you want to build Bash in a directory separate from the source directory – to build for multiple architectures, for example – just use the full path to the configure script. The following commands will build bash in a directory under /usr/local/build from the source code in /usr/local/src/bash-4.4:
+
+如果你想在一个独立于源目录的目录中构建 Bash，例如，为多种体系结构构建，只需要使用配置脚本的完整路径即可。下面的命令将从/usr/local/src/bash-4.4中的源代码在/usr/local/build 下的目录中构建 bash:
+
+mkdir /usr/local/build/bash-4.4
+cd /usr/local/build/bash-4.4
+bash /usr/local/src/bash-4.4/configure
+make
+See Compiling For Multiple Architectures for more information about building in a directory separate from the source.
+
+有关在独立于源的目录中构建的更多信息，请参见编译多种体系结构。
+
+If you need to do unusual things to compile Bash, please try to figure out how configure could check whether or not to do them, and mail diffs or instructions to bash-maintainers@gnu.org so they can be considered for the next release.
+
+如果您需要做一些不寻常的事情来编译 Bash，请尝试找出 configure 如何检查是否执行这些操作，并将 diffs 或指令发送到 Bash-maintainers@gnu. org，以便在下一个版本中考虑使用它们。
+
+The file configure.ac is used to create configure by a program called Autoconf. You only need configure.ac if you want to change it or regenerate configure using a newer version of Autoconf. If you do this, make sure you are using Autoconf version 2.50 or newer.
+
+Ac 文件用于创建一个名为 Autoconf 的程序来配置。如果你想改变它或者使用新版本的 Autoconf 重新生成 configure，你只需要 configure.ac。如果你这样做，请确保你使用的是 Autoconf 2.50或更高版本。
+
+You can remove the program binaries and object files from the source code directory by typing ‘make clean’. To also remove the files that configure created (so you can compile Bash for a different kind of computer), type ‘make distclean’.
+
+您可以通过键入“ makeclean”从源代码目录中删除程序二进制文件和对象文件。要删除配置所创建的文件(以便为不同类型的计算机编译 Bash) ，请键入“ make distclean”。
+
+Next: Compiling For Multiple Architectures, Previous: Basic Installation, Up: Installing Bash   [Contents][Index]
+
+下一步: 为多种架构编译，上一步: 基本安装，上一步: 安装 Bash [内容][索引]
+
+10.2 Compilers and Options
+10.2编译器和选项
+Some systems require unusual options for compilation or linking that the configure script does not know about. You can give configure initial values for variables by setting them in the environment. Using a Bourne-compatible shell, you can do that on the command line like this:
+
+一些系统需要不寻常的选项来编译或链接，而配置脚本并不知道。可以通过在环境中设置变量来配置变量的初始值。使用与 bourne 兼容的 shell，您可以在命令行上这样做:
+
+CC=c89 CFLAGS=-O2 LIBS=-lposix ./configure
+On systems that have the env program, you can do it like this:
+
+在有 env 程序的系统上，你可以这样做:
+
+env CPPFLAGS=-I/usr/local/include LDFLAGS=-s ./configure
+The configuration process uses GCC to build Bash if it is available.
+
+如果 Bash 可用，配置过程使用 GCC 来构建它。
+
+Next: Installation Names, Previous: Compilers and Options, Up: Installing Bash   [Contents][Index]
+
+下一步: 安装名称，上一步: 编译器和选项，向上: 安装 Bash [内容][索引]
+
+10.3 Compiling For Multiple Architectures
+10.3多体系结构编译
+You can compile Bash for more than one kind of computer at the same time, by placing the object files for each architecture in their own directory. To do this, you must use a version of make that supports the VPATH variable, such as GNU make. cd to the directory where you want the object files and executables to go and run the configure script from the source directory (see Basic Installation). You may need to supply the --srcdir=PATH argument to tell configure where the source files are. configure automatically checks for the source code in the directory that configure is in and in ‘..’.
+
+您可以同时为多种计算机编译 Bash，方法是将每种架构的目标文件放在它们自己的目录中。为此，必须使用支持 VPATH 变量的 make 版本，例如 gnumake。将目标文件和可执行文件放到目录中，然后从源目录运行配置脚本文件。您可能需要提供 -- srcdir = PATH 参数来告诉 configure 源文件的位置。Configure 会自动检查 configure 位于和’中的目录中的源代码。.
+
+If you have to use a make that does not supports the VPATH variable, you can compile Bash for one architecture at a time in the source code directory. After you have installed Bash for one architecture, use ‘make distclean’ before reconfiguring for another architecture.
+
+如果必须使用不支持 VPATH 变量的 make，则可以在源代码目录中一次为一个体系结构编译 Bash。在为一个架构安装了 Bash 之后，在为另一个架构重新配置之前使用“ make distclean”。
+
+Alternatively, if your system supports symbolic links, you can use the support/mkclone script to create a build tree which has symbolic links back to each file in the source directory. Here’s an example that creates a build directory in the current directory from a source directory /usr/gnu/src/bash-2.0:
+
+或者，如果您的系统支持符号链接，您可以使用 support/mkclone 脚本创建一个构建树，该树具有返回到源目录中每个文件的符号链接。下面是一个示例，它从源目录/usr/gnu/src/bash-2.0中创建了一个构建目录，该目录位于工作目录文件夹中:
+
+bash /usr/gnu/src/bash-2.0/support/mkclone -s /usr/gnu/src/bash-2.0 .
+The mkclone script requires Bash, so you must have already built Bash for at least one architecture before you can create build directories for other architectures.
+
+Mkclone 脚本需要 Bash，因此在为其他体系结构创建构建目录之前，您必须已经为至少一个体系结构构建了 Bash。
+
+Next: Specifying the System Type, Previous: Compiling For Multiple Architectures, Up: Installing Bash   [Contents][Index]
+
+下一步: 指定系统类型，上一步: 为多体系结构编译，上一步: 安装 Bash [内容][索引]
+
+10.4 Installation Names
+10.4安装名称
+By default, ‘make install’ will install into /usr/local/bin, /usr/local/man, etc. You can specify an installation prefix other than /usr/local by giving configure the option --prefix=PATH, or by specifying a value for the DESTDIR ‘make’ variable when running ‘make install’.
+
+默认情况下，‘ make install’将安装到/usr/local/bin、/usr/local/man 等。您可以通过提供 configure 选项 -- prefix = PATH，或者在运行“ make install”时为 DESTDIR“ make”变量指定一个值，来指定除/usr/local 之外的安装前缀。
+
+You can specify separate installation prefixes for architecture-specific files and architecture-independent files. If you give configure the option --exec-prefix=PATH, ‘make install’ will use PATH as the prefix for installing programs and libraries. Documentation and other data files will still use the regular prefix.
+
+您可以为特定于体系结构的文件和独立于体系结构的文件指定单独的安装前缀。如果您提供 configure 选项 -- exec-prefix = PATH，‘ make install’将使用 PATH 作为安装程序和库的前缀。文档和其他数据文件仍将使用常规前缀。
+
+Next: Sharing Defaults, Previous: Installation Names, Up: Installing Bash   [Contents][Index]
+
+下一步: 共享默认值，上一步: 安装名称，上一步: 安装 Bash [内容][索引]
+
+10.5 Specifying the System Type
+10.5指定系统类型
+There may be some features configure can not figure out automatically, but need to determine by the type of host Bash will run on. Usually configure can figure that out, but if it prints a message saying it can not guess the host type, give it the --host=TYPE option. ‘TYPE’ can either be a short name for the system type, such as ‘sun4’, or a canonical name with three fields: ‘CPU-COMPANY-SYSTEM’ (e.g., ‘i386-unknown-freebsd4.2’).
+
+可能有一些 configure 无法自动识别的特性，但需要根据 Bash 将运行的主机类型来确定。通常 configure 可以解决这个问题，但是如果它输出一条消息说它不能猜测主机类型，那么就给它 -- host = TYPE 选项。TYPE 可以是系统类型的简称，比如“ sun4” ，也可以是有三个字段的规范名: “ CPU-COMPANY-SYSTEM”(比如，“ i386-unknown-freebsd4.2”)。
+
+See the file support/config.sub for the possible values of each field.
+
+有关每个字段的可能值，请参阅文件 support/config. sub。
+
+Next: Operation Controls, Previous: Specifying the System Type, Up: Installing Bash   [Contents][Index]
+
+下一步: 操作控件，上一步: 指定系统类型，向上: 安装 Bash [内容][索引]
+
+10.6 Sharing Defaults
+10.6共享默认值
+If you want to set default values for configure scripts to share, you can create a site shell script called config.site that gives default values for variables like CC, cache_file, and prefix. configure looks for PREFIX/share/config.site if it exists, then PREFIX/etc/config.site if it exists. Or, you can set the CONFIG_SITE environment variable to the location of the site script. A warning: the Bash configure looks for a site script, but not all configure scripts do.
+
+如果你想为配置脚本共享设置默认值，你可以创建一个名为 config.site 的站点 shell 脚本，它为变量提供默认值，比如 CC、 cache _ file 和前缀。Configure 查找 PREFIX/share/config。如果它存在，那么 PREFIX/etc/config。网站，如果它存在。或者，你可以将 CONFIG _ site 环境变量设置为站点脚本的位置。警告: Bash 配置查找站点脚本，但不是所有的配置脚本都这样做。
+
+Next: Optional Features, Previous: Sharing Defaults, Up: Installing Bash   [Contents][Index]
+
+下一步: 可选特性，上一步: 共享默认值，上一步: 安装 Bash [内容][索引]
+
+10.7 Operation Controls
+10.7操作控制
+configure recognizes the following options to control how it operates.
+
+Configure 可以识别以下选项来控制它的操作方式。
+
+--cache-file=file
+Use and save the results of the tests in file instead of ./config.cache. Set file to /dev/null to disable caching, for debugging configure.
+
+使用并将测试结果保存在文件中，而不是。/config.cache.将文件设置为/dev/null 以禁用缓存，用于调试配置。
+
+--help
+Print a summary of the options to configure, and exit.
+
+打印要配置的选项的摘要，然后退出。
+
+--quiet
+--silent
+-q
+Do not print messages saying which checks are being made.
+
+不要打印说明正在进行哪些检查的信息。
+
+--srcdir=dir
+Look for the Bash source code in directory dir. Usually configure can determine that directory automatically.
+
+在目录目录中查找 Bash 源代码。通常 configure 可以自动确定该目录。
+
+--version
+Print the version of Autoconf used to generate the configure script, and exit.
+
+打印用于生成配置脚本文件的 Autoconf 版本，然后退出。
+
+configure also accepts some other, not widely used, boilerplate options. ‘configure --help’ prints the complete list.
+
+Configure 还接受其他一些不常用的样板选项。
+
+Previous: Operation Controls, Up: Installing Bash   [Contents][Index]
+
+上一页: 操作控件，向上: 安装 Bash [目录][索引]
+
+10.8 Optional Features
+10.8可选功能
+The Bash configure has a number of --enable-feature options, where feature indicates an optional part of Bash. There are also several --with-package options, where package is something like ‘bash-malloc’ or ‘purify’. To turn off the default use of a package, use --without-package. To configure Bash without a feature that is enabled by default, use --disable-feature.
+
+Bash 配置有许多 -- enable-feature 选项，其中的特性指示 Bash 的可选部分。还有几个 -- with-package 选项，其中的 package 类似于“ bash-malloc”或“ purify”。若要关闭包的默认使用，请使用 -- without-package。若要在没有默认启用特性的情况下配置 Bash，请使用 -- disable-feature。
+
+Here is a complete list of the --enable- and --with- options that the Bash configure recognizes.
+
+下面是 Bash 配置可识别的 -- enable-and-with-选项的完整列表。
+
+--with-afs
+Define if you are using the Andrew File System from Transarc.
+
+定义您是否正在使用 Transarc 中的 Andrew 文件系统。
+
+--with-bash-malloc
+Use the Bash version of malloc in the directory lib/malloc. This is not the same malloc that appears in GNU libc, but an older version originally derived from the 4.2 BSD malloc. This malloc is very fast, but wastes some space on each allocation. This option is enabled by default. The NOTES file contains a list of systems for which this should be turned off, and configure disables this option automatically for a number of systems.
+
+在 lib/malloc 目录中使用 malloc 的 Bash 版本。这不是出现在 GNU libc 中的 malloc，而是最初从4.2 BSD malloc 派生出来的旧版本。这个 malloc 非常快，但是在每个分配上浪费了一些空间。默认情况下启用此选项。NOTES 文件包含应该关闭这个选项的系统列表，并且 configure 针对许多系统自动禁用这个选项。
+
+--with-curses
+Use the curses library instead of the termcap library. This should be supplied if your system has an inadequate or incomplete termcap database.
+
+使用诅咒库而不是 termcap 库。如果系统的 termcap 数据库不足或不完整，则应该提供此选项。
+
+--with-gnu-malloc
+A synonym for --with-bash-malloc.
+
+与-bash-malloc 同义的词。
+
+--with-installed-readline[=PREFIX]
+Define this to make Bash link with a locally-installed version of Readline rather than the version in lib/readline. This works only with Readline 5.0 and later versions. If PREFIX is yes or not supplied, configure uses the values of the make variables includedir and libdir, which are subdirectories of prefix by default, to find the installed version of Readline if it is not in the standard system include and library directories. If PREFIX is no, Bash links with the version in lib/readline. If PREFIX is set to any other value, configure treats it as a directory pathname and looks for the installed version of Readline in subdirectories of that directory (include files in PREFIX/include and the library in PREFIX/lib).
+
+定义它使 Bash 链接到本地安装的 Readline 版本，而不是 lib/Readline 中的版本。这只适用于 Readline 5.0和更高版本。如果 PREFIX 是 yes 或者没有提供，configure 使用 make 变量 includedir 和 libdir 的值来查找已安装的 Readline 版本，如果它不在标准系统 include 和 library 目录中的话。如果 PREFIX 为 no，则 Bash 链接 lib/readline 中的版本。如果 PREFIX 设置为任何其他值，configure 将其视为目录路径名，并在该目录的子目录中查找已安装的 Readline 版本(包括 PREFIX/include 中的文件和 PREFIX/lib 中的库)。
+
+--with-purify
+Define this to use the Purify memory allocation checker from Rational Software.
+
+定义这个来使用 Rational Software 中的 Purify 内存分配检查器。
+
+--enable-minimal-config
+This produces a shell with minimal features, close to the historical Bourne shell.
+
+这将产生一个具有最小特性的 shell，接近历史上的 Bourne shell。
+
+There are several --enable- options that alter how Bash is compiled and linked, rather than changing run-time features.
+
+有几个 -- enable-options 可以改变 Bash 的编译和链接方式，而不是改变运行时特性。
+
+--enable-largefile
+Enable support for large files if the operating system requires special compiler options to build programs which can access large files. This is enabled by default, if the operating system provides large file support.
+
+如果操作系统需要特殊的编译器选项来生成可以访问大文件的程序，则启用对大文件的支持。如果操作系统提供大文件支持，则默认情况下启用此选项。
+
+--enable-profiling
+This builds a Bash binary that produces profiling information to be processed by gprof each time it is executed.
+
+这构建了一个 Bash 二进制文件，它生成分析信息，每次执行时由 gprof 处理。
+
+--enable-static-link
+This causes Bash to be linked statically, if gcc is being used. This could be used to build a version to use as root’s shell.
+
+如果使用 gcc，这将导致 Bash 静态链接。这可以用来构建一个用作 root 用户 shell 的版本。
+
+The ‘minimal-config’ option can be used to disable all of the following options, but it is processed first, so individual options may be enabled using ‘enable-feature’.
+
+可以使用“ minimal-config”选项禁用以下所有选项，但它是先处理的，因此可以使用“ enable-feature”启用单个选项。
+
+All of the following options except for ‘disabled-builtins’, ‘direxpand-default’, and ‘xpg-echo-default’ are enabled by default, unless the operating system does not provide the necessary support.
+
+除了“ disabled-builtins”、“ direxpand-default”和“ xpg-echo-default”之外，以下所有选项都默认启用，除非操作系统不提供必要的支持。
+
+--enable-alias
+Allow alias expansion and include the alias and unalias builtins (see Aliases).
+
+允许别名扩展并包含别名和无别名内置语句(请参阅别名)。
+
+--enable-arith-for-command
+Include support for the alternate form of the for command that behaves like the C language for statement (see Looping Constructs).
+
+包括对行为类似于 c 语言 for 语句的 for 命令替代形式的支持(参见循环构造)。
+
+--enable-array-variables
+Include support for one-dimensional array shell variables (see Arrays).
+
+包括对一维数组 shell 变量的支持(参见数组)。
+
+--enable-bang-history
+Include support for csh-like history substitution (see History Interaction).
+
+包括对类似于 csh 的历史替换的支持(参见历史交互)。
+
+--enable-brace-expansion
+Include csh-like brace expansion ( b{a,b}c → bac bbc ). See Brace Expansion, for a complete description.
+
+包含类似 csh 的括号扩展(b { a，b } c → bac bbc)。
+
+--enable-casemod-attributes
+Include support for case-modifying attributes in the declare builtin and assignment statements. Variables with the uppercase attribute, for example, will have their values converted to uppercase upon assignment.
+
+在 declare builtin 和 assignment 语句中包含对 case 修改属性的支持。例如，具有大写属性的变量在赋值时将其值转换为大写。
+
+--enable-casemod-expansion
+Include support for case-modifying word expansions.
+
+包括对大小写修改字扩展的支持。
+
+--enable-command-timing
+Include support for recognizing time as a reserved word and for displaying timing statistics for the pipeline following time (see Pipelines). This allows pipelines as well as shell builtins and functions to be timed.
+
+包括支持将时间识别为保留字，以及支持显示管道下一时间的计时统计信息(请参阅管道)。这使得管道以及外壳内置程序和函数都可以计时。
+
+--enable-cond-command
+Include support for the [[ conditional command. (see Conditional Constructs).
+
+包括对[[条件命令. ]的支持(参见条件构造)。
+
+--enable-cond-regexp
+Include support for matching POSIX regular expressions using the ‘=~’ binary operator in the [[ conditional command. (see Conditional Constructs).
+
+在[条件命令]中包含使用“ = ~ ”二进制运算符匹配 POSIX 正则表达式的支持(参见条件构造)。
+
+--enable-coprocesses
+Include support for coprocesses and the coproc reserved word (see Pipelines).
+
+包括对 coprocess 和 coproc 保留字的支持(请参见管道)。
+
+--enable-debugger
+Include support for the bash debugger (distributed separately).
+
+包括对 bash 调试器的支持(分布式)。
+
+--enable-dev-fd-stat-broken
+If calling stat on /dev/fd/N returns different results than calling fstat on file descriptor N, supply this option to enable a workaround. This has implications for conditional commands that test file attributes.
+
+如果在/dev/fd/N 上调用 stat 返回的结果与在文件描述符 n 上调用 fstat 返回的结果不同，请提供此选项以启用解决方案。这对测试文件属性的条件命令有影响。
+
+--enable-direxpand-default
+Cause the direxpand shell option (see The Shopt Builtin) to be enabled by default when the shell starts. It is normally disabled by default.
+
+在 shell 启动时，默认启用 direxpand shell 选项(参见 The Shopt Builtin)。默认情况下通常是禁用的。
+
+--enable-directory-stack
+Include support for a csh-like directory stack and the pushd, popd, and dirs builtins (see The Directory Stack).
+
+包括对类似 csh 的目录堆栈以及 pushd、 popd 和 dirs 内置程序的支持(请参阅目录堆栈)。
+
+--enable-disabled-builtins
+Allow builtin commands to be invoked via ‘builtin xxx’ even after xxx has been disabled using ‘enable -n xxx’. See Bash Builtins, for details of the builtin and enable builtin commands.
+
+允许通过‘ builtin xxx’调用内建命令，即使在 xxx 被禁用后也可以使用‘ enable-n xxx’。有关内置命令和启用内置命令的详细信息，请参阅 Bash 内置命令。
+
+--enable-dparen-arithmetic
+Include support for the ((…)) command (see Conditional Constructs).
+
+包括对((...))命令的支持(请参阅条件结构)。
+
+--enable-extended-glob
+Include support for the extended pattern matching features described above under Pattern Matching.
+
+包括支持上面提到的扩展的模式匹配/模式匹配特性。
+
+--enable-extended-glob-default
+Set the default value of the extglob shell option described above under The Shopt Builtin to be enabled.
+
+将上面在 theshopt Builtin 下面描述的 extglob shell 选项的默认值设置为启用。
+
+--enable-function-import
+Include support for importing function definitions exported by another instance of the shell from the environment. This option is enabled by default.
+
+包括对导入由另一个 shell 实例从环境中导出的函数定义的支持。默认情况下启用此选项。
+
+--enable-glob-asciirange-default
+Set the default value of the globasciiranges shell option described above under The Shopt Builtin to be enabled. This controls the behavior of character ranges when used in pattern matching bracket expressions.
+
+设置上面在 The Shopt Builtin 下面描述的 globasciirranges shell 选项的默认值为启用。这可以控制字符范围的行为，当这些字符范围被用在模式匹配中括号表达式中时。
+
+--enable-help-builtin
+Include the help builtin, which displays help on shell builtins and variables (see Bash Builtins).
+
+包括帮助内建，它在 shell 内建和变量上显示帮助(参见 Bash 内建)。
+
+--enable-history
+Include command history and the fc and history builtin commands (see Bash History Facilities).
+
+包括命令历史记录以及 fc 和历史内置命令(请参阅 Bash 历史记录工具)。
+
+--enable-job-control
+This enables the job control features (see Job Control), if the operating system supports them.
+
+如果操作系统支持作业控制功能(请参阅作业控制) ，则此功能将启用。
+
+--enable-multibyte
+This enables support for multibyte characters if the operating system provides the necessary support.
+
+如果操作系统提供了必要的支持，这将支持多字节字符。
+
+--enable-net-redirections
+This enables the special handling of filenames of the form /dev/tcp/host/port and /dev/udp/host/port when used in redirections (see Redirections).
+
+这允许在重定向中使用表单/dev/tcp/host/port 和/dev/udp/host/port 的文件名的特殊处理(请参阅重定向)。
+
+--enable-process-substitution
+This enables process substitution (see Process Substitution) if the operating system provides the necessary support.
+
+如果操作系统提供了必要的支持，则启用进程替换(请参见进程替换)。
+
+--enable-progcomp
+Enable the programmable completion facilities (see Programmable Completion). If Readline is not enabled, this option has no effect.
+
+启用可编程完成设施(请参阅可编程完成)。如果没有启用 Readline，则此选项没有效果。
+
+--enable-prompt-string-decoding
+Turn on the interpretation of a number of backslash-escaped characters in the $PS0, $PS1, $PS2, and $PS4 prompt strings. See Controlling the Prompt, for a complete list of prompt string escape sequences.
+
+打开 $PS0、 $PS1、 $PS2和 $PS4提示字符串中大量反斜杠转义字符的解释。有关提示字符串转义序列的完整列表，请参阅控制提示。
+
+--enable-readline
+Include support for command-line editing and history with the Bash version of the Readline library (see Command Line Editing).
+
+使用 Readline 库的 Bash 版本包括对命令行编辑和历史记录的支持(请参阅命令行编辑)。
+
+--enable-restricted
+Include support for a restricted shell. If this is enabled, Bash, when called as rbash, enters a restricted mode. See The Restricted Shell, for a description of restricted mode.
+
+包括对受限 shell 的支持。如果启用了这个选项，当作为 rbash 调用时，Bash 将进入受限模式。有关受限制模式的说明，请参阅受限制的 Shell。
+
+--enable-select
+Include the select compound command, which allows the generation of simple menus (see Conditional Constructs).
+
+包括 select compound 命令，该命令允许生成简单的菜单(请参阅条件构造)。
+
+--enable-separate-helpfiles
+Use external files for the documentation displayed by the help builtin instead of storing the text internally.
+
+对内置帮助所显示的文档使用外部文件，而不是在内部存储文本。
+
+--enable-single-help-strings
+Store the text displayed by the help builtin as a single string for each help topic. This aids in translating the text to different languages. You may need to disable this if your compiler cannot handle very long string literals.
+
+将帮助内置的文本存储为每个帮助主题的单个字符串。这有助于将文本翻译成不同的语言。如果编译器不能处理很长的字符串，则可能需要禁用此选项。
+
+--enable-strict-posix-default
+Make Bash POSIX-conformant by default (see Bash POSIX Mode).
+
+默认情况下使 Bash 符合 POSIX 要求(请参阅 bashposix 模式)。
+
+--enable-usg-echo-default
+A synonym for --enable-xpg-echo-default.
+
+一个同义词 -- enable-xpg-echo-default。
+
+--enable-xpg-echo-default
+Make the echo builtin expand backslash-escaped characters by default, without requiring the -e option. This sets the default value of the xpg_echo shell option to on, which makes the Bash echo behave more like the version specified in the Single Unix Specification, version 3. See Bash Builtins, for a description of the escape sequences that echo recognizes.
+
+默认情况下，使 echo 内置扩展反斜杠转义字符，而不需要 -e 选项。这将 xpg echo shell 选项的默认值设置为 on，这使得 Bash echo 的行为更像是在单一UNIX规范版本3中指定的版本。有关 echo 识别的转义序列的描述，请参见 Bash Builtins。
+
+The file config-top.h contains C Preprocessor ‘#define’ statements for options which are not settable from configure. Some of these are not meant to be changed; beware of the consequences if you do. Read the comments associated with each definition for more information about its effect.
+
+文件 config-top.h 包含 c 预处理器‘ # define’语句，用于配置不可设置的选项。其中有些是无法改变的，如果你这样做了，要当心后果。请阅读与每个定义相关联的注释，以获得关于其效果的更多信息。
+
+Next: Major Differences From The Bourne Shell, Previous: Installing Bash, Up: Top   [Contents][Index]
+
+下一步: 与 Bourne Shell 的主要区别，上一步: 安装 Bash，向上: Top [ Contents ][ Index ]
+

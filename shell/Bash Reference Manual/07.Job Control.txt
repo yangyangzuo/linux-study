@@ -1,0 +1,174 @@
+
+
+
+
+7 Job Control
+7工作控制
+This chapter discusses what job control is, how it works, and how Bash allows you to access its facilities.
+
+本章讨论什么是作业控制，它是如何工作的，以及 Bash 如何允许您访问它的工具。
+
+• Job Control Basics 工作控制基础:	  	How job control works. 作业控制是如何工作的
+• Job Control Builtins 工作控制内置程序:	  	Bash builtin commands used to interact with job control. 用于与作业控制交互的 Bash 内置命令
+• Job Control Variables 作业控制变量:	  	Variables Bash uses to customize job control. 用于自定义作业控件的变量
+Next: Job Control Builtins, Up: Job Control   [Contents][Index]
+
+下一步: 作业控制内建，上: 作业控制[目录][索引]
+
+7.1 Job Control Basics
+7.1工作控制基础
+Job control refers to the ability to selectively stop (suspend) the execution of processes and continue (resume) their execution at a later point. A user typically employs this facility via an interactive interface supplied jointly by the operating system kernel’s terminal driver and Bash.
+
+作业控制是指有选择地停止(暂停)进程的执行并在稍后继续(恢复)其执行的能力。用户通常通过操作系统内核的终端驱动程序和 Bash 共同提供的交互界面使用这个工具。
+
+The shell associates a job with each pipeline. It keeps a table of currently executing jobs, which may be listed with the jobs command. When Bash starts a job asynchronously, it prints a line that looks like:
+
+Shell 将作业与每个管道关联。它保存了一个当前正在执行的作业表，可以使用作业命令列出这些作业。当 Bash 异步启动一个作业时，它会打印一行如下代码:
+
+[1] 25647
+indicating that this job is job number 1 and that the process ID of the last process in the pipeline associated with this job is 25647. All of the processes in a single pipeline are members of the same job. Bash uses the job abstraction as the basis for job control.
+
+指示此作业为作业号1，并且与此作业关联的管道中最后一个进程的进程 ID 为25647。单个管道中的所有进程都是同一作业的成员。Bash 使用作业抽象作为作业控制的基础。
+
+To facilitate the implementation of the user interface to job control, the operating system maintains the notion of a current terminal process group ID. Members of this process group (processes whose process group ID is equal to the current terminal process group ID) receive keyboard-generated signals such as SIGINT. These processes are said to be in the foreground. Background processes are those whose process group ID differs from the terminal’s; such processes are immune to keyboard-generated signals. Only foreground processes are allowed to read from or, if the user so specifies with stty tostop, write to the terminal. Background processes which attempt to read from (write to when stty tostop is in effect) the terminal are sent a SIGTTIN (SIGTTOU) signal by the kernel’s terminal driver, which, unless caught, suspends the process.
+
+为了促进作业控制的用户界面的实现，操作系统维护当前终端进程组 ID 的概念。此进程组(其进程组 ID 等于当前终端进程组 ID 的进程)的成员接收键盘生成的信号，如 SIGINT。这些过程被认为是最突出的。后台进程是其进程组 ID 不同于终端的进程; 这些进程对键盘生成的信号免疫。只允许前台进程从中读取数据，如果用户这样指定，则写入终端。后台进程试图从终端读取(写入到当停止运行时)终端被内核的终端驱动程序发送一个 SIGTTIN (SIGTTOU)信号，除非被捕获，否则终端驱动程序将暂停进程。
+
+If the operating system on which Bash is running supports job control, Bash contains facilities to use it. Typing the suspend character (typically ‘^Z’, Control-Z) while a process is running causes that process to be stopped and returns control to Bash. Typing the delayed suspend character (typically ‘^Y’, Control-Y) causes the process to be stopped when it attempts to read input from the terminal, and control to be returned to Bash. The user then manipulates the state of this job, using the bg command to continue it in the background, the fg command to continue it in the foreground, or the kill command to kill it. A ‘^Z’ takes effect immediately, and has the additional side effect of causing pending output and typeahead to be discarded.
+
+如果 Bash 运行的操作系统支持作业控制，则 Bash 包含使用作业控制的工具。在进程运行时键入挂起字符(通常为“ ^ z” ，Control-Z)会导致该进程停止并将控制权返回给 Bash。键入延迟挂起字符(通常是“ ^ y” ，Control-Y)会导致进程在尝试从终端读取输入时停止，并将控制权返回给 Bash。然后，用户操作这个作业的状态，使用 bg 命令在后台继续它，使用 fg 命令在前台继续它，或使用 kill 命令杀死它。“ ^ z”立即生效，并具有导致挂起输出和提前输入被丢弃的附加副作用。
+
+There are a number of ways to refer to a job in the shell. The character ‘%’ introduces a job specification (jobspec).
+
+有许多方法来引用 shell 中的作业。字符“% ”引入了作业规范(jobspec)。
+
+Job number n may be referred to as ‘%n’. The symbols ‘%%’ and ‘%+’ refer to the shell’s notion of the current job, which is the last job stopped while it was in the foreground or started in the background. A single ‘%’ (with no accompanying job specification) also refers to the current job. The previous job may be referenced using ‘%-’. If there is only a single job, ‘%+’ and ‘%-’ can both be used to refer to that job. In output pertaining to jobs (e.g., the output of the jobs command), the current job is always flagged with a ‘+’, and the previous job with a ‘-’.
+
+作业编号 n 可能被称为“% n”。符号“%% ”和“% + ”指的是 shell 对当前作业的概念，即当作业位于前台或在后台启动时停止的最后一个作业。一个单独的“% ”(没有相应的作业说明)也指当前的作业。可以使用“%-”引用前一个作业。如果只有一个作业，则可以使用“% + ”和“%-”来引用该作业。在与作业相关的输出(例如，作业命令的输出)中，当前作业始终标记为“ + ” ，前一个作业标记为“-”。
+
+A job may also be referred to using a prefix of the name used to start it, or using a substring that appears in its command line. For example, ‘%ce’ refers to a stopped ce job. Using ‘%?ce’, on the other hand, refers to any job containing the string ‘ce’ in its command line. If the prefix or substring matches more than one job, Bash reports an error.
+
+作业也可以使用用于开始作业的名称的前缀，或者使用出现在其命令行中的子字符串。例如，‘’指停止的 ce jo。使用’另一方面,% ? ce’指的是在其命令 lin 中包含字符串‘ ce’的任何作业。如果前缀或子字符串匹配多个作业，则 Bash 报告一个 erro
+
+Simply naming a job can be used to bring it into the foreground: ‘%1’ is a synonym for ‘fg %1’, bringing job 1 from the background into the foreground. Similarly, ‘%1 &’ resumes job 1 in the background, equivalent to ‘bg %1’
+
+可以使用简单的作业命名将其带入前台: “% 1”是“ fg% 1”的同义词，将作业1从后台带入前台。同样，“% 1 & ”将恢复后台的作业1，相当于“ bg% 1”
+
+The shell learns immediately whenever a job changes state. Normally, Bash waits until it is about to print a prompt before reporting changes in a job’s status so as to not interrupt any other output. If the -b option to the set builtin is enabled, Bash reports such changes immediately (see The Set Builtin). Any trap on SIGCHLD is executed for each child process that exits.
+
+每当作业更改状态时，shell 都会立即进行学习。通常，Bash 在报告作业状态的更改之前一直等待，直到打印提示符为止，这样就不会中断任何其他输出。如果启用了 Set 内建选项-b，Bash 会立即报告这些更改(参见 The Set Builtin)。SIGCHLD 上的任何陷阱都会为退出的每个子进程执行。
+
+If an attempt to exit Bash is made while jobs are stopped, (or running, if the checkjobs option is enabled – see The Shopt Builtin), the shell prints a warning message, and if the checkjobs option is enabled, lists the jobs and their statuses. The jobs command may then be used to inspect their status. If a second attempt to exit is made without an intervening command, Bash does not print another warning, and any stopped jobs are terminated.
+
+如果在作业停止时尝试退出 Bash (或者运行，如果启用了 checkjobs 选项——请参阅 The Shopt Builtin) ，shell 将打印一条警告消息，如果启用了 checkjobs 选项，则列出作业及其状态。然后可以使用作业命令来检查它们的状态。如果在没有中间命令的情况下进行了第二次退出尝试，则 Bash 不会打印另一个警告，并终止任何已停止的作业。
+
+When the shell is waiting for a job or process using the wait builtin, and job control is enabled, wait will return when the job changes state. The -f option causes wait to wait until the job or process terminates before returning.
+
+当 shell 使用等待内置函数等待作业或进程并且启用了作业控制时，等待将在作业更改状态时返回。F 选项导致等待，直到作业或进程终止后才返回。
+
+Next: Job Control Variables, Previous: Job Control Basics, Up: Job Control   [Contents][Index]
+
+下一步: 作业控制变量，上一步: 作业控制基础，向上: 作业控制[内容][索引]
+
+7.2 Job Control Builtins
+7.2工作控制内置程序
+bg
+bg [jobspec …]
+Resume each suspended job jobspec in the background, as if it had been started with ‘&’. If jobspec is not supplied, the current job is used. The return status is zero unless it is run when job control is not enabled, or, when run with job control enabled, any jobspec was not found or specifies a job that was started without job control.
+
+简历背景中的每个被暂停的工作说明，就好像它已经开始了“ & ”。如果没有提供 jobspec，则使用当前作业。返回状态为零，除非在没有启用作业控制时运行，或者在启用作业控制时运行，没有找到任何作业规范，或者指定在没有作业控制的情况下启动的作业。
+
+fg
+fg [jobspec]
+Resume the job jobspec in the foreground and make it the current job. If jobspec is not supplied, the current job is used. The return status is that of the command placed into the foreground, or non-zero if run when job control is disabled or, when run with job control enabled, jobspec does not specify a valid job or jobspec specifies a job that was started without job control.
+
+在前台恢复工作说明，并使其成为当前的工作。如果没有提供 jobspec，则使用当前作业。返回状态是放置在前台的命令的状态，如果在禁用作业控制时运行，或者在启用作业控制时运行，jobspec 不指定有效作业或者 jobspec 指定在没有作业控制的情况下启动的作业，则返回非零状态。
+
+jobs
+jobs [-lnprs] [jobspec]
+jobs -x command [arguments]
+The first form lists the active jobs. The options have the following meanings:
+
+第一个表单列出了活动的作业。这些选项有以下含义:
+
+-l
+List process IDs in addition to the normal information.
+
+除了正常信息之外，列出进程 id。
+
+-n
+Display information only about jobs that have changed status since the user was last notified of their status.
+
+只显示自上次通知用户其状态以来已更改状态的作业的信息。
+
+-p
+List only the process ID of the job’s process group leader.
+
+只列出作业流程组长的流程 ID。
+
+-r
+Display only running jobs.
+
+只显示正在运行的作业。
+
+-s
+Display only stopped jobs.
+
+只显示停止的作业。
+
+If jobspec is given, output is restricted to information about that job. If jobspec is not supplied, the status of all jobs is listed.
+
+如果给出了 jobspec，则输出仅限于有关该作业的信息。如果没有提供 jobspec，则列出所有作业的状态。
+
+If the -x option is supplied, jobs replaces any jobspec found in command or arguments with the corresponding process group ID, and executes command, passing it arguments, returning its exit status.
+
+如果提供了-x 选项，则作业将命令或参数中的任何 jobspec 替换为相应的进程组 ID，并执行命令，传递参数，返回退出状态。
+
+kill
+kill [-s sigspec] [-n signum] [-sigspec] jobspec or pid
+kill -l|-L [exit_status]
+Send a signal specified by sigspec or signum to the process named by job specification jobspec or process ID pid. sigspec is either a case-insensitive signal name such as SIGINT (with or without the SIG prefix) or a signal number; signum is a signal number. If sigspec and signum are not present, SIGTERM is used. The -l option lists the signal names. If any arguments are supplied when -l is given, the names of the signals corresponding to the arguments are listed, and the return status is zero. exit_status is a number specifying a signal number or the exit status of a process terminated by a signal. The -L option is equivalent to -l. The return status is zero if at least one signal was successfully sent, or non-zero if an error occurs or an invalid option is encountered.
+
+将由 sigspec 或 signum 指定的信号发送给由作业规范 jobspec 或进程 ID pid 命名的进程。Sigspec 要么是不区分大小写的信号名，如 SIGINT (带或不带 SIG 前缀) ，要么是信号号; signum 是信号号。如果没有 sigspec 和 signum，则使用 SIGTERM。L 选项列出了信号名称。如果在给出 -l 时提供任何参数，则列出与参数对应的信号的名称，并且返回状态为零。Exit _ status 是一个数字，它指定一个信号号或一个被信号终止的进程的退出状态。L 选项等价于 -l。如果至少成功发送了一个信号，返回状态为零; 如果发生错误或遇到无效选项，返回状态为非零。
+
+wait
+wait [-fn] [jobspec or pid …]
+Wait until the child process specified by each process ID pid or job specification jobspec exits and return the exit status of the last command waited for. If a job spec is given, all processes in the job are waited for. If no arguments are given, all currently active child processes are waited for, and the return status is zero. If the -n option is supplied, wait waits for a single job to terminate and returns its exit status. Supplying the -f option, when job control is enabled, forces wait to wait for each pid or jobspec to terminate before returning its status, intead of returning when it changes status. If neither jobspec nor pid specifies an active child process of the shell, the return status is 127.
+
+等待，直到每个进程 ID pid 或作业规范 jobspec 指定的子进程退出，并返回最后等待的命令的退出状态。如果给定了作业规范，则作业中的所有进程都将等待。如果没有给出参数，则等待所有当前活动的子进程，并且返回状态为零。如果提供了 -n 选项，则等待单个作业终止并返回其退出状态。如果提供-f 选项，则在启用作业控制时，强制等待每个 pid 或 jobspec 终止后才返回其状态，并在其更改状态时返回。如果 jobspec 或 pid 都不指定 shell 的活动子进程，则返回状态为127。
+
+disown
+disown [-ar] [-h] [jobspec … | pid … ]
+Without options, remove each jobspec from the table of active jobs. If the -h option is given, the job is not removed from the table, but is marked so that SIGHUP is not sent to the job if the shell receives a SIGHUP. If jobspec is not present, and neither the -a nor the -r option is supplied, the current job is used. If no jobspec is supplied, the -a option means to remove or mark all jobs; the -r option without a jobspec argument restricts operation to running jobs.
+
+如果没有选项，则从活动作业表中删除每个作业规范。如果给定了-h 选项，则不会从表中删除作业，而是标记作业，以便在 shell 接收到 SIGHUP 时，不会将 SIGHUP 发送到作业。如果没有 jobspec，而且既没有提供 -a 也没有提供 -r 选项，则使用当前作业。如果没有提供 jobspec,-a 选项意味着删除或标记所有作业; 没有 jobspec 参数的-r 选项将操作限制为运行作业。
+
+suspend
+suspend [-f]
+Suspend the execution of this shell until it receives a SIGCONT signal. A login shell cannot be suspended; the -f option can be used to override this and force the suspension.
+
+暂停这个 shell 的执行，直到它接收到一个 SIGCONT 信号。登录 shell 不能挂起; 可以使用-f 选项来覆盖这个选项并强制挂起。
+
+When job control is not active, the kill and wait builtins do not accept jobspec arguments. They must be supplied process IDs.
+
+当作业控制不活动时，kill 和 wait 内置函数不接受 jobspec 参数。必须提供进程 id。
+
+Previous: Job Control Builtins, Up: Job Control   [Contents][Index]
+
+上一篇: 作业控制内建，向上: 作业控制[目录][索引]
+
+7.3 Job Control Variables
+7.3工作控制变量
+auto_resume
+This variable controls how the shell interacts with the user and job control. If this variable exists then single word simple commands without redirections are treated as candidates for resumption of an existing job. There is no ambiguity allowed; if there is more than one job beginning with the string typed, then the most recently accessed job will be selected. The name of a stopped job, in this context, is the command line used to start it. If this variable is set to the value ‘exact’, the string supplied must match the name of a stopped job exactly; if set to ‘substring’, the string supplied needs to match a substring of the name of a stopped job. The ‘substring’ value provides functionality analogous to the ‘%?’ job ID (see Job Control Basics). If set to any other value, the supplied string must be a prefix of a stopped job’s name; this provides functionality analogous to the ‘%’ job ID.
+
+这个变量控制 shell 如何与用户和作业控件进行交互。如果这个变量存在，那么单个单词没有重定向的简单命令将被视为恢复现有工作的候选对象。不允许有任何歧义; 如果有一个以字符串类型开头的作业，那么将选择最近访问的作业。在此上下文中，已停止作业的名称是用于启动它的命令行。如果将此变量设置为值‘ exact’ ，则提供的字符串必须与已停止作业的名称完全匹配; 如果将其设置为‘ substring’ ，则提供的字符串需要与已停止作业的名称的子字符串匹配。“ substring”值提供了类似于“% ? ”的功能作业 ID (参见作业控制基础)。如果设置为任何其他值，提供的字符串必须是已停止作业名称的前缀; 这提供了类似于‘% ’作业 ID 的功能。
+
+Next: Using History Interactively, Previous: Job Control, Up: Top   [Contents][Index]
+
+下一步: 交互使用历史，上一步: 作业控制，向上: 顶部[目录][索引]
+
+
+
+
+

@@ -1,0 +1,1151 @@
+
+
+6 Bash Features
+6 Bash 功能
+This chapter describes features unique to Bash.
+
+本章描述了 Bash 所特有的特性。
+
+• Invoking Bash 调用 Bash:	  	Command line options that you can give to Bash. 可以提供给 Bash 的命令行选项
+• Bash Startup Files Bash 启动文件:	  	When and how Bash executes scripts. 什么时候以及如何执行脚本
+• Interactive Shells 交互式 shell:	  	What an interactive shell is. 什么是交互式 shell
+• Bash Conditional Expressions 重击条件表达式:	  	Primitives used in composing expressions for the 元素的表达式组合中使用的基元test builtin. 内建的
+• Shell Arithmetic Shell 算术:	  	Arithmetic on shell variables. Shell 变量的算法
+• Aliases 别名:	  	Substituting one command for another. 用一个命令替换另一个命令
+• Arrays 数组:	  	Array Variables. 数组变量
+• The Directory Stack 目录堆栈:	  	History of visited directories. 访问目录的历史
+• Controlling the Prompt 控制提示符:	  	Customizing the various prompt strings. 自定义各种提示字符串
+• The Restricted Shell 受限壳牌:	  	A more controlled mode of shell execution. 一种更受控制的 shell 执行模式
+• Bash POSIX Mode 重击 POSIX 模式:	  	Making Bash behave more closely to what the POSIX standard specifies. 使 Bash 的行为更接近 POSIX 标准所指定的内容
+Next: Bash Startup Files, Up: Bash Features   [Contents][Index]
+
+下一步: Bash 启动文件，向上: Bash 特性[目录][索引]
+
+6.1 Invoking Bash
+6.1调用 Bash
+bash [long-opt] [-ir] [-abefhkmnptuvxdBCDHP] [-o option]
+    [-O shopt_option] [argument …]
+bash [long-opt] [-abefhkmnptuvxdBCDHP] [-o option]
+    [-O shopt_option] -c string [argument …]
+bash [long-opt] -s [-abefhkmnptuvxdBCDHP] [-o option]
+    [-O shopt_option] [argument …]
+All of the single-character options used with the set builtin (see The Set Builtin) can be used as options when the shell is invoked. In addition, there are several multi-character options that you can use. These options must appear on the command line before the single-character options to be recognized.
+
+当 shell 被调用时，所有与 Set Builtin 一起使用的单字符选项(参见 The Set Builtin)都可以作为选项使用。此外，还有几个可以使用的多字符选项。这些选项必须出现在要识别的单字符选项之前的命令行上。
+
+--debugger
+Arrange for the debugger profile to be executed before the shell starts. Turns on extended debugging mode (see The Shopt Builtin for a description of the extdebug option to the shopt builtin).
+
+安排在 shell 启动之前执行调试器配置文件。打开扩展调试模式(参见 The Shopt Builtin 获得对 Shopt Builtin 的 extdebug 选项的描述)。
+
+--dump-po-strings
+A list of all double-quoted strings preceded by ‘$’ is printed on the standard output in the GNU gettext PO (portable object) file format. Equivalent to -D except for the output format.
+
+在标准输出上以 GNU gettext PO (可移植对象)文件格式打印出所有前面加“ $”的双引号字符串列表。除了输出格式之外，等效于 -d。
+
+--dump-strings
+Equivalent to -D.
+
+相当于 -d。
+
+--help
+Display a usage message on standard output and exit successfully.
+
+在标准输出上显示使用信息并成功退出。
+
+--init-file filename
+--rcfile filename
+Execute commands from filename (instead of ~/.bashrc) in an interactive shell.
+
+在交互式 shell 中从文件名(而不是 ~/. bashrc)执行命令。
+
+--login
+Equivalent to -l.
+
+等价于 -1。
+
+--noediting
+Do not use the GNU Readline library (see Command Line Editing) to read command lines when the shell is interactive.
+
+当 shell 是交互式的时候，不要使用 GNU Readline 库(请参阅命令行编辑)来读取命令行。
+
+--noprofile
+Don’t load the system-wide startup file /etc/profile or any of the personal initialization files ~/.bash_profile, ~/.bash_login, or ~/.profile when Bash is invoked as a login shell.
+
+不要加载系统范围的启动文件/etc/profile 或任何个人初始化文件 ~/。配置文件。Bash _ login，或 ~/。当 Bash 作为登录 shell 被调用时。
+
+--norc
+Don’t read the ~/.bashrc initialization file in an interactive shell. This is on by default if the shell is invoked as sh.
+
+不要读 ~/。交互式 shell 中的 bashrc 初始化文件。如果 shell 作为 sh 调用，默认情况下是打开的。
+
+--posix
+Change the behavior of Bash where the default operation differs from the POSIX standard to match the standard. This is intended to make Bash behave as a strict superset of that standard. See Bash POSIX Mode, for a description of the Bash POSIX mode.
+
+在缺省操作与 POSIX 标准不同的地方更改 Bash 的行为，以便与标准匹配。这样做的目的是使 Bash 作为该标准的一个严格的超集运行。有关 bashposix 模式的说明，请参见 bashposix 模式。
+
+--restricted
+Make the shell a restricted shell (see The Restricted Shell).
+
+使 Shell 成为受限制的 Shell (请参阅受限制的 Shell)。
+
+--verbose
+Equivalent to -v. Print shell input lines as they’re read.
+
+相当于 -v. 的输入行在读取时打印出来。
+
+--version
+Show version information for this instance of Bash on the standard output and exit successfully.
+
+在标准输出上显示此 Bash 实例的版本信息，并成功退出。
+
+There are several single-character options that may be supplied at invocation which are not available with the set builtin.
+
+有几个单字符的选项可以在调用时提供，而这些选项在 set 内建中不可用。
+
+-c
+Read and execute commands from the first non-option argument command_string, then exit. If there are arguments after the command_string, the first argument is assigned to $0 and any remaining arguments are assigned to the positional parameters. The assignment to $0 sets the name of the shell, which is used in warning and error messages.
+
+从第一个非选项参数 command _ string 读取并执行命令，然后退出。如果命令 _ string 后面有参数，则将第一个参数分配给 $0，并将其余的参数分配给位置参数。赋值为 $0设置 shell 的名称，该名称用于警告和错误消息。
+
+-i
+Force the shell to run interactively. Interactive shells are described in Interactive Shells.
+
+强制 shell 以交互方式运行。交互式 shell 中描述了交互式 shell。
+
+-l
+Make this shell act as if it had been directly invoked by login. When the shell is interactive, this is equivalent to starting a login shell with ‘exec -l bash’. When the shell is not interactive, the login shell startup files will be executed. ‘exec bash -l’ or ‘exec bash --login’ will replace the current shell with a Bash login shell. See Bash Startup Files, for a description of the special behavior of a login shell.
+
+使这个 shell 表现得好像它已经被 login 直接调用了一样。当 shell 是交互式的时候，这相当于用“ exec-l bash”启动一个登录 shell。当 shell 不是交互式的时候，将执行登录 shell 启动文件。“ exec Bash-l”或“ exec Bash -- login”将用 Bash 登录 shell 替换当前 shell。有关登录 shell 的特殊行为的说明，请参见 Bash 启动文件。
+
+-r
+Make the shell a restricted shell (see The Restricted Shell).
+
+使 Shell 成为受限制的 Shell (请参阅受限制的 Shell)。
+
+-s
+If this option is present, or if no arguments remain after option processing, then commands are read from the standard input. This option allows the positional parameters to be set when invoking an interactive shell or when reading input through a pipe.
+
+如果存在此选项，或者在选项处理之后没有留下参数，则从标准输入读取命令。此选项允许在调用交互式 shell 或通过管道读取输入时设置位置参数。
+
+-D
+A list of all double-quoted strings preceded by ‘$’ is printed on the standard output. These are the strings that are subject to language translation when the current locale is not C or POSIX (see Locale Translation). This implies the -n option; no commands will be executed.
+
+在标准输出中打印出所有前面加“ $”的双引号字符串列表。当当前语言环境不是 c 或 POSIX 时，这些字符串将接受语言翻译(请参阅语言环境翻译)。这意味着-n 选项; 不执行任何命令。
+
+[-+]O [shopt_option]
+shopt_option is one of the shell options accepted by the shopt builtin (see The Shopt Builtin). If shopt_option is present, -O sets the value of that option; +O unsets it. If shopt_option is not supplied, the names and values of the shell options accepted by shopt are printed on the standard output. If the invocation option is +O, the output is displayed in a format that may be reused as input.
+
+Shopt _ 选项是 Shopt 内建接受的外壳选项之一(参见 theshopt 内建)。如果存在 shopt_ 选项,-o 设置该选项的值; + o 取消设置该选项。如果没有提供 shopt _ 选项，则在标准输出中打印 shopt 接受的 shell 选项的名称和值。如果调用选项为 + o，则输出将以可作为输入重用的格式显示。
+
+--
+A -- signals the end of options and disables further option processing. Any arguments after the -- are treated as filenames and arguments.
+
+A -- 表示选项结束，并禁用进一步的选项处理。-- 之后的任何参数都被视为文件名和参数。
+
+A login shell is one whose first character of argument zero is ‘-’, or one invoked with the --login option.
+
+登录 shell 的第一个参数字符是‘-’ ，或者使用 -- login 选项调用。
+
+An interactive shell is one started without non-option arguments, unless -s is specified, without specifying the -c option, and whose input and output are both connected to terminals (as determined by isatty(3)), or one started with the -i option. See Interactive Shells, for more information.
+
+交互式外壳程序启动时没有非选项参数，除非指定-s，没有指定-c 选项，并且其输入和输出都连接到终端(由 isatty (3)决定) ，或者由-i 选项启动。有关更多信息，请参见交互式 shell。
+
+If arguments remain after option processing, and neither the -c nor the -s option has been supplied, the first argument is assumed to be the name of a file containing shell commands (see Shell Scripts). When Bash is invoked in this fashion, $0 is set to the name of the file, and the positional parameters are set to the remaining arguments. Bash reads and executes commands from this file, then exits. Bash’s exit status is the exit status of the last command executed in the script. If no commands are executed, the exit status is 0.
+
+如果参数在选项处理之后仍然存在，而且既没有提供-c 也没有提供-s 选项，则假定第一个参数是包含 Shell 命令的文件的名称(参见 Shell 脚本)。当以这种方式调用 Bash 时，将 $0设置为文件名，并将位置参数设置为其余的参数。Bash 从该文件中读取并执行命令，然后退出。Bash 的退出状态是脚本中执行的最后一个命令的退出状态。如果没有执行命令，则退出状态为0。
+
+Next: Interactive Shells, Previous: Invoking Bash, Up: Bash Features   [Contents][Index]
+
+下一步: 交互式 shell，上一步: 调用 Bash，向上: Bash 特性[目录][索引]
+
+6.2 Bash Startup Files
+6.2 Bash 启动文件
+This section describes how Bash executes its startup files. If any of the files exist but cannot be read, Bash reports an error. Tildes are expanded in filenames as described above under Tilde Expansion (see Tilde Expansion).
+
+本节描述 Bash 如何执行其启动文件。如果有任何文件存在但无法读取，则 Bash 报告错误。在文件名中展开波浪线，如上面在波浪线展开部分所述(参见波浪线展开部分)。
+
+Interactive shells are described in Interactive Shells.
+
+交互式 shell 是在交互式 shell 中描述的。
+
+Invoked as an interactive login shell, or with --login
+作为交互式登录 shell 调用，或者使用 -- login
+When Bash is invoked as an interactive login shell, or as a non-interactive shell with the --login option, it first reads and executes commands from the file /etc/profile, if that file exists. After reading that file, it looks for ~/.bash_profile, ~/.bash_login, and ~/.profile, in that order, and reads and executes commands from the first one that exists and is readable. The --noprofile option may be used when the shell is started to inhibit this behavior.
+
+当 Bash 作为交互式登录 shell 调用时，或者作为带有 -- login 选项的非交互式 shell 调用时，如果存在该文件，它首先从文件/etc/profile 读取并执行命令。读取该文件后，它将查找 ~/。配置文件。Bash _ login，and ~/.配置文件，并从存在且可读的第一个配置文件读取和执行命令。当 shell 启动时，可以使用 -- noprofile 选项来抑制此行为。
+
+When an interactive login shell exits, or a non-interactive login shell executes the exit builtin command, Bash reads and executes commands from the file ~/.bash_logout, if it exists.
+
+当交互式登录 shell 退出时，或者非交互式登录 shell 执行 exit builtin 命令时，Bash 从文件 ~/中读取并执行命令。注销，如果它存在的话。
+
+Invoked as an interactive non-login shell
+作为交互式非登录 shell 调用
+When an interactive shell that is not a login shell is started, Bash reads and executes commands from ~/.bashrc, if that file exists. This may be inhibited by using the --norc option. The --rcfile file option will force Bash to read and execute commands from file instead of ~/.bashrc.
+
+当非登录 shell 的交互式 shell 启动时，Bash 从 ~/读取并执行命令。Bashrc 如果文件存在的话。使用 -- norc 选项可能会抑制这种情况。Rcfile file 选项将强制 Bash 从文件而不是 ~/中读取和执行命令。巴什克。
+
+So, typically, your ~/.bash_profile contains the line
+
+因此，通常情况下，您的 ~/. bash _ 配置文件包含这一行
+
+if [ -f ~/.bashrc ]; then . ~/.bashrc; fi
+after (or before) any login-specific initializations.
+
+在任何特定于登录的初始化之后(或之前)。
+
+Invoked non-interactively
+非交互式调用
+When Bash is started non-interactively, to run a shell script, for example, it looks for the variable BASH_ENV in the environment, expands its value if it appears there, and uses the expanded value as the name of a file to read and execute. Bash behaves as if the following command were executed:
+
+例如，当非交互式启动 BASH 以运行 shell 脚本时，它会在环境中查找变量 BASH _ env，如果它出现在环境中，则会扩展它的值，并使用展开后的值作为要读取和执行的文件的名称。Bash 的行为就好像执行了以下命令:
+
+if [ -n "$BASH_ENV" ]; then . "$BASH_ENV"; fi
+but the value of the PATH variable is not used to search for the filename.
+
+但是 PATH 变量的值不用于搜索文件名。
+
+As noted above, if a non-interactive shell is invoked with the --login option, Bash attempts to read and execute commands from the login shell startup files.
+
+如上所述，如果使用 -- login 选项调用非交互式 shell，Bash 将尝试从登录 shell 启动文件中读取和执行命令。
+
+Invoked with name sh
+使用名称 sh 调用
+If Bash is invoked with the name sh, it tries to mimic the startup behavior of historical versions of sh as closely as possible, while conforming to the POSIX standard as well.
+
+如果使用名称 sh 调用 Bash，它将尽可能模仿 sh 的历史版本的启动行为，同时也遵循 POSIX 标准。
+
+When invoked as an interactive login shell, or as a non-interactive shell with the --login option, it first attempts to read and execute commands from /etc/profile and ~/.profile, in that order. The --noprofile option may be used to inhibit this behavior. When invoked as an interactive shell with the name sh, Bash looks for the variable ENV, expands its value if it is defined, and uses the expanded value as the name of a file to read and execute. Since a shell invoked as sh does not attempt to read and execute commands from any other startup files, the --rcfile option has no effect. A non-interactive shell invoked with the name sh does not attempt to read any other startup files.
+
+当作为交互式登录 shell 或作为带有 -- login 选项的非交互式 shell 调用时，它首先尝试从/etc/profile 和 ~/读取并执行命令。侧写，按这个顺序。Noprofile 选项可用于抑制此行为。当作为名为 sh 的交互式 shell 调用时，Bash 查找变量 ENV，如果定义了变量，则扩展其值，并使用扩展值作为要读取和执行的文件的名称。由于作为 sh 调用的 shell 不会尝试从任何其他启动文件读取和执行命令，-- rcfile 选项没有任何作用。使用 sh 名称调用的非交互式 shell 不会尝试读取任何其他启动文件。
+
+When invoked as sh, Bash enters POSIX mode after the startup files are read.
+
+当作为 sh 调用时，Bash 在读取启动文件后进入 POSIX 模式。
+
+Invoked in POSIX mode
+在 POSIX 模式下调用
+When Bash is started in POSIX mode, as with the --posix command line option, it follows the POSIX standard for startup files. In this mode, interactive shells expand the ENV variable and commands are read and executed from the file whose name is the expanded value. No other startup files are read.
+
+当 Bash 在 POSIX 模式下启动时，与 -- POSIX 命令行选项一样，它遵循 POSIX 启动文件标准。在这种模式下，交互式 shell 展开 ENV 变量，并从名为展开值的文件中读取和执行命令。不读取其他启动文件。
+
+Invoked by remote shell daemon
+由远程 shell 守护进程调用
+Bash attempts to determine when it is being run with its standard input connected to a network connection, as when executed by the remote shell daemon, usually rshd, or the secure shell daemon sshd. If Bash determines it is being run in this fashion, it reads and executes commands from ~/.bashrc, if that file exists and is readable. It will not do this if invoked as sh. The --norc option may be used to inhibit this behavior, and the --rcfile option may be used to force another file to be read, but neither rshd nor sshd generally invoke the shell with those options or allow them to be specified.
+
+Bash 试图确定何时运行它，并将其标准输入连接到网络连接，如何由远程 shell 守护进程(通常是 rshd)或安全 shell 守护进程 sshd 执行。如果 Bash 确定它以这种方式运行，它将从 ~/读取并执行命令。Bashrc，如果这个文件存在并且可读。如果作为 sh 调用，则不会执行此操作。可以使用 -- norc 选项来禁止这种行为，而 -- rcfile 选项可以用来强制读取另一个文件，但是 rshd 和 sshd 通常都不会使用这些选项来调用 shell，也不允许指定这些选项。
+
+Invoked with unequal effective and real UID/GIDs
+使用不同的有效和真实 uid/gid 调用
+If Bash is started with the effective user (group) id not equal to the real user (group) id, and the -p option is not supplied, no startup files are read, shell functions are not inherited from the environment, the SHELLOPTS, BASHOPTS, CDPATH, and GLOBIGNORE variables, if they appear in the environment, are ignored, and the effective user id is set to the real user id. If the -p option is supplied at invocation, the startup behavior is the same, but the effective user id is not reset.
+
+如果 Bash 以有效用户(组) id 开始，并且没有提供-p 选项，没有读取启动文件，没有从环境继承 shell 函数，则忽略 SHELLOPTS、 BASHOPTS、 CDPATH 和 GLOBIGNORE 变量(如果它们出现在环境中) ，并将有效用户 id 设置为真实用户 id。如果在调用时提供-p 选项，则启动行为相同，但不重置有效用户 id。
+
+Next: Bash Conditional Expressions, Previous: Bash Startup Files, Up: Bash Features   [Contents][Index]
+
+下一步: Bash 条件表达式，上一步: Bash 启动文件，向上: Bash 特性[内容][索引]
+
+6.3 Interactive Shells
+6.3交互式 shell
+• What is an Interactive Shell? 什么是交互式 Shell？:	  	What determines whether a shell is Interactive. 决定 shell 是否交互的因素
+• Is this Shell Interactive? 这是 Shell 互动的吗？:	  	How to tell if a shell is interactive. 如何判断 shell 是否具有交互性
+• Interactive Shell Behavior 交互式 Shell 行为:	  	What changes in a interactive shell? 交互式 shell 中的变化是什么？
+Next: Is this Shell Interactive?, Up: Interactive Shells   [Contents][Index]
+
+下一步: 这个 Shell 是交互式的吗? 向上: 交互式 Shell [内容][索引]
+
+6.3.1 What is an Interactive Shell?
+6.3.1什么是交互式 Shell？
+An interactive shell is one started without non-option arguments, unless -s is specified, without specifying the -c option, and whose input and error output are both connected to terminals (as determined by isatty(3)), or one started with the -i option.
+
+交互式外壳程序启动时没有非选项参数，除非指定-s，没有指定-c 选项，并且其输入和错误输出都连接到终端(由 isatty (3)决定) ，或者由-i 选项启动。
+
+An interactive shell generally reads from and writes to a user’s terminal.
+
+交互式 shell 通常从用户的终端读取和写入数据。
+
+The -s invocation option may be used to set the positional parameters when an interactive shell is started.
+
+S 调用选项可用于在启动交互式 shell 时设置位置参数。
+
+Next: Interactive Shell Behavior, Previous: What is an Interactive Shell?, Up: Interactive Shells   [Contents][Index]
+
+下一步: 交互式 Shell 行为，上一步: 什么是交互式 Shell? 上一步: 交互式 Shell [内容][索引]
+
+6.3.2 Is this Shell Interactive?
+6.3.2这是 Shell Interactive 吗？
+To determine within a startup script whether or not Bash is running interactively, test the value of the ‘-’ special parameter. It contains i when the shell is interactive. For example:
+
+要在启动脚本中确定 Bash 是否交互运行，请测试“-”特殊参数的值。当 shell 是交互式的时候，它包含 i。例如:
+
+case "$-" in
+*i*)	echo This shell is interactive ;;
+*)	echo This shell is not interactive ;;
+esac
+Alternatively, startup scripts may examine the variable PS1; it is unset in non-interactive shells, and set in interactive shells. Thus:
+
+或者，启动脚本可以检查变量 PS1; 它在非交互式 shell 中未设置，而是在交互式 shell 中设置:
+
+if [ -z "$PS1" ]; then
+        echo This shell is not interactive
+else
+        echo This shell is interactive
+fi
+Previous: Is this Shell Interactive?, Up: Interactive Shells   [Contents][Index]
+
+上一页: 这个 Shell 是交互式的吗? 向上: 交互式 Shell [内容][索引]
+
+6.3.3 Interactive Shell Behavior
+6.3.3交互式 Shell 行为
+When the shell is running interactively, it changes its behavior in several ways.
+
+当 shell 以交互方式运行时，它通过几种方式改变其行为。
+
+Startup files are read and executed as described in 如下所述，读取并执行启动文件Bash Startup Files Bash 启动文件.
+Job Control (see 作业控制(见Job Control 工作控制) is enabled by default. When job control is in effect, Bash ignores the keyboard-generated job control signals )默认启用。当 jobcontrol 生效时，Bash 忽略键盘生成的作业控制信号SIGTTIN, SIGTTOU, and ，及SIGTSTP.
+Bash expands and displays Bash 展开并显示PS1 before reading the first line of a command, and expands and displays 然后读取命令的第一行，并展开和显示PS2 before reading the second and subsequent lines of a multi-line command. Bash expands and displays 在读取多行命令的第二行和后续行之前PS0 after it reads a command but before executing it. See 在它读取一个命令之后但是在执行它之前Controlling the Prompt 控制提示符, for a complete list of prompt string escape sequences. ，获取提示字符串转义序列的完整列表
+Bash executes the value of the 属性的值执行PROMPT_COMMAND variable as a command before printing the primary prompt, 变量作为一个命令，然后打印主提示符,$PS1 (see (见Bash Variables Bash 变量).
+Readline (see 阅读行(见Command Line Editing 命令行编辑) is used to read commands from the user’s terminal. )用于从用户的终端读取命令
+Bash inspects the value of the Bash 检查ignoreeof option to 选择set -o instead of exiting immediately when it receives an 而不是立即退出时，收到一个EOF on its standard input when reading a command (see 读取命令时的标准输入(参见The Set Builtin 布景内置).
+Command history (see 命令历史记录(参见Bash History Facilities 历史设施) and history expansion (see )及历史扩展(详见History Interaction 历史互动) are enabled by default. Bash will save the command history to the file named by )默认启用。 Bash 将命令历史保存到$HISTFILE when a shell with history enabled exits. 当启用历史记录的 shell 退出时
+Alias expansion (see 别名扩展(见Aliases 别名) is performed by default. )在缺省情况下执行
+In the absence of any traps, Bash ignores 在没有任何陷阱的情况下，Bash 忽略SIGTERM (see (见Signals 信号).
+In the absence of any traps, 没有陷阱,SIGINT is caught and handled (see 被抓获和处理(见Signals 信号). SIGINT will interrupt some shell builtins. 会打断一些壳的生成
+An interactive login shell sends a 交互式登录 shell 会发送一个SIGHUP to all jobs on exit if the 所有的工作，在 exitifhuponexit shell option has been enabled (see Shell 选项已启用(请参见Signals 信号).
+The 这个-n - n invocation option is ignored, and ‘ 调用选项被忽略set -n Set-n’ has no effect (see 没有效果(见The Set Builtin 布景内置).
+Bash will check for mail periodically, depending on the values of the 属性的值定期检查邮件MAIL, MAILPATH, and ，及MAILCHECK shell variables (see Shell 变量(参见Bash Variables Bash 变量).
+Expansion errors due to references to unbound shell variables after ‘ “后引用未绑定的 shell 变量引起的展开错误set -u 集合’ has been enabled will not cause the shell to exit (see 已启用”不会导致 shell 退出(请参见The Set Builtin 布景内置).
+The shell will not exit on expansion errors caused by 外壳将不会退出由膨胀引起的错误var 变量 being unset or null in 没有检查结果${var:?word} expansions (see 扩展(见Shell Parameter Expansion 外壳参数展开).
+Redirection errors encountered by shell builtins will not cause the shell to exit. 外壳内置程序遇到的重定向错误不会导致外壳退出
+When running in 跑进去的时候POSIX Posixth mode, a special builtin returning an error status will not cause the shell to exit (see 模式时，返回错误状态的特殊内置函数不会导致 shell 退出(参见Bash POSIX Mode 重击 POSIX 模式).
+A failed A 失败了exec will not cause the shell to exit (see 不会导致 shell 退出(参见Bourne Shell Builtins 伯恩壳内置).
+Parser syntax errors will not cause the shell to exit. 解析器语法错误不会导致 shell 退出
+Simple spelling correction for directory arguments to the 对象的目录参数的简单拼写校正cd builtin is enabled by default (see the description of the 默认情况下启用内建函数(参见cdspell option to the 选择权shopt builtin in 嵌入The Shopt Builtin 商店大楼).
+The shell will check the value of the Shell 将检查TMOUT variable and exit if a command is not read within the specified number of seconds after printing 变量和 exitif 命令在打印后的指定秒数内没有读取$PS1 (see (见Bash Variables Bash 变量).
+Next: Shell Arithmetic, Previous: Interactive Shells, Up: Bash Features   [Contents][Index]
+
+下一步: Shell 算术，上一步: 交互式 Shell，上一步: Bash 特性[内容][索引]
+
+6.4 Bash Conditional Expressions
+6.4 Bash 条件表达式
+Conditional expressions are used by the [[ compound command and the test and [ builtin commands. The test and [ commands determine their behavior based on the number of arguments; see the descriptions of those commands for any other command-specific actions.
+
+条件表达式由[[复合命令和 test 以及[内建命令]使用。测试和[命令根据参数的数量确定它们的行为; 请参阅这些命令的描述，以了解任何其他特定于命令的操作。
+
+Expressions may be unary or binary, and are formed from the following primaries. Unary expressions are often used to examine the status of a file. There are string operators and numeric comparison operators as well. Bash handles several filenames specially when they are used in expressions. If the operating system on which Bash is running provides these special files, Bash will use them; otherwise it will emulate them internally with this behavior: If the file argument to one of the primaries is of the form /dev/fd/N, then file descriptor N is checked. If the file argument to one of the primaries is one of /dev/stdin, /dev/stdout, or /dev/stderr, file descriptor 0, 1, or 2, respectively, is checked.
+
+表达式可以是一元的，也可以是二元的，它们由以下三元组成。一元表达式通常用于检查文件的状态。还有字符串运算符和数值比较运算符。当在表达式中使用多个文件名时，Bash 会专门处理它们。如果 Bash 运行的操作系统提供了这些特殊文件，那么 Bash 将使用它们; 否则，它将用这种行为在内部模拟它们: 如果其中一个主元的文件参数是/dev/fd/N，那么将检查文件描述符 n。如果其中一个主元素的文件参数是/dev/stdin、/dev/stdout 或/dev/stderr 中的一个，则分别检查文件描述符0、1或2。
+
+When used with [[, the ‘<’ and ‘>’ operators sort lexicographically using the current locale. The test command uses ASCII ordering.
+
+当与[[]一起使用时，‘ < ’和‘ > ’运算符使用当前语言环境按字母顺序排序。测试命令使用 ASCII 排序。
+
+Unless otherwise specified, primaries that operate on files follow symbolic links and operate on the target of the link, rather than the link itself.
+
+除非另有说明，对文件进行操作的初选跟随符号链接并对链接的目标进行操作，而不是链接本身。
+
+-a file
+True if file exists.
+
+如果文件存在，则为 True。
+
+-b file
+True if file exists and is a block special file.
+
+如果文件存在并且是块特殊文件，则为 True。
+
+-c file
+True if file exists and is a character special file.
+
+如果文件存在并且是字符特殊文件，则为 True。
+
+-d file
+True if file exists and is a directory.
+
+如果文件存在并且是目录，则为 True。
+
+-e file
+True if file exists.
+
+如果文件存在，则为 True。
+
+-f file
+True if file exists and is a regular file.
+
+如果文件存在并且是常规文件，则为 True。
+
+-g file
+True if file exists and its set-group-id bit is set.
+
+如果文件存在并且设置了它的 set-group-id 位，则为 True。
+
+-h file
+True if file exists and is a symbolic link.
+
+如果文件存在并且是符号链接，则为 True。
+
+-k file
+True if file exists and its "sticky" bit is set.
+
+如果文件存在并且设置了“ sticky”位，则为 True。
+
+-p file
+True if file exists and is a named pipe (FIFO).
+
+如果文件存在并且是命名管道(FIFO) ，则为 True。
+
+-r file
+True if file exists and is readable.
+
+如果文件存在且可读，则为 True。
+
+-s file
+True if file exists and has a size greater than zero.
+
+如果文件存在且大小大于零，则为 True。
+
+-t fd
+True if file descriptor fd is open and refers to a terminal.
+
+如果文件描述符 fd 为 open 并引用终端，则为 True。
+
+-u file
+True if file exists and its set-user-id bit is set.
+
+如果文件存在并且设置了其 set-user-id 位，则为 True。
+
+-w file
+True if file exists and is writable.
+
+如果文件存在且可写，则为 True。
+
+-x file
+True if file exists and is executable.
+
+如果文件存在且可执行，则为 True。
+
+-G file
+True if file exists and is owned by the effective group id.
+
+如果文件存在且由有效组 id 拥有，则为 True。
+
+-L file
+True if file exists and is a symbolic link.
+
+如果文件存在并且是符号链接，则为 True。
+
+-N file
+True if file exists and has been modified since it was last read.
+
+如果文件存在并且自上次读取以来已被修改，则为 True。
+
+-O file
+True if file exists and is owned by the effective user id.
+
+如果文件存在且由有效用户 id 拥有，则为 True。
+
+-S file
+True if file exists and is a socket.
+
+如果文件存在并且是套接字，则为 True。
+
+file1 -ef file2
+True if file1 and file2 refer to the same device and inode numbers.
+
+如果 file1和 file2引用相同的设备和 inode 号，则为 True。
+
+file1 -nt file2
+True if file1 is newer (according to modification date) than file2, or if file1 exists and file2 does not.
+
+如果 file1比 file2更新(根据修改日期) ，或者 file1存在而 file2不存在，则为 True。
+
+file1 -ot file2
+True if file1 is older than file2, or if file2 exists and file1 does not.
+
+如果 file1比 file2老，或者 file2存在而 file1不存在，则为 True。
+
+-o optname
+True if the shell option optname is enabled. The list of options appears in the description of the -o option to the set builtin (see The Set Builtin).
+
+如果启用了 shell 选项 optname，则为 True。选项列表出现在 Set 内建选项的-o 选项描述中(参见 The Set Builtin)。
+
+-v varname
+True if the shell variable varname is set (has been assigned a value).
+
+如果设置了 shell 变量 varname (已经赋值) ，则为 True。
+
+-R varname
+True if the shell variable varname is set and is a name reference.
+
+如果 shell 变量 varname 设置为名称引用，则为 True。
+
+-z string
+True if the length of string is zero.
+
+如果字符串长度为零，则为 True。
+
+-n string
+string
+True if the length of string is non-zero.
+
+如果字符串的长度非零，则为 True。
+
+string1 == string2
+string1 = string2
+True if the strings are equal. When used with the [[ command, this performs pattern matching as described above (see Conditional Constructs).
+
+如果字符串相等，则为 True。当与[命令一起使用时，这将按照上面描述的方式执行模式匹配操作(参见条件构造)。
+
+‘=’ should be used with the test command for POSIX conformance.
+
+应该与用于 POSIX 一致性的测试命令一起使用‘ = ’。
+
+string1 != string2
+True if the strings are not equal.
+
+如果字符串不相等，则为 True。
+
+string1 < string2
+True if string1 sorts before string2 lexicographically.
+
+如果 string1先于 string2按字母顺序排序，则为 True。
+
+string1 > string2
+True if string1 sorts after string2 lexicographically.
+
+如果 string1按照 string2字母顺序排序，则为 True。
+
+arg1 OP arg2
+OP is one of ‘-eq’, ‘-ne’, ‘-lt’, ‘-le’, ‘-gt’, or ‘-ge’. These arithmetic binary operators return true if arg1 is equal to, not equal to, less than, less than or equal to, greater than, or greater than or equal to arg2, respectively. Arg1 and arg2 may be positive or negative integers. When used with the [[ command, Arg1 and Arg2 are evaluated as arithmetic expressions (see Shell Arithmetic).
+
+OP 是“-eq”、“-ne”、“-lt”、“-le”、“-gt”或“-ge”的一种。如果 arg1分别等于、不等于、小于、小于或等于、大于或等于 arg2，则这些算术二元运算符返回 true。Arg1和 arg2可以是正整数，也可以是负整数。当与[命令一起使用时，Arg1和 Arg2作为算术表达式计算(参见 Shell 算术)。
+
+Next: Aliases, Previous: Bash Conditional Expressions, Up: Bash Features   [Contents][Index]
+
+下一步: 别名，上一步: Bash 条件表达式，向上: Bash 特性[目录][索引]
+
+6.5 Shell Arithmetic
+6.5 Shell 算术
+The shell allows arithmetic expressions to be evaluated, as one of the shell expansions or by using the (( compound command, the let builtin, or the -i option to the declare builtin.
+
+Shell 允许将算术表达式作为 shell 扩展的一部分进行计算，或者使用 declare builtin 的(((compound 命令、 let builtin 或-i 选项。
+
+Evaluation is done in fixed-width integers with no check for overflow, though division by 0 is trapped and flagged as an error. The operators and their precedence, associativity, and values are the same as in the C language. The following list of operators is grouped into levels of equal-precedence operators. The levels are listed in order of decreasing precedence.
+
+计算是在固定宽度的整数中完成的，没有检查溢出，尽管被捕获为0并标记为错误。运算符及其优先级、结合性和值与 c 语言中的相同。下面的运算符列表按等优先级运算符分组。这些级别按优先级递减的顺序列出。
+
+id++ id--
+variable post-increment and post-decrement
+
+变量后递增和后递减
+
+++id --id
+variable pre-increment and pre-decrement
+
+可变预递增和预递减
+
+- +
+unary minus and plus
+
+一元负加
+
+! ~
+logical and bitwise negation
+
+逻辑和按位否定
+
+**
+exponentiation
+
+指数运算
+
+* / %
+multiplication, division, remainder
+
+乘法，除法，余数
+
++ -
+addition, subtraction
+
+加法，减法
+
+<< >>
+left and right bitwise shifts
+
+左右位移
+
+<= >= < >
+comparison
+
+比较
+
+== !=
+equality and inequality
+
+平等与不平等
+
+&
+bitwise AND
+
+按位 AND
+
+^
+bitwise exclusive OR
+
+按位异或
+
+|
+bitwise OR
+
+按位或
+
+&&
+logical AND
+
+逻辑与
+
+||
+logical OR
+
+逻辑或
+
+expr ? expr : expr
+conditional operator
+
+条件运算符
+
+= *= /= %= += -= <<= >>= &= ^= |=
+assignment
+
+赋值
+
+expr1 , expr2
+comma
+
+逗号
+
+Shell variables are allowed as operands; parameter expansion is performed before the expression is evaluated. Within an expression, shell variables may also be referenced by name without using the parameter expansion syntax. A shell variable that is null or unset evaluates to 0 when referenced by name without using the parameter expansion syntax. The value of a variable is evaluated as an arithmetic expression when it is referenced, or when a variable which has been given the integer attribute using ‘declare -i’ is assigned a value. A null value evaluates to 0. A shell variable need not have its integer attribute turned on to be used in an expression.
+
+Shell 变量允许作为操作数; 在计算表达式之前执行参数展开。在表达式中，也可以通过名称引用 shell 变量，而无需使用参数展开语法。如果 shell 变量为 null 或未设置，则在不使用参数扩展语法的情况下，通过名称引用该变量时，其计算结果为0。当变量被引用时，或者当使用‘ declare-i’赋予整数属性的变量被赋值时，变量的值作为算术表达式计算。空值的计算结果为0。Shell 变量不需要打开它的 integer 属性就可以在表达式中使用。
+
+Constants with a leading 0 are interpreted as octal numbers. A leading ‘0x’ or ‘0X’ denotes hexadecimal. Otherwise, numbers take the form [base#]n, where the optional base is a decimal number between 2 and 64 representing the arithmetic base, and n is a number in that base. If base# is omitted, then base 10 is used. When specifying n, the digits greater than 9 are represented by the lowercase letters, the uppercase letters, ‘@’, and ‘_’, in that order. If base is less than or equal to 36, lowercase and uppercase letters may be used interchangeably to represent numbers between 10 and 35.
+
+前导为0的常量被解释为八进制数。前导的“0X”或“0X”表示十六进制。否则，数字采用[ base # ] n 的格式，其中可选的基数是介于2和64之间的十进制数，表示算术基数，而 n 是该基数中的一个数。如果省略 base # ，则使用 base 10。当指定 n 时，大于9的数字按照小写字母、大写字母、“@”和“ _”的顺序表示。如果基数小于或等于36，小写字母和大写字母可以互换使用来表示介于10和35之间的数字。
+
+Operators are evaluated in order of precedence. Sub-expressions in parentheses are evaluated first and may override the precedence rules above.
+
+运算符在优先顺序中进行求值，括号中的子表达式首先进行求值，并且可以覆盖上面的优先规则。
+
+Next: Arrays, Previous: Shell Arithmetic, Up: Bash Features   [Contents][Index]
+
+下一步: 数组，上一步: Shell 算术，上一步: Bash 特性[目录][索引]
+
+6.6 Aliases
+6.6别名
+Aliases allow a string to be substituted for a word when it is used as the first word of a simple command. The shell maintains a list of aliases that may be set and unset with the alias and unalias builtin commands.
+
+别名允许字符串在用作简单命令的第一个单词时替换该单词。Shell 维护一个别名列表，这些别名可以使用别名和无别名内建命令设置和取消设置。
+
+The first word of each simple command, if unquoted, is checked to see if it has an alias. If so, that word is replaced by the text of the alias. The characters ‘/’, ‘$’, ‘`’, ‘=’ and any of the shell metacharacters or quoting characters listed above may not appear in an alias name. The replacement text may contain any valid shell input, including shell metacharacters. The first word of the replacement text is tested for aliases, but a word that is identical to an alias being expanded is not expanded a second time. This means that one may alias ls to "ls -F", for instance, and Bash does not try to recursively expand the replacement text. If the last character of the alias value is a blank, then the next command word following the alias is also checked for alias expansion.
+
+检查每个简单命令的第一个单词(如果没有引号)是否有别名。如果是这样，该单词将替换为别名的文本。字符‘/’、‘ $’、‘’、‘ = ’和上面列出的任何 shell 元字符或引用字符都不能出现在别名中。替换文本可以包含任何有效的 shell 输入，包括 shell 元字符。对替换文本的第一个单词进行别名测试，但是与正在展开的别名相同的单词不会进行第二次展开。这意味着可以将 ls 别名为“ ls-f” ，例如，Bash 不会尝试递归扩展替换文本。如果别名值的最后一个字符为空，则也会检查别名后面的下一个命令字是否有别名展开。
+
+Aliases are created and listed with the alias command, and removed with the unalias command.
+
+别名使用 alias 命令创建和列出，并使用 unalias 命令删除。
+
+There is no mechanism for using arguments in the replacement text, as in csh. If arguments are needed, a shell function should be used (see Shell Functions).
+
+在替换文本中没有像 csh 中那样使用参数的机制。如果需要参数，应该使用 Shell 函数(参见 Shell 函数)。
+
+Aliases are not expanded when the shell is not interactive, unless the expand_aliases shell option is set using shopt (see The Shopt Builtin).
+
+如果 shell 不是交互式的，则不会展开别名，除非使用 Shopt 设置 expand _ Aliases shell 选项(参见 The Shopt Builtin)。
+
+The rules concerning the definition and use of aliases are somewhat confusing. Bash always reads at least one complete line of input, and all lines that make up a compound command, before executing any of the commands on that line or the compound command. Aliases are expanded when a command is read, not when it is executed. Therefore, an alias definition appearing on the same line as another command does not take effect until the next line of input is read. The commands following the alias definition on that line are not affected by the new alias. This behavior is also an issue when functions are executed. Aliases are expanded when a function definition is read, not when the function is executed, because a function definition is itself a command. As a consequence, aliases defined in a function are not available until after that function is executed. To be safe, always put alias definitions on a separate line, and do not use alias in compound commands.
+
+关于别名的定义和使用的规则有些混乱。在执行该行或复合命令上的任何命令之前，Bash 总是至少读取一个完整的输入行以及组成复合命令的所有行。别名在读取命令时展开，而不是在执行命令时展开。因此，与另一个命令出现在同一行上的别名定义在读取下一个输入行之前不会生效。该行别名定义后面的命令不受新别名的影响。在执行函数时，这种行为也是一个问题。别名在读取函数定义时展开，而不是在执行函数时展开，因为函数定义本身就是命令。因此，在函数中定义的别名直到该函数执行之后才可用。为了安全起见，始终将别名定义放在单独的行上，并且不要在复合命令中使用别名。
+
+For almost every purpose, shell functions are preferred over aliases.
+
+对于几乎所有用途，shell 函数都优先于别名。
+
+Next: The Directory Stack, Previous: Aliases, Up: Bash Features   [Contents][Index]
+
+下一步: 目录堆栈，上一步: 别名，向上: Bash 特性[目录][索引]
+
+6.7 Arrays
+6.7数组
+Bash provides one-dimensional indexed and associative array variables. Any variable may be used as an indexed array; the declare builtin will explicitly declare an array. There is no maximum limit on the size of an array, nor any requirement that members be indexed or assigned contiguously. Indexed arrays are referenced using integers (including arithmetic expressions (see Shell Arithmetic)) and are zero-based; associative arrays use arbitrary strings. Unless otherwise noted, indexed array indices must be non-negative integers.
+
+Bash 提供了一维索引和关联数组变量。任何变量都可以用作索引数组; declare 内建函数将显式声明一个数组。对于数组的大小没有最大限制，也没有要求对成员进行索引或连续分配。索引数组使用整数(包括算术表达式(请参阅 Shell 算术))引用，并且是从零开始的; 关联数组使用任意字符串。除非另有说明，索引数组索引必须是非负整数。
+
+An indexed array is created automatically if any variable is assigned to using the syntax
+
+如果使用语法分配了任何变量，则自动创建索引数组
+
+name[subscript]=value
+The subscript is treated as an arithmetic expression that must evaluate to a number. To explicitly declare an array, use
+
+下标被视为必须计算为数字的算术表达式
+
+declare -a name
+The syntax
+
+语法
+
+declare -a name[subscript]
+is also accepted; the subscript is ignored.
+
+也被接受; 下标被忽略。
+
+Associative arrays are created using
+
+创建关联数组时使用
+
+declare -A name
+Attributes may be specified for an array variable using the declare and readonly builtins. Each attribute applies to all members of an array.
+
+可以使用 declare 和 readonly 内置语句为数组变量指定属性。每个属性都应用于数组的所有成员。
+
+Arrays are assigned to using compound assignments of the form
+
+使用表单的复合赋值为数组赋值
+
+name=(value1 value2 … )
+where each value is of the form [subscript]=string. Indexed array assignments do not require anything but string. When assigning to indexed arrays, if the optional subscript is supplied, that index is assigned to; otherwise the index of the element assigned is the last index assigned to by the statement plus one. Indexing starts at zero.
+
+其中每个值的格式为[下标] = string。索引数组赋值只需要字符串。当分配给索引数组时，如果提供了可选的下标，那么索引就被分配给; 否则分配的元素的索引就是语句加1分配给的最后一个索引。索引从零开始。
+
+When assigning to an associative array, the subscript is required.
+
+当分配给一个关联数组时，下标是必需的。
+
+This syntax is also accepted by the declare builtin. Individual array elements may be assigned to using the name[subscript]=value syntax introduced above.
+
+这种语法也被 declare 内置语法所接受。可以使用上面介绍的名称[下标] = 值语法分配单个数组元素。
+
+When assigning to an indexed array, if name is subscripted by a negative number, that number is interpreted as relative to one greater than the maximum index of name, so negative indices count back from the end of the array, and an index of -1 references the last element.
+
+当分配给一个索引数组时，如果名称下标是一个负数，则该数字被解释为相对于名称的最大索引大于1，因此负索引计数从数组末尾开始，而 -1的索引引用最后一个元素。
+
+Any element of an array may be referenced using ${name[subscript]}. The braces are required to avoid conflicts with the shell’s filename expansion operators. If the subscript is ‘@’ or ‘*’, the word expands to all members of the array name. These subscripts differ only when the word appears within double quotes. If the word is double-quoted, ${name[*]} expands to a single word with the value of each array member separated by the first character of the IFS variable, and ${name[@]} expands each element of name to a separate word. When there are no array members, ${name[@]} expands to nothing. If the double-quoted expansion occurs within a word, the expansion of the first parameter is joined with the beginning part of the original word, and the expansion of the last parameter is joined with the last part of the original word. This is analogous to the expansion of the special parameters ‘@’ and ‘*’. ${#name[subscript]} expands to the length of ${name[subscript]}. If subscript is ‘@’ or ‘*’, the expansion is the number of elements in the array. If the subscript used to reference an element of an indexed array evaluates to a number less than zero, it is interpreted as relative to one greater than the maximum index of the array, so negative indices count back from the end of the array, and an index of -1 refers to the last element.
+
+数组的任何元素都可以使用 ${ name [下标]}引用。需要使用大括号来避免与 shell 的文件名扩展运算符发生冲突。如果下标为“@”或“ * ” ，则单词扩展为数组名称的所有成员。这些下标只有在单词出现在双引号中时才不同。如果单词是双引号的，${ name [ * ]}扩展为一个单词，每个数组成员的值由 IFS 变量的第一个字符分隔，而 ${ name [@]}将 name 的每个元素扩展为一个单独的单词。当没有数组成员时，${ name [@]}将展开为空。如果在一个单词内出现双引号展开，则将第一个参数的展开与原单词的开头部分连接起来，将最后一个参数的展开与原单词的最后部分连接起来。这类似于特殊参数“@”和“ * ”的扩展。${ # name [ subscript ]}展开为 ${ name [ subscript ]}的长度。如果下标为“@”或“ * ” ，则展开式为数组中的元素数。如果用于引用索引数组中某个元素的下标计算结果小于零，则被解释为相对于数组的最大索引大于1，因此负索引计数从数组末尾开始，而 -1的索引引用最后一个元素。
+
+Referencing an array variable without a subscript is equivalent to referencing with a subscript of 0. Any reference to a variable using a valid subscript is legal, and bash will create an array if necessary.
+
+引用没有下标的数组变量等效于引用下标为0的数组变量。使用有效下标对变量的任何引用都是合法的，如果需要，bash 将创建一个数组。
+
+An array variable is considered set if a subscript has been assigned a value. The null string is a valid value.
+
+如果已经为下标赋值，则认为已经设置了数组变量。空字符串是一个有效的值。
+
+It is possible to obtain the keys (indices) of an array as well as the values. ${!name[@]} and ${!name[*]} expand to the indices assigned in array variable name. The treatment when in double quotes is similar to the expansion of the special parameters ‘@’ and ‘*’ within double quotes.
+
+可以获得数组的键(索引)和值。${！[@]}和 ${ ！}展开到数组变量名中分配的索引。双引号中的处理类似于双引号中特殊参数“@”和“ * ”的展开。
+
+The unset builtin is used to destroy arrays. unset name[subscript] destroys the array element at index subscript. Negative subscripts to indexed arrays are interpreted as described above. Unsetting the last element of an array variable does not unset the variable. unset name, where name is an array, removes the entire array. A subscript of ‘*’ or ‘@’ also removes the entire array.
+
+未设置的内置函数用于破坏阵列。未设置名称[下标]销毁索引下标处的数组元素。索引数组的负下标解释如上所述。取消设置数组变量的最后一个元素不会取消设置该变量。Unset name (其中 name 是数组)将删除整个数组。“ * ”或“@”的下标也会删除整个数组。
+
+When using a variable name with a subscript as an argument to a command, such as with unset, without using the word expansion syntax described above, the argument is subject to the shell’s filename expansion. If filename expansion is not desired, the argument should be quoted.
+
+当使用带有下标的变量名作为命令的参数时，如使用 unset，而不使用上面描述的单词扩展语法时，参数受到 shell 文件名扩展的限制。如果不需要文件名展开，则应该引用参数。
+
+The declare, local, and readonly builtins each accept a -a option to specify an indexed array and a -A option to specify an associative array. If both options are supplied, -A takes precedence. The read builtin accepts a -a option to assign a list of words read from the standard input to an array, and can read values from the standard input into individual array elements. The set and declare builtins display array values in a way that allows them to be reused as input.
+
+Declare、 local 和 readonly 内建函数分别接受 a-a 选项指定索引数组和 a-a 选项指定关联数组。如果两个选项都提供，则-a 优先。内置的 read 接受一个-a 选项，将从标准输入读取的单词列表分配给一个数组，并且可以将标准输入的值读取到单个数组元素中。Set 和 declare 内置显示数组值的方式允许它们作为输入重用。
+
+Next: Controlling the Prompt, Previous: Arrays, Up: Bash Features   [Contents][Index]
+
+接下来: 控制提示符，上一个: 数组，上一个: Bash 特性[目录][索引]
+
+6.8 The Directory Stack
+6.8目录堆栈
+• Directory Stack Builtins 目录堆栈构建:	  	Bash builtin commands to manipulate the directory stack. 用于操作目录堆栈的 Bash 内置命令
+The directory stack is a list of recently-visited directories. The pushd builtin adds directories to the stack as it changes the current directory, and the popd builtin removes specified directories from the stack and changes the current directory to the directory removed. The dirs builtin displays the contents of the directory stack. The current directory is always the "top" of the directory stack.
+
+目录堆栈是最近访问的目录的列表。当修改工作目录目录时，pushd 内建程序会将目录添加到堆栈中，popd 内建程序会从堆栈中删除指定的目录，并将工作目录目录修改为删除的目录。构建的 dirs 显示目录堆栈的内容。工作目录文件总是目录堆栈的“顶部”。
+
+The contents of the directory stack are also visible as the value of the DIRSTACK shell variable.
+
+目录堆栈的内容作为 DIRSTACK shell 变量的值也是可见的。
+
+Up: The Directory Stack   [Contents][Index]
+
+向上: 目录堆栈[目录][索引]
+
+6.8.1 Directory Stack Builtins
+6.8.1目录栈构建
+dirs
+dirs [-clpv] [+N | -N]
+Display the list of currently remembered directories. Directories are added to the list with the pushd command; the popd command removes directories from the list. The current directory is always the first directory in the stack.
+
+显示当前记住的目录列表。目录通过 pushd 命令添加到列表中; popd 命令从列表中删除目录。工作目录目录总是堆栈中的第一个目录。
+
+-c
+Clears the directory stack by deleting all of the elements.
+
+通过删除所有元素来清除目录堆栈。
+
+-l
+Produces a listing using full pathnames; the default listing format uses a tilde to denote the home directory.
+
+使用完整路径名生成一个清单; 默认的清单格式使用波浪号表示主目录。
+
+-p
+Causes dirs to print the directory stack with one entry per line.
+
+导致 dirs 以每行一个条目打印目录堆栈。
+
+-v
+Causes dirs to print the directory stack with one entry per line, prefixing each entry with its index in the stack.
+
+导致 dirs 使用每行一个条目打印目录堆栈，并在堆栈中以索引作为每个条目的前缀。
+
++N
+Displays the Nth directory (counting from the left of the list printed by dirs when invoked without options), starting with zero.
+
+显示第 n 个目录(在没有选项的情况下调用时，从 dirs 打印的列表的左侧开始计数) ，从零开始。
+
+-N
+Displays the Nth directory (counting from the right of the list printed by dirs when invoked without options), starting with zero.
+
+显示第 n 个目录(在没有选项的情况下调用时，从 dirs 打印的列表右侧计数) ，从零开始。
+
+popd
+popd [-n] [+N | -N]
+When no arguments are given, popd removes the top directory from the stack and performs a cd to the new top directory. The elements are numbered from 0 starting at the first directory listed with dirs; that is, popd is equivalent to popd +0.
+
+如果没有给出参数，则 popd 将从堆栈中移除 top 目录，并执行 cd 到新的 top 目录。从第一个目录开始，用 dirs 对元素进行编号; 也就是说，popd 等价于 popd + 0。
+
+-n
+Suppresses the normal change of directory when removing directories from the stack, so that only the stack is manipulated.
+
+在从堆栈中删除目录时，取消目录的正常更改，以便只操作堆栈。
+
++N
+Removes the Nth directory (counting from the left of the list printed by dirs), starting with zero.
+
+移除 Nth 目录(从 dirs 打印的列表的左侧开始计数) ，从零开始。
+
+-N
+Removes the Nth directory (counting from the right of the list printed by dirs), starting with zero.
+
+移除 Nth 目录(从 dirs 打印的列表右侧计数) ，从零开始。
+
+pushd
+pushd [-n] [+N | -N | dir]
+Save the current directory on the top of the directory stack and then cd to dir. With no arguments, pushd exchanges the top two directories and makes the new top the current directory.
+
+在目录堆栈的顶部保存工作目录文件夹，然后 cd 到目录。没有参数，pushd 交换前2个目录，并使新的顶部工作目录。
+
+-n
+Suppresses the normal change of directory when rotating or adding directories to the stack, so that only the stack is manipulated.
+
+在向堆栈中旋转或添加目录时，取消目录的正常更改，以便只操作堆栈。
+
++N
+Brings the Nth directory (counting from the left of the list printed by dirs, starting with zero) to the top of the list by rotating the stack.
+
+通过旋转堆栈将 Nth 目录(从 dirs 打印的列表的左侧开始计数，从零开始)带到列表的顶部。
+
+-N
+Brings the Nth directory (counting from the right of the list printed by dirs, starting with zero) to the top of the list by rotating the stack.
+
+通过旋转堆栈将第 n 个目录(从 dirs 打印的列表右侧计数，从零开始)带到列表顶部。
+
+dir
+Makes dir be the top of the stack, making it the new current directory as if it had been supplied as an argument to the cd builtin.
+
+使 dir 成为堆栈的顶部，使其成为新的工作目录/目录，就好像它已经作为 cd 内建的参数提供了一样。
+
+Next: The Restricted Shell, Previous: The Directory Stack, Up: Bash Features   [Contents][Index]
+
+下一步: 受限的 Shell，上一步: 目录堆栈，向上: Bash 特性[目录][索引]
+
+6.9 Controlling the Prompt
+6.9控制提示
+The value of the variable PROMPT_COMMAND is examined just before Bash prints each primary prompt. If PROMPT_COMMAND is set and has a non-null value, then the value is executed just as if it had been typed on the command line.
+
+在 Bash 打印每个主提示符之前，检查变量 PROMPT _ command 的值。如果 PROMPT _ command 被设置并且具有非空值，那么这个值就会像在命令行上输入的一样被执行。
+
+In addition, the following table describes the special characters which can appear in the prompt variables PS0, PS1, PS2, and PS4:
+
+此外，下表描述了可能出现在提示变量 PS0、 PS1、 PS2和 PS4中的特殊字符:
+
+\a
+A bell character.
+
+钟形字符。
+
+\d
+The date, in "Weekday Month Date" format (e.g., "Tue May 26").
+
+日期以「平日/月份日期」格式显示(例如: 「星期二/五月二十六日」)。
+
+\D{format}
+The format is passed to strftime(3) and the result is inserted into the prompt string; an empty format results in a locale-specific time representation. The braces are required.
+
+格式被传递给 strftime (3) ，结果被插入到提示字符串中; 空格式将导致特定于区域的时间表示。需要支撑。
+
+\e
+An escape character.
+
+转义字符。
+
+\h
+The hostname, up to the first ‘.’.
+
+主机名，直到第一个‘ . ’。
+
+\H
+The hostname.
+
+主机名。
+
+\j
+The number of jobs currently managed by the shell.
+
+当前由 shell 管理的作业数。
+
+\l
+The basename of the shell’s terminal device name.
+
+Shell 终端设备名称的基本名称。
+
+\n
+A newline.
+
+换行符。
+
+\r
+A carriage return.
+
+回车。
+
+\s
+The name of the shell, the basename of $0 (the portion following the final slash).
+
+Shell 的名称，基名为 $0(最后一个斜杠后面的部分)。
+
+\t
+The time, in 24-hour HH:MM:SS format.
+
+时间，24小时 HH: MM: SS 格式。
+
+\T
+The time, in 12-hour HH:MM:SS format.
+
+时间，12小时 HH: MM: SS 格式。
+
+\@
+The time, in 12-hour am/pm format.
+
+时间，12小时上午/下午格式。
+
+\A
+The time, in 24-hour HH:MM format.
+
+时间，24小时 HH: MM 格式。
+
+\u
+The username of the current user.
+
+当前用户的用户名。
+
+\v
+The version of Bash (e.g., 2.00)
+
+Bash 的版本(例如，2.00)
+
+\V
+The release of Bash, version + patchlevel (e.g., 2.00.0)
+
+Bash 的发布，版本 + 补丁级别(例如，2.00.0)
+
+\w
+The current working directory, with $HOME abbreviated with a tilde (uses the $PROMPT_DIRTRIM variable).
+
+当前的工作目录，$HOME 缩写为波浪形(使用 $PROMPT _ dirtrim 变量)。
+
+\W
+The basename of $PWD, with $HOME abbreviated with a tilde.
+
+$PWD 的基本名称，$HOME 缩写为波浪号。
+
+\!
+The history number of this command.
+
+此命令的历史编号。
+
+\#
+The command number of this command.
+
+此命令的命令编号。
+
+\$
+If the effective uid is 0, #, otherwise $.
+
+如果有效 uid 为0，# ，否则为 $。
+
+\nnn
+The character whose ASCII code is the octal value nnn.
+
+其 ASCII 码为八进制值 nnn 的字符。
+
+\\
+A backslash.
+
+反斜杠。
+
+\[
+Begin a sequence of non-printing characters. This could be used to embed a terminal control sequence into the prompt.
+
+开始一个非打印字符序列。这可以用于将终端控制序列嵌入到提示符中。
+
+\]
+End a sequence of non-printing characters.
+
+结束非打印字符序列。
+
+The command number and the history number are usually different: the history number of a command is its position in the history list, which may include commands restored from the history file (see Bash History Facilities), while the command number is the position in the sequence of commands executed during the current shell session.
+
+命令编号和历史编号通常是不同的: 命令的历史编号是它在历史列表中的位置，其中可能包括从历史文件中恢复的命令(请参阅 Bash History Facilities) ，而命令编号是当前 shell 会话期间执行的命令序列中的位置。
+
+After the string is decoded, it is expanded via parameter expansion, command substitution, arithmetic expansion, and quote removal, subject to the value of the promptvars shell option (see The Shopt Builtin). This can have unwanted side effects if escaped portions of the string appear within command substitution or contain characters special to word expansion.
+
+字符串解码后，它是扩展通过参数扩展，指令替代，算术扩展，并报价删除，取决于提示/词壳选项的值(见 The Shopt Builtin)。如果字符串的转义部分出现在指令替代中或包含单词展开特殊字符，则可能会产生不希望的副作用。
+
+Next: Bash POSIX Mode, Previous: Controlling the Prompt, Up: Bash Features   [Contents][Index]
+
+下一步: Bash POSIX 模式，上一步: 控制提示符，向上: Bash 特性[内容][索引]
+
+6.10 The Restricted Shell
+6.10受限壳牌
+If Bash is started with the name rbash, or the --restricted or -r option is supplied at invocation, the shell becomes restricted. A restricted shell is used to set up an environment more controlled than the standard shell. A restricted shell behaves identically to bash with the exception that the following are disallowed or not performed:
+
+如果 Bash 以名称 rbash 启动，或者在调用时提供 -- restricted 或-r 选项，则 shell 将受到限制。一个受限制的 shell 用于建立一个比标准 shell 更受控制的环境。受限 shell 的行为与 bash 相同，但不允许或不允许执行下列操作:
+
+Changing directories with the 方法更改目录cd builtin. 内建的
+Setting or unsetting the values of the 属性的值设置或取消设置SHELL, PATH, ENV, or ，或BASH_ENV variables. 变量
+Specifying command names containing slashes. 指定包含斜线的命令名
+Specifying a filename containing a slash as an argument to the 指定包含斜杠作为参数的文件名. builtin command. 内建命令
+Specifying a filename containing a slash as an argument to the 指定包含斜杠作为参数的文件名-p - p option to the 选择权hash builtin command. 内建命令
+Importing function definitions from the shell environment at startup. 在启动时从 shell 环境导入函数定义
+Parsing the value of 分析SHELLOPTS from the shell environment at startup. 从启动时的 shell 环境
+Redirecting output using the ‘ 使用’重定向输出>’, ‘ ’ ，’>|’, ‘ ’ ，’<>’, ‘ ’ ，’>&’, ‘ ’ ，’&>’, and ‘ ’ ，和’>>’ redirection operators. ’重定向操作符
+Using the 使用exec builtin to replace the shell with another command. 用另一个命令替换 shell
+Adding or deleting builtin commands with the 方法添加或删除内置命令-f - f and 及-d - d options to the 选择权enable builtin. 内建的
+Using the 使用enable builtin command to enable disabled shell builtins. 内置命令，以启用禁用的外壳内置
+Specifying the 指定-p - p option to the 选择权command builtin. 内建的
+Turning off restricted mode with ‘ 用“”关闭限制模式set +r Set + r’ or ‘ ’或’set +o restricted Set + o restricted’. ’
+These restrictions are enforced after any startup files are read.
+
+这些限制是在读取任何启动文件之后强制执行的。
+
+When a command that is found to be a shell script is executed (see Shell Scripts), rbash turns off any restrictions in the shell spawned to execute the script.
+
+当执行一个被发现是 Shell 脚本的命令(请参阅 Shell 脚本)时，rbash 关闭所产生的 Shell 中执行脚本的任何限制。
+
+The restricted shell mode is only one component of a useful restricted environment. It should be accompanied by setting PATH to a value that allows execution of only a few verified commands (commands that allow shell escapes are particularly vulnerable), leaving the user in a non-writable directory other than his home directory after login, not allowing the restricted shell to execute shell scripts, and cleaning the environment of variables that cause some commands to modify their behavior (e.g., VISUAL or PAGER).
+
+受限壳模式只是有用的受限环境的一个组成部分。应该将 PATH 设置为只允许执行少数经过验证的命令(允许 shell 转义的命令尤其容易受到攻击)的值，在登录后将用户留在主目录以外的不可写目录中，不允许受限制的 shell 执行 shell 脚本，并清除导致某些命令修改其行为的变量环境(例如，VISUAL PAGER 或者 PAGER)。
+
+Modern systems provide more secure ways to implement a restricted environment, such as jails, zones, or containers.
+
+现代系统提供了更安全的方式来实现受限制的环境，如监狱、区域或集装箱。
+
+Previous: The Restricted Shell, Up: Bash Features   [Contents][Index]
+
+上一页: 受限 Shell，向上: Bash 特性[目录][索引]
+
+6.11 Bash POSIX Mode
+6.11 Bash POSIX 模式
+Starting Bash with the --posix command-line option or executing ‘set -o posix’ while Bash is running will cause Bash to conform more closely to the POSIX standard by changing the behavior to match that specified by POSIX in areas where the Bash default differs.
+
+使用 -- POSIX 命令行选项启动 Bash，或者在 Bash 运行时执行“ set-o POSIX” ，将使 Bash 更加符合 POSIX 标准，方法是在 Bash 默认值不同的地方更改 POSIX 指定的行为。
+
+When invoked as sh, Bash enters POSIX mode after reading the startup files.
+
+当作为 sh 调用时，Bash 在读取启动文件后进入 POSIX 模式。
+
+The following list is what’s changed when ‘POSIX mode’ is in effect:
+
+下面的列表是‘ POSIX 模式’生效时发生的变化:
+
+Bash ensures that the 确保POSIXLY_CORRECT variable is set. 变量设置完毕
+When a command in the hash table no longer exists, Bash will re-search 当哈希表中的命令不再存在时，Bash 将重新搜索$PATH to find the new location. This is also available with ‘ 找到新的位置。这也可以在’shopt -s checkhash 商店检查’. ’
+The message printed by the job control code and builtins when a job exits with a non-zero status is ‘Done(status)’. 当作业以非零状态退出时，作业控制代码打印的消息是“完成(状态)”
+The message printed by the job control code and builtins when a job is stopped is ‘Stopped( 作业控制代码和停止作业时内置的消息是“ Stopped (signame 签名)’, where )」 ，网址为signame 签名 is, for example, 比如说,SIGTSTP.
+Alias expansion is always enabled, even in non-interactive shells. 别名扩展总是启用的，即使在非交互式 shell 中也是如此
+Reserved words appearing in a context where reserved words are recognized do not undergo alias expansion. 出现在识别保留字的上下文中的保留字不会进行别名扩展
+The 这个POSIX Posixth PS1 and 及PS2 expansions of ‘ 扩张!’ to the history number and ‘ “历史号码和”!! !’ to ‘ ’到’!’ are enabled, and parameter expansion is performed on the values of 的值进行参数展开PS1 and 及PS2 regardless of the setting of the 无论设置的promptvars option. 选择
+The 这个POSIX Posixth startup files are executed ( 执行启动文件($ENV) rather than the normal Bash files. )而不是普通的 Bash 文件
+Tilde expansion is only performed on assignments preceding a command name, rather than on all assignment statements on the line. 波浪形展开仅在命令名之前的赋值上执行，而不是在行上的所有赋值语句上执行
+The default history file is 默认的历史记录文件是~/.sh_history ~/. sh _ history (this is the default value of (这是默认值$HISTFILE).
+Redirection operators do not perform filename expansion on the word in the redirection unless the shell is interactive. 重定向操作符不会对重定向中的单词执行文件名扩展，除非 shell 是交互式的
+Redirection operators do not perform word splitting on the word in the redirection. 重定向操作符不对重定向中的单词执行单词分割
+Function names must be valid shell 函数名必须是有效的 shellnames. That is, they may not contain characters other than letters, digits, and underscores, and may not start with a digit. Declaring a function with an invalid name causes a fatal syntax error in non-interactive shells. 是的。也就是说，它们不能包含字母、数字和下划线以外的字符，也不能以数字开头。用无效名称声明函数会在非交互式 shell 中导致致命的语法错误
+Function names may not be the same as one of the 函数名可能与POSIX Posixth special builtins. 特殊的建筑
+POSIX Posixth special builtins are found before shell functions during command lookup. 在命令查找过程中，在 shell 功能之前会发现一些特殊的内置语句
+When printing shell function definitions (e.g., by 当打印 shell 函数定义时(例如，使用type), Bash does not print the ) ，Bash 不打印function keyword. 关键字
+Literal tildes that appear as the first character in elements of the 元素中作为第一个字符出现的字面值波浪PATH variable are not expanded as described above under 变量没有像上面描述的那样展开Tilde Expansion.
+The 这个time reserved word may be used by itself as a command. When used in this way, it displays timing statistics for the shell and its completed children. The 保留字本身可以作为命令使用。以这种方式使用时，它将显示 shell 及其已完成子级的时间统计信息。这个TIMEFORMAT variable controls the format of the timing information. 变量控制时间信息的格式
+When parsing and expanding a ${…} expansion that appears within double quotes, single quotes are no longer special and cannot be used to quote a closing brace or other special character, unless the operator is one of those defined to perform pattern removal. In this case, they do not have to appear as matched pairs. 当解析和展开出现在双引号中的 ${ ... }展开式时，单引号不再特殊，不能用于引用结束括号或其他特殊字符，除非运算符是定义来执行模式移除的运算符之一。在这种情况下，它们不必作为匹配对出现
+The parser does not recognize 解析器不识别time as a reserved word if the next token begins with a ‘ 作为一个保留字，如果下一个标记以’开头-’. ’
+The ‘ 这是我们的工作!’ character does not introduce history expansion within a double-quoted string, even if the ’字符不会在可引用的字符串中引入历史扩展，即使histexpand option is enabled. 选项启用
+If a 如果有POSIX Posixth special builtin returns an error status, a non-interactive shell exits. The fatal errors are those listed in the 特殊内置函数返回一个错误状态，非交互式 shell 退出POSIX Posixth standard, and include things like passing incorrect options, redirection errors, variable assignment errors for assignments preceding the command name, and so on. 标准，包括传递不正确的选项、重定向错误、命令名前面的赋值的变量赋值错误等
+A non-interactive shell exits with an error status if a variable assignment error occurs when no command name follows the assignment statements. A variable assignment error occurs, for example, when trying to assign a value to a readonly variable. 如果在赋值语句后面没有命令名时发生变量赋值错误，则非交互式 shell 退出时将出现错误状态。例如，当试图为只读变量赋值时，会发生变量赋值错误
+A non-interactive shell exits with an error status if a variable assignment error occurs in an assignment statement preceding a special builtin, but not with any other simple command. 如果在特殊内置语句之前的赋值语句中发生了变量赋值错误，则非交互式 shell 退出时将出现错误状态，但不会退出任何其他简单命令
+A non-interactive shell exits with an error status if the iteration variable in a 中的 iterationvariable 退出时，非交互式 shell 将具有错误状态for statement or the selection variable in a 语句或选择变量select statement is a readonly variable. 语句是一个只读变量
+Non-interactive shells exit if 非交互式 shell 退出filename 文件名 in 在. filename 文件名 is not found. 没有找到
+Non-interactive shells exit if a syntax error in an arithmetic expansion results in an invalid expression. 如果算术展开中的语法错误导致无效表达式，则退出非交互式 shell
+Non-interactive shells exit if a parameter expansion error occurs. 如果出现参数展开错误，则退出非交互式 shell
+Non-interactive shells exit if there is a syntax error in a script read with the 方法的脚本中出现语法错误时，退出非交互式 shell. or 或source builtins, or in a string processed by the 内建，或在一个字符串处理由eval builtin. 内建的
+Process substitution is not available. 进程替换不可用
+While variable indirection is available, it may not be applied to the ‘ 虽然可以使用变量间接寻址，但它可能不适用于#’ and ‘ ’和’?’ special parameters. 特殊参数
+When expanding the ‘ 当扩展‘*’ special parameter in a pattern context where the expansion is double-quoted does not treat the 在模式上下文中，如果展开式是双引号的，那么特殊参数不会处理$* as if it were double-quoted. 就好像是不能引用一样
+Assignment statements preceding 前面的赋值语句POSIX Posixth special builtins persist in the shell environment after the builtin completes. 在内建完成后，在 shell 环境中存储一些特殊的内建
+Assignment statements preceding shell function calls persist in the shell environment after the function returns, as if a 在 shell 函数调用之前的赋值语句在函数返回之后仍然保留在地狱环境中，就像POSIX Posixth special builtin command had been executed. 特殊的内置命令已经被执行
+The 这个command builtin does not prevent builtins that take assignment statements as arguments from expanding them as assignment statements; when not in 内置语句并不能阻止将转让语句作为参数扩展为转让语句的内置语句POSIX Posixth mode, assignment builtins lose their assignment statement expansion properties when preceded by 模式下，分配内置失去了他们的分配/陈述展开属性当前面command.
+The 这个bg builtin uses the required format to describe each job placed in the background, which does not include an indication of whether the job is the current or previous job. 内置函数使用所需的格式来描述后台放置的每个作业，这并不包括作业是当前作业还是以前作业的指示
+The output of ‘ 的输出kill -l 杀了我’ prints all the signal names on a single line, separated by spaces, without the ‘ ’将所有信号名称打印在一行上，用空格分隔，没有’SIG 信息产业组织’ prefix. ’前缀
+The 这个kill builtin does not accept signal names with a ‘ 内置程序不接受带有’的信号名SIG 信息产业组织’ prefix. ’前缀
+The 这个export and 及readonly builtin commands display their output in the format required by 内置命令以下面的格式显示他们的输出:POSIX Posixth.
+The 这个trap builtin displays signal names without the leading 内建显示信号名称，没有前导SIG.
+The 这个trap builtin doesn’t check the first argument for a possible signal specification and revert the signal handling to the original disposition if it is, unless that argument consists solely of digits and is a valid signal number. If users want to reset the handler for a given signal to the original disposition, they should use ‘ 内置函数不检查 possibleignal 规范的第一个参数，如果是，则将信号处理恢复为原始处理，除非该参数仅由数字组成，并且是一个有效的信号号。如果用户希望将给定信号的处理程序重置为原始处置，则应使用‘-’ as the first argument. 作为第一个论点
+The 这个. and 及source builtins do not search the current directory for the filename argument if it is not found by searching 如果没有通过搜索找到文件名参数，那么 builtins 不会在当前目录中搜索文件名参数PATH.
+Enabling 促进环境监察及审核POSIX Posixth mode has the effect of setting the 模式具有设置inherit_errexit option, so subshells spawned to execute command substitutions inherit the value of the 选项，所派生的用于执行命令替换的 sosubshell 将继承-e - e option from the parent shell. When the 选项。当inherit_errexit option is not enabled, Bash clears the 选项未启用，则 Bash 将清除-e - e option in such subshells. 在这样的 subshell 选项
+Enabling 促进环境监察及审核POSIX Posixth mode has the effect of setting the 模式具有设置shift_verbose option, so numeric arguments to 选项，所以数值参数为shift that exceed the number of positional parameters will result in an error message. 超过位置参数的数量将导致错误消息
+When the 当alias builtin displays alias definitions, it does not display them with a leading ‘ 内建显示别名定义，它不显示他们与前导’alias 别名’ unless the ’除非-p - p option is supplied. 提供选择权
+When the 当set builtin is invoked without options, it does not display shell function names and definitions. 调用 builtin 时没有选项，它不显示 shell 函数的名称和定义
+When the 当set builtin is invoked without options, it displays variable values without quotes, unless they contain shell metacharacters, even if the result contains nonprinting characters. 内建函数在调用时不使用选项，它在不使用引号的情况下显示 svariable 值，除非它们包含 shell 元字符，即使结果包含非打印字符
+When the 当cd builtin is invoked in 调用内置函数logical 逻辑的 mode, and the pathname constructed from 的路径名$PWD and the directory name supplied as an argument does not refer to an existing directory, 并且作为参数提供的目录名称不引用现有目录,cd will fail instead of falling back to 将会失败而不是回到physical 身体的 mode. 方式
+When the 当cd builtin cannot change a directory because the length of the pathname constructed from 不能更改目录，因为路径名的长度由$PWD and the directory name supplied as an argument exceeds 和目录名称提供的一个争论超过PATH_MAX 最大路径 when all symbolic links are expanded, 当所有的符号链接都被展开时,cd will fail instead of attempting to use only the supplied directory name. 将失败，而不是试图只使用提供的目录名称
+The 这个pwd builtin verifies that the value it prints is the same as the current directory, even if it is not asked to check the file system with the 内建函数验证它输出的值是否与当前目录相同，即使不要求它使用-P - p option. 选择
+When listing the history, the 在列出历史记录时,fc builtin does not include an indication of whether or not a history entry has been modified. 历史记录条目是否被修改的指示不包括在内
+The default editor used by 使用的默认编辑器fc is 是ed.
+The 这个type and 及command builtins will not report a non-executable file as having been found, though the shell will attempt to execute such a file if it is the only so-named file found in 尽管 shell 会尝试执行这样一个文件，如果它是在$PATH.
+The 这个vi editing mode will invoke the 编辑模式将调用vi editor directly when the ‘ 编辑直接在’时v’ command is run, instead of checking ’命令运行，而不是检查$VISUAL and 及$EDITOR.
+When the 当xpg_echo option is enabled, Bash does not attempt to interpret any arguments to 选项时，Bash 不会尝试将任何参数解释为echo as options. Each argument is displayed, after escape characters are converted. 每个参数都会显示，在转义字符被转换之后
+The 这个ulimit builtin uses a block size of 512 bytes for the 使用512字节的块大小-c - c and 及-f - f options. 选择
+The arrival of 到来的SIGCHLD when a trap is set on 当一个陷阱被设置SIGCHLD does not interrupt the 没有打断wait builtin and cause it to return immediately. The trap command is run once for each child that exits. 陷阱命令对于每个退出的子进程运行一次
+The 这个read builtin may be interrupted by a signal for which a trap has been set. If Bash receives a trapped signal while executing 内建信号可能会被设置了一个陷阱的信号中断read, the trap handler executes and ，捕鱼人执行和read returns an exit status greater than 128. 返回大于128的退出状态
+Bash removes an exited background process’s status from the list of such statuses after the 属性之后，从 suchstatuses 列表中删除已退出后台进程的状态wait builtin is used to obtain it. 是用来获取的
+There is other POSIX behavior that Bash does not implement by default even when in POSIX mode. Specifically:
+
+在缺省情况下，即使在 POSIX 模式下，Bash 也不会实现其他 POSIX 行为。具体来说:
+
+The 这个fc builtin checks 内部检查$EDITOR as a program to edit history entries if 作为编辑历史条目的程序FCEDIT is unset, rather than defaulting directly to 是未设置的，而不是直接默认为ed. fc uses 使用ed if 如果EDITOR is unset. 没有固定
+As noted above, Bash requires the 如上所述，Bash 需要xpg_echo option to be enabled for the 选项被启用echo builtin to be fully conformant. 内建完全符合
+Bash can be configured to be POSIX-conformant by default, by specifying the --enable-strict-posix-default to configure when building (see Optional Features).
+
+通过在构建时指定 -- enable-strict-posix-default 进行配置(请参阅可选特性) ，可以默认地将 Bash 配置为符合 posix 要求。
+
+Next: Command Line Editing, Previous: Bash Features, Up: Top   [Contents][Index]
+
+下一步: 命令行编辑，上一步: Bash 特性，向上: 顶部[目录][索引]
+
+

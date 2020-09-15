@@ -1,0 +1,648 @@
+
+
+5 Shell Variables
+5 Shell 变量
+• Bourne Shell Variables 外壳变量:	  	Variables which Bash uses in the same way as the Bourne Shell. Bash 以与 Bourne Shell 相同的方式使用的变量
+• Bash Variables Bash 变量:	  	List of variables that exist in Bash. Bash 中存在的变量列表
+This chapter describes the shell variables that Bash uses. Bash automatically assigns default values to a number of variables.
+
+本章介绍 Bash 使用的 shell 变量。 Bash 自动为许多变量分配默认值。
+
+Next: Bash Variables, Up: Shell Variables   [Contents][Index]
+
+下一步: Bash 变量，向上: Shell 变量[内容][索引]
+
+5.1 Bourne Shell Variables
+Bash uses certain shell variables in the same way as the Bourne shell. In some cases, Bash assigns a default value to the variable.
+
+Bash 使用某些 shell 变量的方式与 Bourne shell 相同。在某些情况下，Bash 会为变量指定一个默认值。
+
+CDPATH
+A colon-separated list of directories used as a search path for the cd builtin command.
+
+冒号分隔的目录列表，用作 cd 内建命令的搜索路径。
+
+HOME
+The current user’s home directory; the default for the cd builtin command. The value of this variable is also used by tilde expansion (see Tilde Expansion).
+
+当前用户的主目录; cd 内建命令的默认目录。此变量的值也用于波浪线展开(请参阅波浪线展开)。
+
+IFS
+A list of characters that separate fields; used when the shell splits words as part of expansion.
+
+分隔字段的字符列表; 当 shell 作为展开的一部分分隔单词时使用。
+
+MAIL
+If this parameter is set to a filename or directory name and the MAILPATH variable is not set, Bash informs the user of the arrival of mail in the specified file or Maildir-format directory.
+
+如果将此参数设置为文件名或目录名，并且未设置 MAILPATH 变量，则 Bash 将通知用户指定的文件或 Maildir-format 目录中的邮件已到达。
+
+MAILPATH
+A colon-separated list of filenames which the shell periodically checks for new mail. Each list entry can specify the message that is printed when new mail arrives in the mail file by separating the filename from the message with a ‘?’. When used in the text of the message, $_ expands to the name of the current mail file.
+
+一个用冒号分隔的文件名列表，shell 定期检查新邮件。每个列表条目都可以指定新邮件到达邮件文件时打印的消息，方法是将文件名与消息分隔为“ ? ”.在邮件文本中使用时，$_ 展开为当前邮件文件的名称。
+
+OPTARG
+The value of the last option argument processed by the getopts builtin.
+
+Getopts 内建处理的最后一个选项参数的值。
+
+OPTIND
+The index of the last option argument processed by the getopts builtin.
+
+Getopts 内建处理的最后一个选项参数的索引。
+
+PATH
+A colon-separated list of directories in which the shell looks for commands. A zero-length (null) directory name in the value of PATH indicates the current directory. A null directory name may appear as two adjacent colons, or as an initial or trailing colon.
+
+以冒号分隔的目录列表，shell 在其中查找命令。PATH 值中的零长度(空)目录名表示工作目录。空目录名可以显示为两个相邻的冒号，也可以显示为初始冒号或尾随冒号。
+
+PS1
+The primary prompt string. The default value is ‘\s-\v\$ ’. See Controlling the Prompt, for the complete list of escape sequences that are expanded before PS1 is displayed.
+
+主提示字符串。默认值为“ s-v $”。有关在显示 PS1之前展开的转义序列的完整列表，请参阅控制提示。
+
+PS2
+The secondary prompt string. The default value is ‘> ’. PS2 is expanded in the same way as PS1 before being displayed.
+
+次要提示字符串。默认值是‘ > ’。PS2在显示之前以与 PS1相同的方式展开。
+
+Previous: Bourne Shell Variables, Up: Shell Variables   [Contents][Index]
+
+上一页: Bourne Shell 变量，向上: Shell 变量[目录][索引]
+
+5.2 Bash Variables
+5.2 Bash 变量
+These variables are set or used by Bash, but other shells do not normally treat them specially.
+
+这些变量由 Bash 设置或使用，但其他 shell 通常不特别对待它们。
+
+A few variables used by Bash are described in different chapters: variables for controlling the job control facilities (see Job Control Variables).
+
+Bash 使用的一些变量在不同的章节中进行了描述: 控制作业控制工具的变量(请参阅作业控制变量)。
+
+BASH
+The full pathname used to execute the current instance of Bash.
+
+用于执行当前 Bash 实例的完整路径名。
+
+BASHOPTS
+A colon-separated list of enabled shell options. Each word in the list is a valid argument for the -s option to the shopt builtin command (see The Shopt Builtin). The options appearing in BASHOPTS are those reported as ‘on’ by ‘shopt’. If this variable is in the environment when Bash starts up, each shell option in the list will be enabled before reading any startup files. This variable is readonly.
+
+启用 shell 选项的冒号分隔列表。列表中的每个单词都是 Shopt Builtin 命令的-s 选项的有效参数(参见 The Shopt Builtin)。出现在 BASHOPTS 中的选项是那些被 shopt 报告为 on 的选项。如果此变量在 Bash 启动时位于环境中，则在读取任何启动文件之前，将启用列表中的每个 shell 选项。这个变量是只读的。
+
+BASHPID
+Expands to the process ID of the current Bash process. This differs from $$ under certain circumstances, such as subshells that do not require Bash to be re-initialized. Assignments to BASHPID have no effect. If BASHPID is unset, it loses its special properties, even if it is subsequently reset.
+
+展开为当前 Bash 进程的进程 ID。在某些情况下，这不同于 $，比如不需要重新初始化 Bash 的子 shell。分配给 BASHPID 没有任何效果。如果 BASHPID 未设置，即使它随后被重置，它也将失去其特殊属性。
+
+BASH_ALIASES
+An associative array variable whose members correspond to the internal list of aliases as maintained by the alias builtin. (see Bourne Shell Builtins). Elements added to this array appear in the alias list; however, unsetting array elements currently does not cause aliases to be removed from the alias list. If BASH_ALIASES is unset, it loses its special properties, even if it is subsequently reset.
+
+一个关联数组变量，其成员对应于由内建的别名维护的内部别名列表。(见 Bourne Shell Builtins)。添加到此数组中的元素出现在别名列表中; 但是，当前取消设置数组元素不会导致别名从别名列表中移除。如果 BASH _ aliases 未设置，即使它随后被重置，它也将失去其特殊属性。
+
+BASH_ARGC
+An array variable whose values are the number of parameters in each frame of the current bash execution call stack. The number of parameters to the current subroutine (shell function or script executed with . or source) is at the top of the stack. When a subroutine is executed, the number of parameters passed is pushed onto BASH_ARGC. The shell sets BASH_ARGC only when in extended debugging mode (see The Shopt Builtin for a description of the extdebug option to the shopt builtin). Setting extdebug after the shell has started to execute a script, or referencing this variable when extdebug is not set, may result in inconsistent values.
+
+一个数组变量，其值为当前 bash 执行调用堆栈中每帧中的参数数。当前子例程(shell 函数或使用。或源代码)是在堆栈的顶部。当执行子例程时，将传递的参数数目推送到 bash_argc 上。Shell 仅在处于扩展调试模式时才设置 BASH _ argc (参见 Shopt Builtin 对 Shopt Builtin 的 extdebug 选项的描述)。在 shell 开始执行脚本之后设置 extdebug，或者在没有设置 extdebug 时引用此变量，可能会导致不一致的值。
+
+BASH_ARGV
+An array variable containing all of the parameters in the current bash execution call stack. The final parameter of the last subroutine call is at the top of the stack; the first parameter of the initial call is at the bottom. When a subroutine is executed, the parameters supplied are pushed onto BASH_ARGV. The shell sets BASH_ARGV only when in extended debugging mode (see The Shopt Builtin for a description of the extdebug option to the shopt builtin). Setting extdebug after the shell has started to execute a script, or referencing this variable when extdebug is not set, may result in inconsistent values.
+
+包含当前 bash 执行调用堆栈中所有参数的数组变量。最后一个子例程调用的最后一个参数位于堆栈的顶部; 初始调用的第一个参数位于堆栈的底部。执行子例程时，将提供的参数推送到 bash_argv 上。Shell 仅在扩展调试模式下设置 BASH _ argv (参见 The Shopt Builtin 对 Shopt Builtin 的 extdebug 选项的描述)。在 shell 开始执行脚本之后设置 extdebug，或者在没有设置 extdebug 时引用此变量，可能会导致不一致的值。
+
+BASH_ARGV0
+When referenced, this variable expands to the name of the shell or shell script (identical to $0; See Special Parameters, for the description of special parameter 0). Assignment to BASH_ARGV0 causes the value assigned to also be assigned to $0. If BASH_ARGV0 is unset, it loses its special properties, even if it is subsequently reset.
+
+在引用时，该变量展开为 shell 或 shell 脚本的名称(与 $0相同; 有关特殊参数0的描述，请参见 Special Parameters)。对 BASH _ argv0的赋值使得分配给 $0的值也被赋值给 $0。如果 BASH _ argv0未设置，它将失去其特殊属性，即使它随后被重置。
+
+BASH_CMDS
+An associative array variable whose members correspond to the internal hash table of commands as maintained by the hash builtin (see Bourne Shell Builtins). Elements added to this array appear in the hash table; however, unsetting array elements currently does not cause command names to be removed from the hash table. If BASH_CMDS is unset, it loses its special properties, even if it is subsequently reset.
+
+一个关联数组变量，其成员对应于由散列内建器维护的命令的内部散列表(参见 Bourne Shell 内建器)。添加到此数组中的元素出现在哈希表中; 但是，当前取消设置数组元素不会导致从哈希表中移除命令名。如果 BASH _ cmds 未设置，即使它随后被重置，它也将失去其特殊属性。
+
+BASH_COMMAND
+The command currently being executed or about to be executed, unless the shell is executing a command as the result of a trap, in which case it is the command executing at the time of the trap.
+
+当前正在执行或即将执行的命令，除非 shell 作为一个陷阱的结果正在执行一个命令，在这种情况下，它是陷阱发生时正在执行的命令。
+
+BASH_COMPAT
+The value is used to set the shell’s compatibility level. See The Shopt Builtin, for a description of the various compatibility levels and their effects. The value may be a decimal number (e.g., 4.2) or an integer (e.g., 42) corresponding to the desired compatibility level. If BASH_COMPAT is unset or set to the empty string, the compatibility level is set to the default for the current version. If BASH_COMPAT is set to a value that is not one of the valid compatibility levels, the shell prints an error message and sets the compatibility level to the default for the current version. The valid compatibility levels correspond to the compatibility options accepted by the shopt builtin described above (for example, compat42 means that 4.2 and 42 are valid values). The current version is also a valid value.
+
+该值用于设置 shell 的兼容级别。参见商店内置，为各种兼容性水平和他们的影响的描述。这个值可以是一个十进制数(例如，4.2)或者一个整数(例如，42) ，对应于所需的兼容性水平。如果 bash_compat 未设置或设置为空字符串，则将当前版本的兼容级别设置为默认值。如果将 BASH _ compat 设置为非有效兼容级别的值，shell 将打印错误消息，并将当前版本的兼容级别设置为默认级别。有效的兼容级别对应于上述 shopt 内建接受的兼容性选项(例如，compat42表示4.2和42是有效值)。当前版本也是一个有效值。
+
+BASH_ENV
+If this variable is set when Bash is invoked to execute a shell script, its value is expanded and used as the name of a startup file to read before executing the script. See Bash Startup Files.
+
+如果在调用 Bash 执行 shell 脚本时设置了这个变量，那么它的值将被展开，并用作在执行脚本之前要读取的启动文件的名称。参见 Bash 启动文件。
+
+BASH_EXECUTION_STRING
+The command argument to the -c invocation option.
+
+C 调用选项的命令参数。
+
+BASH_LINENO
+An array variable whose members are the line numbers in source files where each corresponding member of FUNCNAME was invoked. ${BASH_LINENO[$i]} is the line number in the source file (${BASH_SOURCE[$i+1]}) where ${FUNCNAME[$i]} was called (or ${BASH_LINENO[$i-1]} if referenced within another shell function). Use LINENO to obtain the current line number.
+
+一个数组变量，其成员是调用 FUNCNAME 的每个对应成员的源文件中的行号。${ BASH _ lineno [ $i ]}是源文件(${ BASH _ source [ $i + 1]})中调用 ${ FUNCNAME [ $i ]}的行号(如果在另一个 shell 函数中引用，则为 ${ BASH _ lineno [ $i-1]})。使用 LINENO 获取当前行号。
+
+BASH_LOADABLES_PATH
+A colon-separated list of directories in which the shell looks for dynamically loadable builtins specified by the enable command.
+
+一个冒号分隔的目录列表，shell 在其中查找由 enable 命令指定的动态可加载内置程序。
+
+BASH_REMATCH
+An array variable whose members are assigned by the ‘=~’ binary operator to the [[ conditional command (see Conditional Constructs). The element with index 0 is the portion of the string matching the entire regular expression. The element with index n is the portion of the string matching the nth parenthesized subexpression. This variable is read-only.
+
+一个数组变量，其成员由‘ = ~ ’二进制运算符分配给[[条件命令](参见条件构造)。索引为0的元素是与整个正则表达式匹配的字符串的一部分。索引为 n 的元素是与第 n 个括号子表达式匹配的字符串的一部分。这个变量是只读的。
+
+BASH_SOURCE
+An array variable whose members are the source filenames where the corresponding shell function names in the FUNCNAME array variable are defined. The shell function ${FUNCNAME[$i]} is defined in the file ${BASH_SOURCE[$i]} and called from ${BASH_SOURCE[$i+1]}
+
+一个数组变量，其成员为源文件名，其中定义了 FUNCNAME 数组变量中对应的 shell 函数名。Shell 函数 ${ FUNCNAME [ $i ]}在文件 ${ BASH _ source [ $i ]}中定义，并从 ${ BASH _ source [ $i + 1]}中调用
+
+BASH_SUBSHELL
+Incremented by one within each subshell or subshell environment when the shell begins executing in that environment. The initial value is 0.
+
+当 shell 开始在该环境中执行时，在每个子 shell 或子 shell 环境中增加一个。初始值为0。
+
+BASH_VERSINFO
+A readonly array variable (see Arrays) whose members hold version information for this instance of Bash. The values assigned to the array members are as follows:
+
+一个只读数组变量(参见数组) ，其成员保存此 Bash 实例的版本信息。分配给数组成员的值如下:
+
+BASH_VERSINFO[0]
+The major version number (the release).
+
+主版本号(发行版)。
+
+BASH_VERSINFO[1]
+The minor version number (the version).
+
+次要版本号(版本)。
+
+BASH_VERSINFO[2]
+The patch level.
+
+补丁级别。
+
+BASH_VERSINFO[3]
+The build version.
+
+构建版本。
+
+BASH_VERSINFO[4]
+The release status (e.g., beta1).
+
+释放状态(例如 beta1)。
+
+BASH_VERSINFO[5]
+The value of MACHTYPE.
+
+MACHTYPE 的值。
+
+BASH_VERSION
+The version number of the current instance of Bash.
+
+Bash 的当前实例的版本号。
+
+BASH_XTRACEFD
+If set to an integer corresponding to a valid file descriptor, Bash will write the trace output generated when ‘set -x’ is enabled to that file descriptor. This allows tracing output to be separated from diagnostic and error messages. The file descriptor is closed when BASH_XTRACEFD is unset or assigned a new value. Unsetting BASH_XTRACEFD or assigning it the empty string causes the trace output to be sent to the standard error. Note that setting BASH_XTRACEFD to 2 (the standard error file descriptor) and then unsetting it will result in the standard error being closed.
+
+如果将其设置为与有效文件描述符对应的整数，则 Bash 将在启用“ set-x”时将生成的跟踪输出写入该文件描述符。这允许将跟踪输出与诊断和错误消息分开。当取消 BASH _ xtracefd 的设置或为其分配新值时，文件描述符将关闭。取消对 BASH _ xtracefd 的设置或将其赋值为空字符串会导致将跟踪输出发送到标准错误。请注意，将 BASH _ xtracefd 设置为2(标准错误文件描述符) ，然后将其取消设置将导致关闭标准错误。
+
+CHILD_MAX
+Set the number of exited child status values for the shell to remember. Bash will not allow this value to be decreased below a POSIX-mandated minimum, and there is a maximum value (currently 8192) that this may not exceed. The minimum value is system-dependent.
+
+设置 shell 要记住的已退出子状态值的数量。Bash 不允许将该值降低到 posix 规定的最小值以下，并且有一个最大值(目前为8192) ，该值不能超过。最小值取决于系统。
+
+COLUMNS
+Used by the select command to determine the terminal width when printing selection lists. Automatically set if the checkwinsize option is enabled (see The Shopt Builtin), or in an interactive shell upon receipt of a SIGWINCH.
+
+由 select 命令用于确定打印选择列表时的终端宽度。如果启用了 checkwinsize 选项(请参阅 theshopt Builtin) ，或者在收到 SIGWINCH 后在交互式 shell 中自动设置。
+
+COMP_CWORD
+An index into ${COMP_WORDS} of the word containing the current cursor position. This variable is available only in shell functions invoked by the programmable completion facilities (see Programmable Completion).
+
+包含当前光标位置的单词的 ${ COMP _ words }的索引。此变量仅在可编程完成设施调用的 shell 函数中可用(请参阅可编程完成)。
+
+COMP_LINE
+The current command line. This variable is available only in shell functions and external commands invoked by the programmable completion facilities (see Programmable Completion).
+
+当前命令行。此变量仅在 shell 函数和可编程完成设施调用的外部命令中可用(请参阅可编程完成)。
+
+COMP_POINT
+The index of the current cursor position relative to the beginning of the current command. If the current cursor position is at the end of the current command, the value of this variable is equal to ${#COMP_LINE}. This variable is available only in shell functions and external commands invoked by the programmable completion facilities (see Programmable Completion).
+
+当前游标位置相对于当前命令开头的索引。如果当前光标位于当前命令的末尾，则此变量的值等于 ${ # comp _ line }。此变量仅在 shell 函数和可编程完成设施调用的外部命令中可用(请参阅可编程完成)。
+
+COMP_TYPE
+Set to an integer value corresponding to the type of completion attempted that caused a completion function to be called: TAB, for normal completion, ‘?’, for listing completions after successive tabs, ‘!’, for listing alternatives on partial word completion, ‘@’, to list completions if the word is not unmodified, or ‘%’, for menu completion. This variable is available only in shell functions and external commands invoked by the programmable completion facilities (see Programmable Completion).
+
+设置为一个整数值，该整数值对应于导致完成函数被调用的尝试完成类型: TAB，用于正常完成，‘ ? ’，用于列出连续标签后的完成情况，“ ! ”，用于列出部分单词完成时的备选项“@” ，如果该单词没有被修改，则列出完成情况，如果该单词没有被修改，则列出完成情况。此变量仅在 shell 函数和可编程完成设施调用的外部命令中可用(请参阅可编程完成)。
+
+COMP_KEY
+The key (or final key of a key sequence) used to invoke the current completion function.
+
+用于调用当前完成函数的键(或键序列的最终键)。
+
+COMP_WORDBREAKS
+The set of characters that the Readline library treats as word separators when performing word completion. If COMP_WORDBREAKS is unset, it loses its special properties, even if it is subsequently reset.
+
+Readline 库在执行单词补全时将其视为单词分隔符的字符集。如果未设置 comp_wordbreaks，即使它随后被重置，它也将失去其特殊属性。
+
+COMP_WORDS
+An array variable consisting of the individual words in the current command line. The line is split into words as Readline would split it, using COMP_WORDBREAKS as described above. This variable is available only in shell functions invoked by the programmable completion facilities (see Programmable Completion).
+
+一个数组变量，由当前命令行中的单个单词组成。这一行被分割成单词，因为 Readline 会使用 comp_wordbreaks 将其分割，如上所述。此变量仅在可编程完成设施调用的 shell 函数中可用(请参阅可编程完成)。
+
+COMPREPLY
+An array variable from which Bash reads the possible completions generated by a shell function invoked by the programmable completion facility (see Programmable Completion). Each array element contains one possible completion.
+
+一个数组变量，Bash 从中读取可编程完成工具调用的 shell 函数所生成的可能完成(请参阅可编程完成)。每个数组元素包含一个可能的完成。
+
+COPROC
+An array variable created to hold the file descriptors for output from and input to an unnamed coprocess (see Coprocesses).
+
+创建一个数组变量，用于保存来自未命名 coprocess 的输出和输入的文件描述符(参见 Coprocesses)。
+
+DIRSTACK
+An array variable containing the current contents of the directory stack. Directories appear in the stack in the order they are displayed by the dirs builtin. Assigning to members of this array variable may be used to modify directories already in the stack, but the pushd and popd builtins must be used to add and remove directories. Assignment to this variable will not change the current directory. If DIRSTACK is unset, it loses its special properties, even if it is subsequently reset.
+
+包含目录堆栈当前内容的数组变量。目录按照内建目录显示的顺序出现在堆栈中。分配给这个数组变量的成员可以用来修改堆栈中已经存在的目录，但是必须使用 pushd 和 popd 内置目录来添加和删除目录。对这个变量赋值不会改变工作目录。如果 DIRSTACK 未设置，即使它随后被重置，它也将失去其特殊属性。
+
+EMACS
+If Bash finds this variable in the environment when the shell starts with value ‘t’, it assumes that the shell is running in an Emacs shell buffer and disables line editing.
+
+如果当 shell 以值‘ t’开始时，Bash 在环境中找到了这个变量，那么它会假设 shell 在 Emacs shell 缓冲区中运行，并禁用行编辑。
+
+ENV
+Similar to BASH_ENV; used when the shell is invoked in POSIX Mode (see Bash POSIX Mode).
+
+类似于 BASH _ env; 在 POSIX 模式下调用 shell 时使用(请参阅 BASH POSIX 模式)。
+
+EPOCHREALTIME
+Each time this parameter is referenced, it expands to the number of seconds since the Unix Epoch as a floating point value with micro-second granularity (see the documentation for the C library function time for the definition of Epoch). Assignments to EPOCHREALTIME are ignored. If EPOCHREALTIME is unset, it loses its special properties, even if it is subsequently reset.
+
+每次引用这个参数时，它都会扩展为自 Unix Epoch 以来的秒数，作为具有微秒粒度的浮点值(有关 Epoch 的定义，请参阅 c 库函数 time 的文档)。对 EPOCHREALTIME 的赋值被忽略。如果 EPOCHREALTIME 未设置，它将失去其特殊属性，即使它随后被重置。
+
+EPOCHSECONDS
+Each time this parameter is referenced, it expands to the number of seconds since the Unix Epoch (see the documentation for the C library function time for the definition of Epoch). Assignments to EPOCHSECONDS are ignored. If EPOCHSECONDS is unset, it loses its special properties, even if it is subsequently reset.
+
+每次引用此参数时，它都会扩展为自 Unix Epoch 以来的秒数(有关 Epoch 的定义，请参阅 c 库函数 time 的文档)。对 EPOCHSECONDS 的赋值被忽略。如果 EPOCHSECONDS 未设置，它将失去其特殊属性，即使它随后被重置。
+
+EUID
+The numeric effective user id of the current user. This variable is readonly.
+
+当前用户的数字有效用户 id。该变量是只读的。
+
+EXECIGNORE
+A colon-separated list of shell patterns (see Pattern Matching) defining the list of filenames to be ignored by command search using PATH. Files whose full pathnames match one of these patterns are not considered executable files for the purposes of completion and command execution via PATH lookup. This does not affect the behavior of the [, test, and [[ commands. Full pathnames in the command hash table are not subject to EXECIGNORE. Use this variable to ignore shared library files that have the executable bit set, but are not executable files. The pattern matching honors the setting of the extglob shell option.
+
+一个用冒号分隔的 shell 模式列表(参见模式匹配文件名) ，定义使用 PATH 进行命令搜索时要忽略的文件名列表。完整路径名匹配这些模式之一的文件不被认为是通过 PATH 查找完成和命令执行的目的可执行文件。这不会影响[、 test 和[命令]的行为。命令哈希表中的完整路径名不受 EXECIGNORE 的约束。使用此变量可以忽略设置了可执行位但不是可执行文件的共享库文件。模式匹配版本尊重 extglob shell 选项的设置。
+
+FCEDIT
+The editor used as a default by the -e option to the fc builtin command.
+
+编辑器用作 fc 内建命令的-e 选项的默认值。
+
+FIGNORE
+A colon-separated list of suffixes to ignore when performing filename completion. A filename whose suffix matches one of the entries in FIGNORE is excluded from the list of matched filenames. A sample value is ‘.o:~’
+
+执行文件名完成时要忽略的冒号分隔的后缀列表。后缀匹配 FIGNORE 中某个条目的文件名被排除在匹配文件名列表之外。样本值为。O: ~
+
+FUNCNAME
+An array variable containing the names of all shell functions currently in the execution call stack. The element with index 0 is the name of any currently-executing shell function. The bottom-most element (the one with the highest index) is "main". This variable exists only when a shell function is executing. Assignments to FUNCNAME have no effect. If FUNCNAME is unset, it loses its special properties, even if it is subsequently reset.
+
+一个数组变量，包含执行调用堆栈中当前所有 shell 函数的名称。索引为0的元素是任何当前正在执行的 shell 函数的名称。最底部的元素(索引最高的元素)是“ main”。此变量仅在执行 shell 函数时存在。赋值到 FUNCNAME 没有效果。如果 FUNCNAME 未设置，它将失去其特殊属性，即使它随后被重置。
+
+This variable can be used with BASH_LINENO and BASH_SOURCE. Each element of FUNCNAME has corresponding elements in BASH_LINENO and BASH_SOURCE to describe the call stack. For instance, ${FUNCNAME[$i]} was called from the file ${BASH_SOURCE[$i+1]} at line number ${BASH_LINENO[$i]}. The caller builtin displays the current call stack using this information.
+
+此变量可以与 bash_lineno 和 bash_source 一起使用。FUNCNAME 的每个元素在 BASH _ lineno 和 BASH _ source 中都有对应的元素来描述调用堆栈。例如，从文件 ${ BASH _ source [ $i + 1]}的行号 ${ BASH _ lineno [ $i ]}调用 ${ FUNCNAME [ $i ]}。调用方内置函数使用此信息显示当前调用堆栈。
+
+FUNCNEST
+If set to a numeric value greater than 0, defines a maximum function nesting level. Function invocations that exceed this nesting level will cause the current command to abort.
+
+如果设置为大于0的数值，则定义最大函数嵌套级别。超过此嵌套级别的函数调用将导致当前命令中止。
+
+GLOBIGNORE
+A colon-separated list of patterns defining the set of file names to be ignored by filename expansion. If a file name matched by a filename expansion pattern also matches one of the patterns in GLOBIGNORE, it is removed from the list of matches. The pattern matching honors the setting of the extglob shell option.
+
+冒号分隔的模式列表，定义文件名展开时要忽略的一组文件名。如果与文件名扩展模式匹配的文件名也与 GLOBIGNORE 的某个模式匹配，则该文件名将从匹配列表中移除。模式匹配版本尊重 extglob shell 选项的设置。
+
+GROUPS
+An array variable containing the list of groups of which the current user is a member. Assignments to GROUPS have no effect. If GROUPS is unset, it loses its special properties, even if it is subsequently reset.
+
+一个数组变量，包含当前用户为其成员的组的列表。分配给 GROUPS 没有任何效果。如果未设置 GROUPS，即使它随后被重置，它也将失去其特殊属性。
+
+histchars
+Up to three characters which control history expansion, quick substitution, and tokenization (see History Interaction). The first character is the history expansion character, that is, the character which signifies the start of a history expansion, normally ‘!’. The second character is the character which signifies ‘quick substitution’ when seen as the first character on a line, normally ‘^’. The optional third character is the character which indicates that the remainder of the line is a comment when found as the first character of a word, usually ‘#’. The history comment character causes history substitution to be skipped for the remaining words on the line. It does not necessarily cause the shell parser to treat the rest of the line as a comment.
+
+最多三个字符控制历史扩展、快速替换和标记化(参见历史交互)。第一个字符是历史扩展字符，即标志着历史扩展的开始的字符，通常是“ ! ”.第二个字符是表示“快速替换”的字符，通常是“ ^ ”。可选的第三个字符是这样一个字符，它指示行的其余部分作为单词的第一个字符时为注释，通常是“ # ”。历史注释字符导致跳过该行其余单词的历史替换。它不一定会导致 shell 解析器将该行的其余部分视为注释。
+
+HISTCMD
+The history number, or index in the history list, of the current command. If HISTCMD is unset, it loses its special properties, even if it is subsequently reset.
+
+当前命令的历史记录编号或历史记录列表中的索引。如果 HISTCMD 未设置，它将失去其特殊属性，即使它随后被重置。
+
+HISTCONTROL
+A colon-separated list of values controlling how commands are saved on the history list. If the list of values includes ‘ignorespace’, lines which begin with a space character are not saved in the history list. A value of ‘ignoredups’ causes lines which match the previous history entry to not be saved. A value of ‘ignoreboth’ is shorthand for ‘ignorespace’ and ‘ignoredups’. A value of ‘erasedups’ causes all previous lines matching the current line to be removed from the history list before that line is saved. Any value not in the above list is ignored. If HISTCONTROL is unset, or does not include a valid value, all lines read by the shell parser are saved on the history list, subject to the value of HISTIGNORE. The second and subsequent lines of a multi-line compound command are not tested, and are added to the history regardless of the value of HISTCONTROL.
+
+以冒号分隔的值列表，控制如何在历史记录列表中保存命令。如果值列表包含“ ignorespace” ，则以空格开头的行不会保存在历史列表中。“ ignoredups”的值导致不保存与前一个历史记录条目匹配的行。Ignoreboth 的一个值是 ignorrespace 和 ignoredups 的简写。“ erasedups”的值导致在保存当前行之前从历史列表中删除所有以前匹配当前行的行。上面列表中没有的值将被忽略。如果 HISTCONTROL 未设置，或者没有包含有效值，那么 shell 解析器读取的所有行都将保存在历史列表中，保留 HISTIGNORE 的值。不测试多行复合命令的第二行和后续行，并将其添加到历史记录中，而不考虑 HISTCONTROL 的值。
+
+HISTFILE
+The name of the file to which the command history is saved. The default value is ~/.bash_history.
+
+将命令历史记录保存到的文件的名称。默认值为 ~/. bash _ history。
+
+HISTFILESIZE
+The maximum number of lines contained in the history file. When this variable is assigned a value, the history file is truncated, if necessary, to contain no more than that number of lines by removing the oldest entries. The history file is also truncated to this size after writing it when a shell exits. If the value is 0, the history file is truncated to zero size. Non-numeric values and numeric values less than zero inhibit truncation. The shell sets the default value to the value of HISTSIZE after reading any startup files.
+
+包含在历史文件中的最大行数。当为这个变量赋值时，历史文件将被截断，如果需要的话，通过删除最旧的条目来使其包含的行数不超过该数。当 shell 退出时，在写入历史文件后，历史文件也会被截断为这个大小。如果值为0，则历史文件将被截断为零大小。禁止截断小于零的非数值和数值。在读取任何启动文件后，shell 将默认值设置为 HISTSIZE 的值。
+
+HISTIGNORE
+A colon-separated list of patterns used to decide which command lines should be saved on the history list. Each pattern is anchored at the beginning of the line and must match the complete line (no implicit ‘*’ is appended). Each pattern is tested against the line after the checks specified by HISTCONTROL are applied. In addition to the normal shell pattern matching characters, ‘&’ matches the previous history line. ‘&’ may be escaped using a backslash; the backslash is removed before attempting a match. The second and subsequent lines of a multi-line compound command are not tested, and are added to the history regardless of the value of HISTIGNORE. The pattern matching honors the setting of the extglob shell option.
+
+用冒号分隔的模式列表，用于决定哪些命令行应该保存在历史列表中。每个模式都锚定在行的开头，并且必须匹配完整的行(没有隐式的‘ * ’附加)。在应用 HISTCONTROL 指定的检查之后，对每个模式进行行测试。除了正常的 shell/模式匹配字符外，& 符合前面的历史行。可以使用反斜杠进行转义; 在尝试匹配之前，反斜杠将被删除。多行复合命令的第二行和后续行不进行测试，而是添加到历史记录中，而不考虑 HISTIGNORE 的值。模式匹配版本尊重 extglob shell 选项的设置。
+
+HISTIGNORE subsumes the function of HISTCONTROL. A pattern of ‘&’ is identical to ignoredups, and a pattern of ‘[ ]*’ is identical to ignorespace. Combining these two patterns, separating them with a colon, provides the functionality of ignoreboth.
+
+组织工程学包含了组织工程学控制的功能。“ & ”的模式与 ignore dups 相同，“[] * ”的模式与 ignore 的模式相同。结合这两种模式，用冒号分隔它们，提供了 ignoreboth 的功能。
+
+HISTSIZE
+The maximum number of commands to remember on the history list. If the value is 0, commands are not saved in the history list. Numeric values less than zero result in every command being saved on the history list (there is no limit). The shell sets the default value to 500 after reading any startup files.
+
+历史记录列表中需要记住的最大命令数。如果值为0，则命令不保存在历史列表中。小于零的数值将导致每个命令保存在历史记录列表中(没有限制)。在读取任何启动文件后，shell 将默认值设置为500。
+
+HISTTIMEFORMAT
+If this variable is set and not null, its value is used as a format string for strftime to print the time stamp associated with each history entry displayed by the history builtin. If this variable is set, time stamps are written to the history file so they may be preserved across shell sessions. This uses the history comment character to distinguish timestamps from other history lines.
+
+如果该变量被设置为非空，那么它的值将被用作 strftime 的格式字符串，以打印与历史内置程序显示的每个历史记录条目相关联的时间戳。如果设置了此变量，则将时间戳写入历史文件，以便可以跨 shell 会话保留它们。这使用历史注释字符来区分时间戳和其他历史行。
+
+HOSTFILE
+Contains the name of a file in the same format as /etc/hosts that should be read when the shell needs to complete a hostname. The list of possible hostname completions may be changed while the shell is running; the next time hostname completion is attempted after the value is changed, Bash adds the contents of the new file to the existing list. If HOSTFILE is set, but has no value, or does not name a readable file, Bash attempts to read /etc/hosts to obtain the list of possible hostname completions. When HOSTFILE is unset, the hostname list is cleared.
+
+包含与/etc/hosts 格式相同的文件名，当 shell 需要完成主机名时应该读取这些文件名。当 shell 运行时，可能的主机名完成列表可能会被更改; 下次在更改值后尝试主机名完成时，Bash 会将新文件的内容添加到现有的列表中。如果设置了 HOSTFILE，但是没有值，或者没有命名可读的文件，Bash 会尝试读取/etc/hosts，以获取可能的主机名完成列表。未设置 HOSTFILE 时，将清除主机名列表。
+
+HOSTNAME
+The name of the current host.
+
+当前主机的名称。
+
+HOSTTYPE
+A string describing the machine Bash is running on.
+
+描述正在运行 Bash 的计算机的字符串。
+
+IGNOREEOF
+Controls the action of the shell on receipt of an EOF character as the sole input. If set, the value denotes the number of consecutive EOF characters that can be read as the first character on an input line before the shell will exit. If the variable exists but does not have a numeric value, or has no value, then the default is 10. If the variable does not exist, then EOF signifies the end of input to the shell. This is only in effect for interactive shells.
+
+控制 shell 在收到作为唯一输入的 EOF 字符时的动作。如果设置，该值表示在 shell 退出之前可以作为输入行的第一个字符读取的连续 EOF 字符数。如果变量存在但没有数值，或者没有值，则默认值为10。如果该变量不存在，则 EOF 表示 shell 的输入结束。这只对交互式 shell 有效。
+
+INPUTRC
+The name of the Readline initialization file, overriding the default of ~/.inputrc.
+
+Readline 初始化文件的名称，重写默认的 ~/. inputrc。
+
+INSIDE_EMACS
+If Bash finds this variable in the environment when the shell starts, it assumes that the shell is running in an Emacs shell buffer and may disable line editing depending on the value of TERM.
+
+如果 Bash 在 shell 启动时在环境中找到了这个变量，那么它假设 shell 在 Emacs shell 缓冲区中运行，并且可能根据 TERM 的值禁用行编辑。
+
+LANG
+Used to determine the locale category for any category not specifically selected with a variable starting with LC_.
+
+用于确定任何类别的区域设置类别，这些类别没有以 LC _ 开头的变量特定选择。
+
+LC_ALL
+This variable overrides the value of LANG and any other LC_ variable specifying a locale category.
+
+此变量覆盖 LANG 的值和指定区域设置类别的任何其他 LC _ 变量。
+
+LC_COLLATE
+This variable determines the collation order used when sorting the results of filename expansion, and determines the behavior of range expressions, equivalence classes, and collating sequences within filename expansion and pattern matching (see Filename Expansion).
+
+这个变量决定了对文件名展开的结果进行排序时使用的排序顺序，并决定了文件名展开和模式匹配中范围表达式、等价类和排序序列的行为(参见文件名展开)。
+
+LC_CTYPE
+This variable determines the interpretation of characters and the behavior of character classes within filename expansion and pattern matching (see Filename Expansion).
+
+这个变量决定了字符的解释以及字符类在文件名展开和模式匹配中的行为(参见文件名展开)。
+
+LC_MESSAGES
+This variable determines the locale used to translate double-quoted strings preceded by a ‘$’ (see Locale Translation).
+
+此变量确定用于转换前面带有“ $”的双引号字符串的区域设置(请参见区域设置转换)。
+
+LC_NUMERIC
+This variable determines the locale category used for number formatting.
+
+此变量确定用于数字格式化的区域设置类别。
+
+LC_TIME
+This variable determines the locale category used for data and time formatting.
+
+此变量确定用于数据和时间格式化的区域设置类别。
+
+LINENO
+The line number in the script or shell function currently executing.
+
+当前执行的脚本或 shell 函数中的行号。
+
+LINES
+Used by the select command to determine the column length for printing selection lists. Automatically set if the checkwinsize option is enabled (see The Shopt Builtin), or in an interactive shell upon receipt of a SIGWINCH.
+
+由 select 命令用于确定打印选择列表的列长度。如果启用了 checkwinsize 选项(请参阅 theshopt Builtin) ，或者在收到 SIGWINCH 后在交互式 shell 中自动设置。
+
+MACHTYPE
+A string that fully describes the system type on which Bash is executing, in the standard GNU cpu-company-system format.
+
+一个字符串，以标准的 gnucpu-company-system 格式全面描述 Bash 正在其上执行的系统类型。
+
+MAILCHECK
+How often (in seconds) that the shell should check for mail in the files specified in the MAILPATH or MAIL variables. The default is 60 seconds. When it is time to check for mail, the shell does so before displaying the primary prompt. If this variable is unset, or set to a value that is not a number greater than or equal to zero, the shell disables mail checking.
+
+Shell 检查 MAILPATH 或 MAIL 变量中指定的文件中的邮件的频率(以秒为单位)。默认是60秒。当需要检查邮件时，shell 会在显示主提示符之前进行检查。如果未设置此变量，或者将其设置为不大于或等于零的值，shell 将禁用邮件检查。
+
+MAPFILE
+An array variable created to hold the text read by the mapfile builtin when no variable name is supplied.
+
+当没有提供变量名时，创建一个数组变量来保存映射文件内置的文本读取。
+
+OLDPWD
+The previous working directory as set by the cd builtin.
+
+之前的工作目录由 cd 内置设置。
+
+OPTERR
+If set to the value 1, Bash displays error messages generated by the getopts builtin command.
+
+如果设置为值1，Bash 将显示由 getopts builtin 命令生成的错误消息。
+
+OSTYPE
+A string describing the operating system Bash is running on.
+
+描述 Bash 正在运行的操作系统的字符串。
+
+PIPESTATUS
+An array variable (see Arrays) containing a list of exit status values from the processes in the most-recently-executed foreground pipeline (which may contain only a single command).
+
+一个数组变量(参见数组) ，其中包含最近执行的前台管道(可能只包含一个命令)中的进程的退出状态值的列表。
+
+POSIXLY_CORRECT
+If this variable is in the environment when Bash starts, the shell enters POSIX mode (see Bash POSIX Mode) before reading the startup files, as if the --posix invocation option had been supplied. If it is set while the shell is running, Bash enables POSIX mode, as if the command
+
+如果这个变量在 Bash 启动时位于环境中，则 shell 在读取启动文件之前进入 POSIX 模式(请参阅 Bash POSIX 模式) ，就好像提供了 -- POSIX 调用选项。如果它是在 shell 运行时设置的，则 Bash 启用 POSIX 模式，就像命令一样
+
+set -o posix
+had been executed. When the shell enters POSIX mode, it sets this variable if it was not already set.
+
+当 shell 进入 POSIX 模式时，如果尚未设置该变量，则设置该变量。
+
+PPID
+The process ID of the shell’s parent process. This variable is readonly.
+
+Shell 父进程的进程 ID。这个变量是只读的。
+
+PROMPT_COMMAND
+If set, the value is interpreted as a command to execute before the printing of each primary prompt ($PS1).
+
+如果设置该值，则将其解释为在打印每个主提示符($PS1)之前执行的命令。
+
+PROMPT_DIRTRIM
+If set to a number greater than zero, the value is used as the number of trailing directory components to retain when expanding the \w and \W prompt string escapes (see Controlling the Prompt). Characters removed are replaced with an ellipsis.
+
+如果设置为大于零的数字，则该值用作展开 w 和 w 提示字符串转义时保留的尾随目录组件数(请参阅控制提示)。删除的字符将替换为省略号。
+
+PS0
+The value of this parameter is expanded like PS1 and displayed by interactive shells after reading a command and before the command is executed.
+
+这个参数的值像 PS1一样展开，并在读取命令之后和执行命令之前由交互式 shell 显示。
+
+PS3
+The value of this variable is used as the prompt for the select command. If this variable is not set, the select command prompts with ‘#? ’
+
+此变量的值用作 select 命令的提示。如果没有设置这个变量，select 命令会提示输入 #
+
+PS4
+The value of this parameter is expanded like PS1 and the expanded value is the prompt printed before the command line is echoed when the -x option is set (see The Set Builtin). The first character of the expanded value is replicated multiple times, as necessary, to indicate multiple levels of indirection. The default is ‘+ ’.
+
+这个参数的值像 PS1一样展开，展开后的值是在设置-x 选项时回显命令行之前打印的提示符(参见 The Set Builtin)。扩展值的第一个字符将根据需要多次复制，以指示多个间接层次。默认值是 + 。
+
+PWD
+The current working directory as set by the cd builtin.
+
+由 cd 内建设置的当前工作目录。
+
+RANDOM
+Each time this parameter is referenced, a random integer between 0 and 32767 is generated. Assigning a value to this variable seeds the random number generator.
+
+每次引用此参数时，都会生成一个介于0和32767之间的随机整数。给这个变量赋一个值就是随机数生成器的种子。
+
+READLINE_LINE
+The contents of the Readline line buffer, for use with ‘bind -x’ (see Bash Builtins).
+
+Readline 行缓冲区的内容，用于“ bind-x”(请参阅 Bash 内建语言)。
+
+READLINE_POINT
+The position of the insertion point in the Readline line buffer, for use with ‘bind -x’ (see Bash Builtins).
+
+插入点在 Readline 行缓冲区中的位置，用于“ bind-x”(参见 Bash 内建语言)。
+
+REPLY
+The default variable for the read builtin.
+
+Read 内置的默认变量。
+
+SECONDS
+This variable expands to the number of seconds since the shell was started. Assignment to this variable resets the count to the value assigned, and the expanded value becomes the value assigned plus the number of seconds since the assignment.
+
+此变量展开为启动 shell 后的秒数。对该变量的赋值将计数重置为赋值，展开后的值成为赋值加上赋值后的秒数。
+
+SHELL
+The full pathname to the shell is kept in this environment variable. If it is not set when the shell starts, Bash assigns to it the full pathname of the current user’s login shell.
+
+Shell 的完整路径名保存在这个环境变量文件夹中。如果在 shell 启动时没有设置，则 Bash 将当前用户登录 shell 的完整路径名分配给它。
+
+SHELLOPTS
+A colon-separated list of enabled shell options. Each word in the list is a valid argument for the -o option to the set builtin command (see The Set Builtin). The options appearing in SHELLOPTS are those reported as ‘on’ by ‘set -o’. If this variable is in the environment when Bash starts up, each shell option in the list will be enabled before reading any startup files. This variable is readonly.
+
+启用 shell 选项的冒号分隔列表。列表中的每个单词都是 Set Builtin 命令的-o 选项的有效参数(参见 The Set Builtin)。SHELLOPTS 中出现的选项是“ set-o”报告为“ on”的选项。如果此变量在 Bash 启动时位于环境中，则在读取任何启动文件之前，将启用列表中的每个 shell 选项。这个变量是只读的。
+
+SHLVL
+Incremented by one each time a new instance of Bash is started. This is intended to be a count of how deeply your Bash shells are nested.
+
+每次启动 Bash 的新实例时增加一个。这是用来计算您的 Bash shell 嵌套的深度的。
+
+TIMEFORMAT
+The value of this parameter is used as a format string specifying how the timing information for pipelines prefixed with the time reserved word should be displayed. The ‘%’ character introduces an escape sequence that is expanded to a time value or other information. The escape sequences and their meanings are as follows; the braces denote optional portions.
+
+此参数的值用作格式字符串，指定应如何显示以时间保留字为前缀的管道计时信息。“% ”字符引入一个转义序列，该转义序列扩展为时间值或其他信息。转义序列及其含义如下; 括号表示可选部分。
+
+%%
+A literal ‘%’.
+
+一个字面上的“% ”。
+
+%[p][l]R
+The elapsed time in seconds.
+
+以秒为单位的经过时间。
+
+%[p][l]U
+The number of CPU seconds spent in user mode.
+
+在用户模式下花费的 CPU 秒数。
+
+%[p][l]S
+The number of CPU seconds spent in system mode.
+
+处于系统模式下的 CPU 秒数。
+
+%P
+The CPU percentage, computed as (%U + %S) / %R.
+
+CPU 百分比，计算为(% u +% s)/% r。
+
+The optional p is a digit specifying the precision, the number of fractional digits after a decimal point. A value of 0 causes no decimal point or fraction to be output. At most three places after the decimal point may be specified; values of p greater than 3 are changed to 3. If p is not specified, the value 3 is used.
+
+可选的 p 是一个数字，用于指定精度，即小数点后的小数位数。如果值为0，则不会输出任何小数点或分数。可以指定小数点后最多三位; 大于3的 p 值改为3。如果未指定 p，则使用值3。
+
+The optional l specifies a longer format, including minutes, of the form MMmSS.FFs. The value of p determines whether or not the fraction is included.
+
+可选的 l 指定了 MMmSS.FFs 表单的较长格式(包括分钟)。P 的值决定了是否包含这个分数。
+
+If this variable is not set, Bash acts as if it had the value
+
+如果没有设置这个变量，Bash 的行为就好像它有值一样
+
+$'\nreal\t%3lR\nuser\t%3lU\nsys\t%3lS'
+If the value is null, no timing information is displayed. A trailing newline is added when the format string is displayed.
+
+如果值为空，则不显示计时信息。在显示格式字符串时添加尾随换行符。
+
+TMOUT
+If set to a value greater than zero, TMOUT is treated as the default timeout for the read builtin (see Bash Builtins). The select command (see Conditional Constructs) terminates if input does not arrive after TMOUT seconds when input is coming from a terminal.
+
+如果设置为大于零的值，TMOUT 将被视为读内建函数的默认超时(参见 Bash Builtins)。当输入来自终端时，如果输入在 TMOUT 秒后没有到达，select 命令(参见 Conditional Constructs)将终止。
+
+In an interactive shell, the value is interpreted as the number of seconds to wait for a line of input after issuing the primary prompt. Bash terminates after waiting for that number of seconds if a complete line of input does not arrive.
+
+在交互式 shell 中，该值被解释为在发出主提示后等待输入行的秒数。如果一个完整的输入行没有到达，则 Bash 在等待秒数之后终止。
+
+TMPDIR
+If set, Bash uses its value as the name of a directory in which Bash creates temporary files for the shell’s use.
+
+如果设置，则 Bash 使用其值作为目录的名称，Bash 在该目录中创建供 shell 使用的临时文件。
+
+UID
+The numeric real user id of the current user. This variable is readonly.
+
+当前用户的真实用户 id。这个变量是只读的。
+
+Next: Job Control, Previous: Shell Variables, Up: Top   [Contents][Index]
+
+下一步: 作业控制，上一步: Shell 变量，上一步: Top [ Contents ][ Index ]
+
+
+
