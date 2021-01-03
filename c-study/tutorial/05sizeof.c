@@ -6,6 +6,8 @@ int main(){
     // sizeof 变量
     // 或者
     // sizeof(变量)
+
+    // 注意:不同的操作系统对于变量内存分配字节数是不同的
     int a = 1;
     int b = sizeof a;
 
