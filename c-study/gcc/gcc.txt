@@ -1,3 +1,6 @@
+环境配置:
+    https://mp.weixin.qq.com/s/0gV7RhwZmcDNQluBjZIABw
+    
 编译指令:
     help:
         man gcc
